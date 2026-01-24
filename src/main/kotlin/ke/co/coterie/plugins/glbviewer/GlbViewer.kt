@@ -39,7 +39,6 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
 
     private fun uploadFile() {
         val client = OkHttpClient()
-        val mediaType = "text/plain".toMediaType()
         println("Virtual File path : ${file.path}")
         val body = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart(
             "file", file.name, File(file.path).asRequestBody("application/octet-stream".toMediaType())
