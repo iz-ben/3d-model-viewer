@@ -21,6 +21,10 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.compose</depends>
 
+    <applicationListeners>
+        <listener class="ke.co.coterie.plugins.glbviewer.GlbApplicationListener" topic="com.intellij.ide.AppLifecycleListener"/>
+    </applicationListeners>
+
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
