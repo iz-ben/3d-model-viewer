@@ -40,6 +40,11 @@ class GlbApplicationListener: AppLifecycleListener {
                 }
             }.start();
             println("GLB upload server started.")
+            // close the process when the application exits
+            Runtime.getRuntime().addShutdownHook(Thread {
+                println("GLB upload server shut down")
+                process.destroy()
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
