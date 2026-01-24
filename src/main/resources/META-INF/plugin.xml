@@ -31,8 +31,6 @@
                 fieldName="INSTANCE"
                 language="GLB"
                 extensions="glb"/>
--->
-<!--        <fileEditorProvider implementation="ke.co.coterie.plugins.glbviewer.GLBEditorProvider"-->
-<!--        />-->
+        <fileEditorProvider implementation="ke.co.coterie.plugins.glbviewer.GlbEditorProvider" />
     </extensions>
 </idea-plugin>

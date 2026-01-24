@@ -13,21 +13,21 @@ class GlbEditorProvider: FileEditorProvider, DumbAware {
         project: Project,
         file: VirtualFile
     ): Boolean {
-        TODO("Not yet implemented")
+        return file.extension == "glb"
     }
 
     override fun createEditor(
         project: Project,
         file: VirtualFile
     ): FileEditor {
-        TODO("Not yet implemented")
+        return GlbEditor(project, file)
     }
 
     override fun getEditorTypeId(): @NonNls String {
-        TODO("Not yet implemented")
+        return "GLB_EDITOR"
     }
 
     override fun getPolicy(): FileEditorPolicy {
-        TODO("Not yet implemented")
+        return FileEditorPolicy.HIDE_DEFAULT_EDITOR
     }
 }
