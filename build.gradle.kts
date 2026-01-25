@@ -22,6 +22,7 @@ dependencies {
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
 
         // Add plugin dependencies for compilation here:
+        // implementation("com.google.code.gson:gson:2.10.1")
 
         composeUI()
 

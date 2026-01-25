@@ -165,6 +165,19 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
     private fun uploadFile() {
         val client = OkHttpClient()
         println("Virtual File path : ${file.path}")
+
+        val fileExtension = file.extension?.lowercase()
+
+        if (fileExtension == "gltf") {
+            // GLTF files may reference external assets - upload as a bundle
+            uploadGltfBundle(client)
+        } else {
+            // GLB and OBJ files are self-contained - single file upload
+            uploadSingleFile(client)
+        }
+    }
+
+    private fun uploadSingleFile(client: OkHttpClient) {
         val body = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart(
             "file", file.name, File(file.path).asRequestBody("application/octet-stream".toMediaType())
         ).build()
@@ -172,8 +185,38 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             .post(body).build()
 
         val response = client.newCall(request).execute()
+        println(response.body?.string())
+    }
 
-        println(response.body.string())
+    private fun uploadGltfBundle(client: OkHttpClient) {
+        val gltfFile = File(file.path)
+        val referencedAssets = GltfAssetParser.parseReferencedAssets(gltfFile)
+
+        println("GLTF Bundle: Main file + ${referencedAssets.size} referenced assets")
+
+        val bodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+
+        // Add the main GLTF file
+        bodyBuilder.addFormDataPart(
+            "files", file.name, gltfFile.asRequestBody("application/octet-stream".toMediaType())
+        )
+
+        // Add all referenced assets
+        referencedAssets.forEach { assetFile ->
+            println("GLTF Bundle: Adding asset ${assetFile.name}")
+            bodyBuilder.addFormDataPart(
+                "files", assetFile.name, assetFile.asRequestBody("application/octet-stream".toMediaType())
+            )
+        }
+
+        val body = bodyBuilder.build()
+        val request = Request.Builder()
+            .url("http://localhost:${Model3DApplicationListener.port}/api/models/upload/bulk")
+            .post(body)
+            .build()
+
+        val response = client.newCall(request).execute()
+        println(response.body?.string())
     }
 
 }
