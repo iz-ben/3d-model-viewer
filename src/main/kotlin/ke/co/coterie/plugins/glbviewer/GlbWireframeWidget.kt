@@ -12,8 +12,9 @@ class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomS
 
     companion object {
         var wireframeEnabled = false
-        var currentViewer: GlbViewer? = null
     }
+
+    private val viewerService = GlbViewerService.getInstance(project)
 
     private val checkbox = JBCheckBox("Wireframe").apply {
         isSelected = wireframeEnabled
@@ -23,7 +24,7 @@ class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomS
         addActionListener {
             wireframeEnabled = isSelected
             println("Wireframe mode: $wireframeEnabled")
-            currentViewer?.toggleWireframe(wireframeEnabled)
+            viewerService.getCurrentViewer()?.toggleWireframe(wireframeEnabled)
         }
     }
 

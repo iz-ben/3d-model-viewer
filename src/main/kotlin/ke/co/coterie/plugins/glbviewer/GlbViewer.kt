@@ -26,8 +26,13 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
     private var isPageReady = false
     private val pendingCommands = mutableListOf<String>()
 
+    private val viewerService = GlbViewerService.getInstance(project)
+    private val animationStateService = GlbAnimationStateService.getInstance(project)
+
     init {
-        GlbWireframeWidget.currentViewer = this
+        // Register this viewer with the service
+        viewerService.registerViewer(file, this)
+
         // Set up the animation list callback
         animationListQuery.addHandler { animationsJson ->
             // Parse the JSON array of animation names
@@ -38,7 +43,8 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
                 .map { it.trim().removeSurrounding("\"") }
                 .filter { it.isNotEmpty() }
 
-            GlbAnimationSelectorWidget.updateAnimations(animations)
+            // Update animations for this specific file
+            animationStateService.updateAvailableAnimations(file, animations)
             null
         }
 

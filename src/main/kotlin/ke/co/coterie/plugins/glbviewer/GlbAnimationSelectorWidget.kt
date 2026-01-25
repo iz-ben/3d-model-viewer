@@ -2,6 +2,7 @@ package ke.co.coterie.plugins.glbviewer
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
@@ -14,27 +15,8 @@ import javax.swing.JPanel
 
 class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
 
-    companion object {
-        private val animationListeners = mutableListOf<(List<String>) -> Unit>()
-        private var animations: List<String> = emptyList()
-
-        fun updateAnimations(animationList: List<String>) {
-            animations = animationList
-            animationListeners.forEach { it(animationList) }
-        }
-
-        fun addListener(listener: (List<String>) -> Unit) {
-            animationListeners.add(listener)
-            // Immediately notify with current animations if any
-            if (animations.isNotEmpty()) {
-                listener(animations)
-            }
-        }
-
-        fun removeListener(listener: (List<String>) -> Unit) {
-            animationListeners.remove(listener)
-        }
-    }
+    private val viewerService = GlbViewerService.getInstance(project)
+    private val animationStateService = GlbAnimationStateService.getInstance(project)
 
     private val comboBoxModel = DefaultComboBoxModel<String>()
     private val comboBox = ComboBox(comboBoxModel).apply {
@@ -45,7 +27,11 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
             println("selected animation: $selected")
             if (selected?.isNotEmpty() == true) {
                 println("Sending selected animation to js: $selected")
-                GlbWireframeWidget.currentViewer?.selectAnimation(selected)
+                val currentFile = viewerService.getCurrentFile()
+                if (currentFile != null) {
+                    animationStateService.setSelectedAnimation(currentFile, selected)
+                }
+                viewerService.getCurrentViewer()?.selectAnimation(selected)
             }
         }
     }
@@ -61,19 +47,45 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
         add(comboBox)
     }
 
-    private val animationUpdateListener: (List<String>) -> Unit = { animationList ->
+    private val animationStateListener: (VirtualFile, GlbAnimationStateService.FileAnimationState) -> Unit = { file, state ->
+        // Only update if this is the currently active file
+        if (viewerService.getCurrentFile()?.path == file.path) {
+            updateUIForState(state)
+        }
+    }
+
+    private val viewerChangeListener: (VirtualFile?, GlbViewer?) -> Unit = { file, _ ->
+        if (file != null) {
+            val state = animationStateService.getState(file)
+            updateUIForState(state)
+        } else {
+            // No GLB file selected, reset UI
+            updateUIForState(GlbAnimationStateService.FileAnimationState())
+        }
+    }
+
+    private fun updateUIForState(state: GlbAnimationStateService.FileAnimationState) {
         comboBoxModel.removeAllElements()
-        animationList.forEach { comboBoxModel.addElement(it) }
-        val hasAnimations = animationList.isNotEmpty()
+        state.availableAnimations.forEach { comboBoxModel.addElement(it) }
+        val hasAnimations = state.availableAnimations.isNotEmpty()
         comboBox.isEnabled = hasAnimations
         label.isEnabled = hasAnimations
-        if (hasAnimations) {
+        if (hasAnimations && state.selectedAnimation != null) {
+            comboBox.selectedItem = state.selectedAnimation
+        } else if (hasAnimations) {
             comboBox.selectedIndex = 0
         }
     }
 
     init {
-        addListener(animationUpdateListener)
+        animationStateService.addStateChangeListener(animationStateListener)
+        viewerService.addViewerChangeListener(viewerChangeListener)
+
+        // Initialize with current file's state if available
+        viewerService.getCurrentFile()?.let { file ->
+            val state = animationStateService.getState(file)
+            updateUIForState(state)
+        }
     }
 
     override fun ID(): String = "GlbViewerAnimationSelectorWidget"
@@ -83,7 +95,7 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
     override fun getComponent(): JComponent = panel
 
     override fun dispose() {
-        removeListener(animationUpdateListener)
-        //super.dispose()
+        animationStateService.removeStateChangeListener(animationStateListener)
+        viewerService.removeViewerChangeListener(viewerChangeListener)
     }
 }
