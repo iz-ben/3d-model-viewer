@@ -1,6 +1,7 @@
 package ke.co.coterie.plugins.glbviewer
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
@@ -28,9 +29,22 @@ class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomS
         }
     }
 
+    private val viewerChangeListener: (VirtualFile?, GlbViewer?) -> Unit = { _, viewer ->
+        // Sync wireframe state with the newly selected viewer
+        viewer?.toggleWireframe(wireframeEnabled)
+    }
+
+    init {
+        viewerService.addViewerChangeListener(viewerChangeListener)
+    }
+
     override fun ID(): String = "GlbViewerWireframeWidget"
 
     override fun copy(): StatusBarWidget = GlbWireframeWidget(project)
 
     override fun getComponent(): JComponent = checkbox
+
+    override fun dispose() {
+        viewerService.removeViewerChangeListener(viewerChangeListener)
+    }
 }

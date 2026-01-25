@@ -54,10 +54,14 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
         }
     }
 
-    private val viewerChangeListener: (VirtualFile?, GlbViewer?) -> Unit = { file, _ ->
+    private val viewerChangeListener: (VirtualFile?, GlbViewer?) -> Unit = { file, viewer ->
         if (file != null) {
             val state = animationStateService.getState(file)
             updateUIForState(state)
+            // Sync selected animation with the newly selected viewer
+            state.selectedAnimation?.let { animation ->
+                viewer?.selectAnimation(animation)
+            }
         } else {
             // No GLB file selected, reset UI
             updateUIForState(GlbAnimationStateService.FileAnimationState())
