@@ -6,6 +6,7 @@ import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
 import com.intellij.ui.components.JBLabel
 import java.awt.FlowLayout
+import javax.swing.BorderFactory
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
 import javax.swing.JComponent
@@ -48,6 +49,7 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
 
     private val panel = JPanel(FlowLayout(FlowLayout.LEFT, 4, 0)).apply {
         isOpaque = false
+        border = BorderFactory.createEmptyBorder(0, 8, 0, 0)
         add(JBLabel("Animation:"))
         add(comboBox)
     }

@@ -5,6 +5,7 @@ import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
 import com.intellij.ui.components.JBCheckBox
+import javax.swing.BorderFactory
 import javax.swing.JComponent
 
 class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
@@ -18,6 +19,7 @@ class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomS
         isSelected = wireframeEnabled
         toolTipText = "Toggle wireframe mode"
         isOpaque = false
+        border = BorderFactory.createEmptyBorder(0, 8, 0, 0)
         addActionListener {
             wireframeEnabled = isSelected
             currentViewer?.toggleWireframe(wireframeEnabled)
