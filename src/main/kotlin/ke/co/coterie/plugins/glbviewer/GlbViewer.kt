@@ -3,6 +3,7 @@ package ke.co.coterie.plugins.glbviewer
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.jcef.JBCefBrowser
+import com.intellij.ui.jcef.JBCefBrowserBase
 import com.intellij.ui.jcef.JBCefJSQuery
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -21,7 +22,7 @@ import java.io.File
 
 class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
 
-    private val animationListQuery = JBCefJSQuery.create(this)
+    private val animationListQuery = JBCefJSQuery.create(this as JBCefBrowserBase)
     @Volatile
     private var isPageReady = false
     private val pendingCommands = mutableListOf<String>()
