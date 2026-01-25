@@ -29,6 +29,7 @@
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.glbviewer.GlbViewerWidgetFactory" id="ke.co.coterie.plugins.glb-viewer.status-bar"/>
         <fileType
                 name="GLB"
                 implementationClass="ke.co.coterie.plugins.glbviewer.GlbFileType"
