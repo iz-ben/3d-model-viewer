@@ -22,8 +22,12 @@ import java.io.File
 class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
 
     private val animationListQuery = JBCefJSQuery.create(this)
+    @Volatile
+    private var isPageReady = false
+    private val pendingCommands = mutableListOf<String>()
 
     init {
+        GlbWireframeWidget.currentViewer = this
         // Set up the animation list callback
         animationListQuery.addHandler { animationsJson ->
             // Parse the JSON array of animation names
@@ -66,6 +70,15 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
                     browser.url,
                     0
                 )
+
+                // Mark page as ready and execute any pending commands
+                isPageReady = true
+                synchronized(pendingCommands) {
+                    pendingCommands.forEach { js ->
+                        browser?.executeJavaScript(js, browser.url, 0)
+                    }
+                    pendingCommands.clear()
+                }
             }
         }, cefBrowser)
 
@@ -110,33 +123,35 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
 
         val url: String = file.url
         val port = GlbApplicationListener.port
-        val serverUrl = "http://localhost:${port}/viewer.html?model=${file.name}"
+        val wireframe = if (GlbWireframeWidget.wireframeEnabled) "true" else "false"
+        val serverUrl = "http://localhost:${port}/viewer.html?model=${file.name}&wireframe=${wireframe}"
         println("url: $url port: $port serverUrl: $serverUrl")
         loadURL(serverUrl)
     }
 
+    private fun executeJavaScript(js: String) {
+        if (isPageReady) {
+            cefBrowser.executeJavaScript(js, cefBrowser.url, 0)
+        } else {
+            synchronized(pendingCommands) {
+                pendingCommands.add(js)
+            }
+        }
+    }
+
     fun toggleWireframe(enabled: Boolean) {
-        cefBrowser.executeJavaScript(
-            "if (window.toggleWireframe) { window.toggleWireframe($enabled); }",
-            cefBrowser.url,
-            0
-        )
+        println("toggleWireframe enabled: $enabled")
+        executeJavaScript("if (window.toggleWireframe) { window.toggleWireframe($enabled); }")
     }
 
     fun toggleAnimation(enabled: Boolean) {
-        cefBrowser.executeJavaScript(
-            "if (window.toggleAnimation) { window.toggleAnimation($enabled); }",
-            cefBrowser.url,
-            0
-        )
+        println("toggleAnimation enabled: $enabled")
+        executeJavaScript("if (window.toggleAnimation) { window.toggleAnimation($enabled); }")
     }
 
     fun selectAnimation(animationName: String) {
-        cefBrowser.executeJavaScript(
-            "if (window.selectAnimation) { window.selectAnimation('$animationName'); }",
-            cefBrowser.url,
-            0
-        )
+        println("selecting animation: $animationName")
+        executeJavaScript("if (window.selectAnimation) { window.selectAnimation('$animationName'); }")
     }
 
     private fun uploadFile() {
@@ -150,7 +165,7 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
 
         val response = client.newCall(request).execute()
 
-        println(response.body?.string())
+        println(response.body.string())
     }
 
 }

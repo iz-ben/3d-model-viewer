@@ -42,13 +42,17 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
         isEnabled = false // Disabled by default until animations are available
         addActionListener {
             val selected = selectedItem as? String
-            if (selected != null && selected.isNotEmpty()) {
+            println("selected animation: $selected")
+            if (selected?.isNotEmpty() == true) {
+                println("Sending selected animation to js: $selected")
                 GlbWireframeWidget.currentViewer?.selectAnimation(selected)
             }
         }
     }
 
-    private val label = JBLabel("Pick animation:")
+    private val label = JBLabel("Pick animation:").apply {
+        isEnabled = false // Disabled by default until animations are available
+    }
 
     private val panel = JPanel(FlowLayout(FlowLayout.LEFT, 4, 0)).apply {
         isOpaque = false

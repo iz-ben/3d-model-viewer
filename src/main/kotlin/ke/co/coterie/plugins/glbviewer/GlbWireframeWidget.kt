@@ -22,6 +22,7 @@ class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomS
         border = BorderFactory.createEmptyBorder(0, 8, 0, 0)
         addActionListener {
             wireframeEnabled = isSelected
+            println("Wireframe mode: $wireframeEnabled")
             currentViewer?.toggleWireframe(wireframeEnabled)
         }
     }
