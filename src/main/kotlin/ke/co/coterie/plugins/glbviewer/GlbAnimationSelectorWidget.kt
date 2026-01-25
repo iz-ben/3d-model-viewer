@@ -1,6 +1,7 @@
 package ke.co.coterie.plugins.glbviewer
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
@@ -8,7 +9,6 @@ import com.intellij.ui.components.JBLabel
 import java.awt.FlowLayout
 import javax.swing.BorderFactory
 import javax.swing.DefaultComboBoxModel
-import javax.swing.JComboBox
 import javax.swing.JComponent
 import javax.swing.JPanel
 
@@ -37,7 +37,7 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
     }
 
     private val comboBoxModel = DefaultComboBoxModel<String>()
-    private val comboBox = JComboBox(comboBoxModel).apply {
+    private val comboBox = ComboBox(comboBoxModel).apply {
         toolTipText = "Select animation to play"
         isEnabled = false // Disabled by default until animations are available
         addActionListener {
@@ -48,7 +48,7 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
         }
     }
 
-    private val label = JBLabel("Animation:")
+    private val label = JBLabel("Pick animation:")
 
     private val panel = JPanel(FlowLayout(FlowLayout.LEFT, 4, 0)).apply {
         isOpaque = false
