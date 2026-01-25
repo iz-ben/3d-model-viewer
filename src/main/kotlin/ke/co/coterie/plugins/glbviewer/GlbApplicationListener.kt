@@ -2,7 +2,6 @@ package ke.co.coterie.plugins.glbviewer
 
 import com.intellij.ide.AppLifecycleListener
 import com.intellij.openapi.util.io.FileUtil
-import com.jetbrains.rd.util.string.print
 import org.apache.commons.io.FileUtils
 
 class GlbApplicationListener: AppLifecycleListener {
@@ -70,7 +69,7 @@ class GlbApplicationListener: AppLifecycleListener {
                         notifyServerReady()
                     }
                 }
-            }.start();
+            }.start()
             println("GLB upload server started.")
             // close the process when the application exits
             Runtime.getRuntime().addShutdownHook(Thread {

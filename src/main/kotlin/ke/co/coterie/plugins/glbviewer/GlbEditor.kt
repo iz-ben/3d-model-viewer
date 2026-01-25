@@ -4,7 +4,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.annotations.Nls
@@ -64,11 +63,11 @@ class GlbEditor(private val project: Project, private val file: VirtualFile) : F
     }
 
     override fun isModified(): Boolean {
-        return false;
+        return false
     }
 
     override fun isValid(): Boolean {
-        return file.isValid;
+        return file.isValid
     }
 
     override fun addPropertyChangeListener(listener: PropertyChangeListener) {

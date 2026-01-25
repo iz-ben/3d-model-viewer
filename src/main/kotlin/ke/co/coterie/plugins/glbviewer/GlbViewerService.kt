@@ -12,7 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile
  * the currently active viewer based on editor selection.
  */
 @Service(Service.Level.PROJECT)
-class GlbViewerService(private val project: Project) : Disposable {
+class GlbViewerService(project: Project) : Disposable {
 
     private val viewersByFile = mutableMapOf<String, GlbViewer>()
     private val viewerChangeListeners = mutableListOf<(VirtualFile?, GlbViewer?) -> Unit>()
@@ -63,13 +63,6 @@ class GlbViewerService(private val project: Project) : Disposable {
     }
 
     /**
-     * Unregister a viewer for a specific file.
-     */
-    fun unregisterViewer(file: VirtualFile) {
-        viewersByFile.remove(file.path)
-    }
-
-    /**
      * Get the viewer for the currently selected GLB file.
      */
     fun getCurrentViewer(): GlbViewer? {
@@ -80,13 +73,6 @@ class GlbViewerService(private val project: Project) : Disposable {
      * Get the currently selected GLB file.
      */
     fun getCurrentFile(): VirtualFile? = currentFile
-
-    /**
-     * Get the viewer for a specific file.
-     */
-    fun getViewerForFile(file: VirtualFile): GlbViewer? {
-        return viewersByFile[file.path]
-    }
 
     /**
      * Add a listener for viewer changes (when user switches between GLB files).
