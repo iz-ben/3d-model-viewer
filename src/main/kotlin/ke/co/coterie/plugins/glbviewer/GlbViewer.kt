@@ -3,6 +3,7 @@ package ke.co.coterie.plugins.glbviewer
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.jcef.JBCefBrowser
+import com.intellij.ui.jcef.JBCefJSQuery
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -15,11 +16,28 @@ import org.cef.callback.CefMenuModel
 import org.cef.callback.CefRunContextMenuCallback
 import org.cef.handler.CefContextMenuHandler
 import org.cef.handler.CefDisplayHandlerAdapter
+import org.cef.handler.CefLoadHandlerAdapter
 import java.io.File
 
 class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
 
+    private val animationListQuery = JBCefJSQuery.create(this)
+
     init {
+        // Set up the animation list callback
+        animationListQuery.addHandler { animationsJson ->
+            // Parse the JSON array of animation names
+            val animations = animationsJson
+                .trim()
+                .removeSurrounding("[", "]")
+                .split(",")
+                .map { it.trim().removeSurrounding("\"") }
+                .filter { it.isNotEmpty() }
+
+            GlbAnimationSelectorWidget.updateAnimations(animations)
+            null
+        }
+
         // Add console message listener to capture JavaScript output
         jbCefClient.addDisplayHandler(object : CefDisplayHandlerAdapter() {
             override fun onConsoleMessage(
@@ -30,6 +48,24 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
                 line: Int): Boolean {
                 println("JS Console [$level] $source:$line - $message")
                 return false
+            }
+        }, cefBrowser)
+
+        // Add load handler to inject the callback function after page loads
+        jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
+            override fun onLoadEnd(browser: CefBrowser?, frame: CefFrame?, httpStatusCode: Int) {
+                // Inject the callback function for sending animation list to Kotlin
+                val jsCallback = animationListQuery.inject("animationsJson")
+                browser?.executeJavaScript(
+                    """
+                    window.sendAnimationListToKotlin = function(animations) {
+                        var animationsJson = JSON.stringify(animations);
+                        $jsCallback
+                    };
+                    """.trimIndent(),
+                    browser.url,
+                    0
+                )
             }
         }, cefBrowser)
 
@@ -82,6 +118,22 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
     fun toggleWireframe(enabled: Boolean) {
         cefBrowser.executeJavaScript(
             "if (window.toggleWireframe) { window.toggleWireframe($enabled); }",
+            cefBrowser.url,
+            0
+        )
+    }
+
+    fun toggleAnimation(enabled: Boolean) {
+        cefBrowser.executeJavaScript(
+            "if (window.toggleAnimation) { window.toggleAnimation($enabled); }",
+            cefBrowser.url,
+            0
+        )
+    }
+
+    fun selectAnimation(animationName: String) {
+        cefBrowser.executeJavaScript(
+            "if (window.selectAnimation) { window.selectAnimation('$animationName'); }",
             cefBrowser.url,
             0
         )
