@@ -9,6 +9,34 @@ class GlbApplicationListener: AppLifecycleListener {
 
     companion object {
         var port = -1
+        @Volatile
+        var isServerReady = false
+            private set
+
+        private val readyCallbacks = mutableListOf<() -> Unit>()
+        private val lock = Any()
+
+        /**
+         * Register a callback to be invoked when the server is ready.
+         * If the server is already ready, the callback is invoked immediately.
+         */
+        fun onServerReady(callback: () -> Unit) {
+            synchronized(lock) {
+                if (isServerReady) {
+                    callback()
+                } else {
+                    readyCallbacks.add(callback)
+                }
+            }
+        }
+
+        private fun notifyServerReady() {
+            synchronized(lock) {
+                isServerReady = true
+                readyCallbacks.forEach { it() }
+                readyCallbacks.clear()
+            }
+        }
     }
 
     override fun appFrameCreated(commandLineArgs: List<String?>) {
@@ -37,6 +65,10 @@ class GlbApplicationListener: AppLifecycleListener {
             Thread {
                 process.inputStream.bufferedReader().lines().forEach { line ->
                     println("GLB Server: $line")
+                    // Detect when Spring Boot server is ready
+                    if (line.contains("Started") || line.contains("Tomcat started on port")) {
+                        notifyServerReady()
+                    }
                 }
             }.start();
             println("GLB upload server started.")
