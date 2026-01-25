@@ -57,11 +57,6 @@
 
         <!-- Application services -->
         <applicationService serviceImplementation="ke.co.coterie.plugins.model3dviewer.Model3DSettings"/>
-        <applicationService serviceImplementation="ke.co.coterie.plugins.model3dviewer.ObjFileTypeRegistrar"/>
-
-        <!-- Project services -->
-        <projectService serviceImplementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerService"/>
-        <projectService serviceImplementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationStateService"/>
 
         <!-- Settings configurable -->
         <applicationConfigurable
