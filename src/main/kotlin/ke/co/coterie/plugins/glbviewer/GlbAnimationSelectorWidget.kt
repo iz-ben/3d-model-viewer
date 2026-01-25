@@ -39,6 +39,7 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
     private val comboBoxModel = DefaultComboBoxModel<String>()
     private val comboBox = JComboBox(comboBoxModel).apply {
         toolTipText = "Select animation to play"
+        isEnabled = false // Disabled by default until animations are available
         addActionListener {
             val selected = selectedItem as? String
             if (selected != null && selected.isNotEmpty()) {
@@ -47,17 +48,22 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
         }
     }
 
+    private val label = JBLabel("Animation:")
+
     private val panel = JPanel(FlowLayout(FlowLayout.LEFT, 4, 0)).apply {
         isOpaque = false
         border = BorderFactory.createEmptyBorder(0, 8, 0, 0)
-        add(JBLabel("Animation:"))
+        add(label)
         add(comboBox)
     }
 
     private val animationUpdateListener: (List<String>) -> Unit = { animationList ->
         comboBoxModel.removeAllElements()
         animationList.forEach { comboBoxModel.addElement(it) }
-        if (animationList.isNotEmpty()) {
+        val hasAnimations = animationList.isNotEmpty()
+        comboBox.isEnabled = hasAnimations
+        label.isEnabled = hasAnimations
+        if (hasAnimations) {
             comboBox.selectedIndex = 0
         }
     }

@@ -19,10 +19,23 @@ class GlbAnimationWidget(project: Project) : EditorBasedWidget(project), CustomS
         toolTipText = "Toggle animation playback"
         isOpaque = false
         border = BorderFactory.createEmptyBorder(0, 8, 0, 0)
+        isEnabled = false // Disabled by default until animations are available
         addActionListener {
             animationEnabled = isSelected
             GlbWireframeWidget.currentViewer?.toggleAnimation(animationEnabled)
         }
+    }
+
+    private val animationUpdateListener: (List<String>) -> Unit = { animationList ->
+        checkbox.isEnabled = animationList.isNotEmpty()
+        if (animationList.isEmpty()) {
+            checkbox.isSelected = false
+            animationEnabled = false
+        }
+    }
+
+    init {
+        GlbAnimationSelectorWidget.addListener(animationUpdateListener)
     }
 
     override fun ID(): String = "GlbViewerAnimationWidget"
@@ -30,4 +43,8 @@ class GlbAnimationWidget(project: Project) : EditorBasedWidget(project), CustomS
     override fun copy(): StatusBarWidget = GlbAnimationWidget(project)
 
     override fun getComponent(): JComponent = checkbox
+
+    override fun dispose() {
+        GlbAnimationSelectorWidget.removeListener(animationUpdateListener)
+    }
 }
