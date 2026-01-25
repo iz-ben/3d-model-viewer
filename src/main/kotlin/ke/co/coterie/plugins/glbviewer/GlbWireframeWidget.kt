@@ -1,33 +1,32 @@
 package ke.co.coterie.plugins.glbviewer
 
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.wm.StatusBar
+import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget
-import com.intellij.util.Consumer
-import java.awt.event.MouseEvent
-import javax.swing.Icon
+import com.intellij.ui.components.JBCheckBox
+import javax.swing.JComponent
 
-class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), StatusBarWidget.TextPresentation {
+class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
 
     companion object {
         var wireframeEnabled = false
         var currentViewer: GlbViewer? = null
     }
 
+    private val checkbox = JBCheckBox("Wireframe").apply {
+        isSelected = wireframeEnabled
+        toolTipText = "Toggle wireframe mode"
+        isOpaque = false
+        addActionListener {
+            wireframeEnabled = isSelected
+            currentViewer?.toggleWireframe(wireframeEnabled)
+        }
+    }
+
     override fun ID(): String = "GlbViewerWireframeWidget"
 
-    override fun getPresentation(): StatusBarWidget.WidgetPresentation = this
+    override fun copy(): StatusBarWidget = GlbWireframeWidget(project)
 
-    override fun getText(): String = if (wireframeEnabled) "[x] Wireframe" else "[  ] Wireframe"
-
-    override fun getAlignment(): Float = 0f
-
-    override fun getTooltipText(): String = "Toggle wireframe mode"
-
-    override fun getClickConsumer(): Consumer<MouseEvent> = Consumer {
-        wireframeEnabled = !wireframeEnabled
-        currentViewer?.toggleWireframe(wireframeEnabled)
-        myStatusBar?.updateWidget(ID())
-    }
+    override fun getComponent(): JComponent = checkbox
 }
