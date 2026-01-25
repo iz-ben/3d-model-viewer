@@ -1,1 +1,1 @@
-rootProject.name = "glb-viewer"
+rootProject.name = "model3d-viewer"
