@@ -1,4 +1,4 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -20,15 +20,15 @@ import org.cef.handler.CefDisplayHandlerAdapter
 import org.cef.handler.CefLoadHandlerAdapter
 import java.io.File
 
-class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
+class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser() {
 
     private val animationListQuery = JBCefJSQuery.create(this as JBCefBrowserBase)
     @Volatile
     private var isPageReady = false
     private val pendingCommands = mutableListOf<String>()
 
-    private val viewerService = GlbViewerService.getInstance(project)
-    private val animationStateService = GlbAnimationStateService.getInstance(project)
+    private val viewerService = Model3DViewerService.getInstance(project)
+    private val animationStateService = Model3DAnimationStateService.getInstance(project)
 
     init {
         // Register this viewer with the service
@@ -56,7 +56,8 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
                 level: org.cef.CefSettings.LogSeverity?,
                 message: String?,
                 source: String?,
-                line: Int): Boolean {
+                line: Int
+            ): Boolean {
                 println("JS Console [$level] $source:$line - $message")
                 return false
             }
@@ -129,8 +130,8 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
         uploadFile()
 
         val url: String = file.url
-        val port = GlbApplicationListener.port
-        val wireframe = if (GlbWireframeWidget.wireframeEnabled) "true" else "false"
+        val port = Model3DApplicationListener.port
+        val wireframe = if (Model3DWireframeWidget.wireframeEnabled) "true" else "false"
         val serverUrl = "http://localhost:${port}/viewer.html?model=${file.name}&wireframe=${wireframe}"
         println("url: $url port: $port serverUrl: $serverUrl")
         loadURL(serverUrl)
@@ -167,7 +168,7 @@ class GlbViewer(val project: Project, val file: VirtualFile): JBCefBrowser() {
         val body = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart(
             "file", file.name, File(file.path).asRequestBody("application/octet-stream".toMediaType())
         ).build()
-        val request = Request.Builder().url("http://localhost:${GlbApplicationListener.port}/api/models/upload")
+        val request = Request.Builder().url("http://localhost:${Model3DApplicationListener.port}/api/models/upload")
             .post(body).build()
 
         val response = client.newCall(request).execute()

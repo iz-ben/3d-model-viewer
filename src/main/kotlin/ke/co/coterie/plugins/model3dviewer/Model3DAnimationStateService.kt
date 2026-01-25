@@ -1,4 +1,4 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
@@ -6,12 +6,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 /**
- * Service that stores animation state per GLB file.
+ * Service that stores animation state per 3D model file.
  * This allows each file to maintain its own list of available animations,
  * selected animation, and playback state.
  */
 @Service(Service.Level.PROJECT)
-class GlbAnimationStateService : Disposable {
+class Model3DAnimationStateService : Disposable {
 
     data class FileAnimationState(
         val availableAnimations: List<String> = emptyList(),
@@ -93,8 +93,8 @@ class GlbAnimationStateService : Disposable {
     }
 
     companion object {
-        fun getInstance(project: Project): GlbAnimationStateService {
-            return project.getService(GlbAnimationStateService::class.java)
+        fun getInstance(project: Project): Model3DAnimationStateService {
+            return project.getService(Model3DAnimationStateService::class.java)
         }
     }
 }

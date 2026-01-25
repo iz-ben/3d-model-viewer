@@ -1,4 +1,4 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileEditor.FileEditor
@@ -14,23 +14,23 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 
-class GlbEditor(private val project: Project, private val file: VirtualFile) : FileEditor, UserDataHolderBase() {
+class Model3DEditor(private val project: Project, private val file: VirtualFile) : FileEditor, UserDataHolderBase() {
 
-    private var glbViewer: GlbViewer? = null
+    private var model3DViewer: Model3DViewer? = null
 
     private val mainPanel = JPanel(BorderLayout()).apply {
         // Show loading message initially
-        add(JLabel("Loading GLB Viewer...", SwingConstants.CENTER), BorderLayout.CENTER)
+        add(JLabel("Loading 3D Model Viewer...", SwingConstants.CENTER), BorderLayout.CENTER)
     }
 
     init {
         // Wait for server to be ready before creating the viewer
-        GlbApplicationListener.onServerReady {
+        Model3DApplicationListener.onServerReady {
             ApplicationManager.getApplication().invokeLater {
                 if (!project.isDisposed && file.isValid) {
-                    glbViewer = GlbViewer(project, file)
+                    model3DViewer = Model3DViewer(project, file)
                     mainPanel.removeAll()
-                    mainPanel.add(glbViewer!!.component, BorderLayout.CENTER)
+                    mainPanel.add(model3DViewer!!.component, BorderLayout.CENTER)
                     mainPanel.revalidate()
                     mainPanel.repaint()
                 }
@@ -39,7 +39,7 @@ class GlbEditor(private val project: Project, private val file: VirtualFile) : F
     }
 
     override fun dispose() {
-        glbViewer?.dispose()
+        model3DViewer?.dispose()
     }
 
     override fun getFile(): VirtualFile {
@@ -51,11 +51,11 @@ class GlbEditor(private val project: Project, private val file: VirtualFile) : F
     }
 
     override fun getPreferredFocusedComponent(): JComponent? {
-        return glbViewer?.component
+        return model3DViewer?.component
     }
 
     override fun getName(): @Nls(capitalization = Nls.Capitalization.Title) String {
-        return "Glb Editor"
+        return "3D Model Editor"
     }
 
     override fun setState(p0: FileEditorState) {

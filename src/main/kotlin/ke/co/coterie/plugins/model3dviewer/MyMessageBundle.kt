@@ -1,4 +1,4 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.Nls

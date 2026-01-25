@@ -1,30 +1,31 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.util.NlsContexts
 import com.intellij.openapi.util.NlsSafe
-import icons.GlbIcon.icon_darkMode
+import icons.Model3DIcon
 import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
-class GlbFileType: LanguageFileType(GlbLanguage.INSTANCE) {
+class ObjFileType private constructor() : LanguageFileType(ObjLanguage.INSTANCE) {
     companion object {
-        val INSTANCE = GlbFileType()
+        @JvmField
+        val INSTANCE = ObjFileType()
     }
+
     override fun getName(): @NonNls String {
-        return "GLB"
+        return "OBJ"
     }
 
     override fun getDescription(): @NlsContexts.Label String {
-        return "Glb Language file"
+        return "OBJ 3D Model file"
     }
 
     override fun getDefaultExtension(): @NlsSafe String {
-        return "glb"
+        return "obj"
     }
 
     override fun getIcon(): Icon {
-        return icon_darkMode
+        return Model3DIcon.objIcon
     }
-
 }

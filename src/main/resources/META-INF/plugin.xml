@@ -1,11 +1,11 @@
 <!-- Plugin Configuration File: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN, cannot be changed between the plugin versions. -->
-    <id>ke.co.coterie.plugins.glb-viewer</id>
+    <id>ke.co.coterie.plugins.model3d-viewer</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>Glb-Viewer</name>
+    <name>3D-Model-Viewer</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor url="https://coterie.ke">Coterie Kenya</vendor>
@@ -13,8 +13,9 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Enter short description for your plugin here.<br>
-        <em>most HTML tags may be used</em>
+        A 3D model viewer plugin for IntelliJ-based IDEs.<br>
+        Supports GLB, GLTF, and optionally OBJ file formats.<br>
+        <em>View and inspect 3D models directly in your IDE.</em>
     ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -22,22 +23,57 @@
     <depends>com.intellij.modules.compose</depends>
 
     <applicationListeners>
-        <listener class="ke.co.coterie.plugins.glbviewer.GlbApplicationListener" topic="com.intellij.ide.AppLifecycleListener"/>
+        <listener class="ke.co.coterie.plugins.model3dviewer.Model3DApplicationListener" topic="com.intellij.ide.AppLifecycleListener"/>
     </applicationListeners>
 
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
+
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.glbviewer.GlbViewerWidgetFactory" id="ke.co.coterie.plugins.glb-viewer.wireframe-status-bar"/>
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.glbviewer.GlbAnimationWidgetFactory" id="ke.co.coterie.plugins.glb-viewer.animation-status-bar"/>
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.glbviewer.GlbAnimationSelectorWidgetFactory" id="ke.co.coterie.plugins.glb-viewer.animation-selector-status-bar"/>
+        <!-- Status bar widgets -->
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.wireframe-status-bar"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.animation-status-bar"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationSelectorWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.animation-selector-status-bar"/>
+
+        <!-- File types - GLB (static registration) -->
         <fileType
                 name="GLB"
-                implementationClass="ke.co.coterie.plugins.glbviewer.GlbFileType"
+                implementationClass="ke.co.coterie.plugins.model3dviewer.Model3DFileType"
                 fieldName="INSTANCE"
-                language="GLB"
+                language="3DModel"
                 extensions="glb"/>
-        <fileEditorProvider implementation="ke.co.coterie.plugins.glbviewer.GlbEditorProvider" />
+
+        <!-- File types - GLTF (static registration) -->
+        <fileType
+                name="GLTF"
+                implementationClass="ke.co.coterie.plugins.model3dviewer.GltfFileType"
+                fieldName="INSTANCE"
+                language="GLTF"
+                extensions="gltf"/>
+
+        <!-- File editor provider for 3D model files -->
+        <fileEditorProvider implementation="ke.co.coterie.plugins.model3dviewer.Model3DEditorProvider"/>
+
+        <!-- Application services -->
+        <applicationService serviceImplementation="ke.co.coterie.plugins.model3dviewer.Model3DSettings"/>
+        <applicationService serviceImplementation="ke.co.coterie.plugins.model3dviewer.ObjFileTypeRegistrar"/>
+
+        <!-- Project services -->
+        <projectService serviceImplementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerService"/>
+        <projectService serviceImplementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationStateService"/>
+
+        <!-- Settings configurable -->
+        <applicationConfigurable
+                parentId="tools"
+                instance="ke.co.coterie.plugins.model3dviewer.Model3DSettingsConfigurable"
+                id="ke.co.coterie.plugins.model3dviewer.settings"
+                displayName="3D Model Viewer"/>
+
+        <!-- Notification group for restart notifications -->
+        <notificationGroup id="Model3DViewer.Notifications" displayType="BALLOON"/>
+
+        <!-- Startup activity to initialize OBJ file type registration -->
+        <postStartupActivity implementation="ke.co.coterie.plugins.model3dviewer.ObjFileTypeStartupActivity"/>
     </extensions>
 </idea-plugin>

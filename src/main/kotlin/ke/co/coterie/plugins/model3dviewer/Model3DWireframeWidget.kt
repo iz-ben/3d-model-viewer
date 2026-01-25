@@ -1,4 +1,4 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -9,13 +9,13 @@ import com.intellij.ui.components.JBCheckBox
 import javax.swing.BorderFactory
 import javax.swing.JComponent
 
-class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
+class Model3DWireframeWidget(project: Project) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
 
     companion object {
         var wireframeEnabled = false
     }
 
-    private val viewerService = GlbViewerService.getInstance(project)
+    private val viewerService = Model3DViewerService.getInstance(project)
 
     private val checkbox = JBCheckBox("Wireframe").apply {
         isSelected = wireframeEnabled
@@ -29,7 +29,7 @@ class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomS
         }
     }
 
-    private val viewerChangeListener: (VirtualFile?, GlbViewer?) -> Unit = { _, viewer ->
+    private val viewerChangeListener: (VirtualFile?, Model3DViewer?) -> Unit = { _, viewer ->
         // Sync wireframe state with the newly selected viewer
         viewer?.toggleWireframe(wireframeEnabled)
     }
@@ -38,9 +38,9 @@ class GlbWireframeWidget(project: Project) : EditorBasedWidget(project), CustomS
         viewerService.addViewerChangeListener(viewerChangeListener)
     }
 
-    override fun ID(): String = "GlbViewerWireframeWidget"
+    override fun ID(): String = "Model3DViewerWireframeWidget"
 
-    override fun copy(): StatusBarWidget = GlbWireframeWidget(project)
+    override fun copy(): StatusBarWidget = Model3DWireframeWidget(project)
 
     override fun getComponent(): JComponent = checkbox
 

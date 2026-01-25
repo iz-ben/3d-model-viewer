@@ -1,10 +1,10 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.ide.AppLifecycleListener
 import com.intellij.openapi.util.io.FileUtil
 import org.apache.commons.io.FileUtils
 
-class GlbApplicationListener: AppLifecycleListener {
+class Model3DApplicationListener : AppLifecycleListener {
 
     companion object {
         var port = -1
@@ -57,23 +57,23 @@ class GlbApplicationListener: AppLifecycleListener {
             val processBuilder = ProcessBuilder(
                 "java", "-jar", serverWarFile.absolutePath, "--server.port=$port"
             )
-            println("Starting GLB upload server...")
+            println("Starting 3D Model upload server...")
 
             val process = processBuilder.start()
             // Print out output stream for debugging in a non-blocking way
             Thread {
                 process.inputStream.bufferedReader().lines().forEach { line ->
-                    println("GLB Server: $line")
+                    println("3D Model Server: $line")
                     // Detect when Spring Boot server is ready
                     if (line.contains("Started") || line.contains("Tomcat started on port")) {
                         notifyServerReady()
                     }
                 }
             }.start()
-            println("GLB upload server started.")
+            println("3D Model upload server started.")
             // close the process when the application exits
             Runtime.getRuntime().addShutdownHook(Thread {
-                println("GLB upload server shut down")
+                println("3D Model upload server shut down")
                 process.destroy()
             })
         } catch (e: Exception) {

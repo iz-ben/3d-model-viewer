@@ -1,4 +1,4 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
@@ -13,10 +13,10 @@ import javax.swing.DefaultComboBoxModel
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
+class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(project), CustomStatusBarWidget, StatusBarWidget.Multiframe {
 
-    private val viewerService = GlbViewerService.getInstance(project)
-    private val animationStateService = GlbAnimationStateService.getInstance(project)
+    private val viewerService = Model3DViewerService.getInstance(project)
+    private val animationStateService = Model3DAnimationStateService.getInstance(project)
 
     private val comboBoxModel = DefaultComboBoxModel<String>()
     private val comboBox = ComboBox(comboBoxModel).apply {
@@ -47,14 +47,14 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
         add(comboBox)
     }
 
-    private val animationStateListener: (VirtualFile, GlbAnimationStateService.FileAnimationState) -> Unit = { file, state ->
+    private val animationStateListener: (VirtualFile, Model3DAnimationStateService.FileAnimationState) -> Unit = { file, state ->
         // Only update if this is the currently active file
         if (viewerService.getCurrentFile()?.path == file.path) {
             updateUIForState(state)
         }
     }
 
-    private val viewerChangeListener: (VirtualFile?, GlbViewer?) -> Unit = { file, viewer ->
+    private val viewerChangeListener: (VirtualFile?, Model3DViewer?) -> Unit = { file, viewer ->
         if (file != null) {
             val state = animationStateService.getState(file)
             updateUIForState(state)
@@ -63,12 +63,12 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
                 viewer?.selectAnimation(animation)
             }
         } else {
-            // No GLB file selected, reset UI
-            updateUIForState(GlbAnimationStateService.FileAnimationState())
+            // No 3D model file selected, reset UI
+            updateUIForState(Model3DAnimationStateService.FileAnimationState())
         }
     }
 
-    private fun updateUIForState(state: GlbAnimationStateService.FileAnimationState) {
+    private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState) {
         comboBoxModel.removeAllElements()
         state.availableAnimations.forEach { comboBoxModel.addElement(it) }
         val hasAnimations = state.availableAnimations.isNotEmpty()
@@ -92,9 +92,9 @@ class GlbAnimationSelectorWidget(project: Project) : EditorBasedWidget(project),
         }
     }
 
-    override fun ID(): String = "GlbViewerAnimationSelectorWidget"
+    override fun ID(): String = "Model3DViewerAnimationSelectorWidget"
 
-    override fun copy(): StatusBarWidget = GlbAnimationSelectorWidget(project)
+    override fun copy(): StatusBarWidget = Model3DAnimationSelectorWidget(project)
 
     override fun getComponent(): JComponent = panel
 

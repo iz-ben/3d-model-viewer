@@ -1,4 +1,4 @@
-package ke.co.coterie.plugins.glbviewer
+package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
@@ -8,14 +8,22 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 /**
- * Service that tracks GlbViewer instances per file and manages
+ * Service that tracks Model3DViewer instances per file and manages
  * the currently active viewer based on editor selection.
  */
 @Service(Service.Level.PROJECT)
-class GlbViewerService(project: Project) : Disposable {
+class Model3DViewerService(project: Project) : Disposable {
 
-    private val viewersByFile = mutableMapOf<String, GlbViewer>()
-    private val viewerChangeListeners = mutableListOf<(VirtualFile?, GlbViewer?) -> Unit>()
+    companion object {
+        private val SUPPORTED_EXTENSIONS = setOf("glb", "gltf", "obj")
+
+        fun getInstance(project: Project): Model3DViewerService {
+            return project.getService(Model3DViewerService::class.java)
+        }
+    }
+
+    private val viewersByFile = mutableMapOf<String, Model3DViewer>()
+    private val viewerChangeListeners = mutableListOf<(VirtualFile?, Model3DViewer?) -> Unit>()
 
     private var currentFile: VirtualFile? = null
     private var messageBusConnection = project.messageBus.connect()
@@ -27,19 +35,19 @@ class GlbViewerService(project: Project) : Disposable {
             object : FileEditorManagerListener {
                 override fun selectionChanged(event: com.intellij.openapi.fileEditor.FileEditorManagerEvent) {
                     val newFile = event.newFile
-                    if (newFile != null && newFile.extension?.lowercase() == "glb") {
+                    if (newFile != null && newFile.extension?.lowercase() in SUPPORTED_EXTENSIONS) {
                         currentFile = newFile
                         val viewer = viewersByFile[newFile.path]
                         notifyViewerChanged(newFile, viewer)
-                    } else if (newFile == null || newFile.extension?.lowercase() != "glb") {
-                        // No GLB file selected
+                    } else if (newFile == null || newFile.extension?.lowercase() !in SUPPORTED_EXTENSIONS) {
+                        // No 3D model file selected
                         currentFile = null
                         notifyViewerChanged(null, null)
                     }
                 }
 
                 override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
-                    if (file.extension?.lowercase() == "glb") {
+                    if (file.extension?.lowercase() in SUPPORTED_EXTENSIONS) {
                         viewersByFile.remove(file.path)
                         if (currentFile?.path == file.path) {
                             currentFile = null
@@ -54,7 +62,7 @@ class GlbViewerService(project: Project) : Disposable {
     /**
      * Register a viewer for a specific file.
      */
-    fun registerViewer(file: VirtualFile, viewer: GlbViewer) {
+    fun registerViewer(file: VirtualFile, viewer: Model3DViewer) {
         viewersByFile[file.path] = viewer
         // If this is the currently active file, notify listeners
         if (currentFile?.path == file.path) {
@@ -63,32 +71,32 @@ class GlbViewerService(project: Project) : Disposable {
     }
 
     /**
-     * Get the viewer for the currently selected GLB file.
+     * Get the viewer for the currently selected 3D model file.
      */
-    fun getCurrentViewer(): GlbViewer? {
+    fun getCurrentViewer(): Model3DViewer? {
         return currentFile?.let { viewersByFile[it.path] }
     }
 
     /**
-     * Get the currently selected GLB file.
+     * Get the currently selected 3D model file.
      */
     fun getCurrentFile(): VirtualFile? = currentFile
 
     /**
-     * Add a listener for viewer changes (when user switches between GLB files).
+     * Add a listener for viewer changes (when user switches between 3D model files).
      */
-    fun addViewerChangeListener(listener: (VirtualFile?, GlbViewer?) -> Unit) {
+    fun addViewerChangeListener(listener: (VirtualFile?, Model3DViewer?) -> Unit) {
         viewerChangeListeners.add(listener)
     }
 
     /**
      * Remove a viewer change listener.
      */
-    fun removeViewerChangeListener(listener: (VirtualFile?, GlbViewer?) -> Unit) {
+    fun removeViewerChangeListener(listener: (VirtualFile?, Model3DViewer?) -> Unit) {
         viewerChangeListeners.remove(listener)
     }
 
-    private fun notifyViewerChanged(file: VirtualFile?, viewer: GlbViewer?) {
+    private fun notifyViewerChanged(file: VirtualFile?, viewer: Model3DViewer?) {
         viewerChangeListeners.forEach { it(file, viewer) }
     }
 
@@ -96,11 +104,5 @@ class GlbViewerService(project: Project) : Disposable {
         messageBusConnection.disconnect()
         viewersByFile.clear()
         viewerChangeListeners.clear()
-    }
-
-    companion object {
-        fun getInstance(project: Project): GlbViewerService {
-            return project.getService(GlbViewerService::class.java)
-        }
     }
 }
