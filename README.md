@@ -63,11 +63,6 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 
 ## Support
 
-ffmpeg -i damaged_helmet.mp4 -vf "fps=10,scale=1080:-1:flags=lanczos" -loop 0 damaged_helmet.gif
-ffmpeg -i littlest_tokyo.mp4 -vf "fps=10,scale=1080:-1:flags=lanczos" -loop 0 littlest_tokyo.gif
-ffmpeg -i robot_expressive.mp4 -vf "fps=10,scale=1080:-1:flags=lanczos" -loop 0 robot_expressive.gif
-
-
 If you find this plugin useful, consider supporting its development:
 
 ☕ [Buy Me a Coffee](https://buymeacoffee.com/coterieke)
