@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "ke.co.coterie.plugins"
-version = "1.0-SNAPSHOT"
+version = providers.gradleProperty("pluginVersion").get()
 
 repositories {
     mavenCentral()
@@ -38,6 +38,12 @@ intellijPlatform {
         changeNotes = """
             Initial version
         """.trimIndent()
+    }
+
+    // JetBrains Marketplace publishing configuration
+    // Uncomment and configure when ready to publish
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
     }
 }
 

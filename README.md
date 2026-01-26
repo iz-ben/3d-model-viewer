@@ -61,6 +61,56 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
   <img src="assets/images/robot_expressive_wireframe.png" alt="Robot Expressive Wireframe"/>
 </div>
 
+## Contributing
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) to automatically determine version bumps and generate changelogs.
+
+### Commit Message Format
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Commit Types
+
+| Type | Description | Version Bump |
+|------|-------------|--------------|
+| `feat:` | A new feature | Minor |
+| `fix:` | A bug fix | Patch |
+| `docs:` | Documentation only changes | None |
+| `style:` | Code style changes (formatting, etc.) | None |
+| `refactor:` | Code refactoring | None |
+| `perf:` | Performance improvements | None |
+| `test:` | Adding or updating tests | None |
+| `chore:` | Maintenance tasks | None |
+
+### Breaking Changes
+
+Add `BREAKING CHANGE:` in the commit footer or `!` after the type to trigger a **major** version bump:
+
+```
+feat!: remove deprecated API endpoints
+
+BREAKING CHANGE: The v1 API has been removed in favor of v2.
+```
+
+### Examples
+
+```bash
+# Patch release (1.0.0 → 1.0.1)
+git commit -m "fix: resolve memory leak in 3D renderer"
+
+# Minor release (1.0.0 → 1.1.0)
+git commit -m "feat: add support for FBX file format"
+
+# Major release (1.0.0 → 2.0.0)
+git commit -m "feat!: redesign plugin settings UI"
+```
+
 ## Support
 
 If you find this plugin useful, consider supporting its development:
