@@ -46,7 +46,7 @@ jobs:
 
       - name: Conventional Changelog Action
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v5
+        uses: TriPSs/conventional-changelog-action@v6
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           version-file: './package.json'
@@ -61,6 +61,22 @@ jobs:
           skip-ci: true
           fallback-version: '1.0.0'
           version-path: 'version'
+          output-file: 'false'
+          create-summary: true
+
+      - name: Debug Changelog Outputs
+        run: |
+          echo "Version: ${{ steps.changelog.outputs.version }}"
+          echo "Tag: ${{ steps.changelog.outputs.tag }}"
+          echo "Skipped: ${{ steps.changelog.outputs.skipped }}"
+
+      - name: Validate Version
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          if [ -z "${{ steps.changelog.outputs.version }}" ]; then
+            echo "Error: Version output is null or empty"
+            exit 1
+          fi
 
       - name: Sync version to gradle.properties
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
