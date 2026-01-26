@@ -1,0 +1,105 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type (leave empty to auto-detect from conventional commits)'
+        required: false
+        default: ''
+        type: choice
+        options:
+          - ''
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version-file: './gradle.properties'
+          version-path: 'pluginVersion'
+          preset: 'conventionalcommits'
+          release-count: 0
+          skip-on-empty: false
+          skip-version-file: false
+          skip-commit: false
+          skip-tag: false
+          git-push: true
+          # Override version bump if manually specified
+          skip-ci: true
+          ${{ inputs.version_bump != '' && format('pre-release: {0}', inputs.version_bump) || '' }}
+
+      - name: Build plugin
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: ./gradlew buildPlugin
+
+      - name: Create GitHub Release
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          name: Release ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+          draft: false
+          prerelease: false
+          files: |
+            build/distributions/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ============================================================
+      # JetBrains Marketplace Publishing (Uncomment when ready)
+      # ============================================================
+      # Prerequisites:
+      # 1. Generate a token at: https://plugins.jetbrains.com/author/me/tokens
+      # 2. Add JETBRAINS_MARKETPLACE_TOKEN as a repository secret
+      # 3. Uncomment the step below
+      # ============================================================
+      # - name: Publish to JetBrains Marketplace
+      #   if: ${{ steps.changelog.outputs.skipped == 'false' }}
+      #   run: ./gradlew publishPlugin
+      #   env:
+      #     PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
+
+      - name: Summary
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.changelog.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ steps.changelog.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.changelog.outputs.clean_changelog }}" >> $GITHUB_STEP_SUMMARY
