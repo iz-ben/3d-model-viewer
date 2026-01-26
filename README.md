@@ -45,15 +45,28 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 
 ## Screenshots & Videos
 
-<!-- TODO: Add screenshots and video links here -->
-<!-- 
-![Screenshot 1](URL_TO_SCREENSHOT_1)
-![Screenshot 2](URL_TO_SCREENSHOT_2)
+## Demo Videos
 
-[Watch Demo Video](URL_TO_VIDEO)
--->
+[![Damaged Helmet Demo Video](assets/videos/damaged_helmet.gif)](assets/videos/damaged_helmet.mp4)
+[![Littlest Tokyo Demo Video](assets/videos/littlest_tokyo.gif)](assets/videos/littlest_tokyo.mp4)
+[![Robot Expressive Demo Video](assets/videos/robot_expressive.gif)](assets/videos/robot_expressive.mp4)
+
+## Screenshots
+<div class="slider">
+  <img src="assets/images/damaged_helmet_wireframe.png" alt="Damaged Helmet Wireframe"/>
+  <img src="assets/images/damaged_helmet_wireframe.png" alt="Damaged Helmet"/>
+  <img src="assets/images/littlest_tokyo.png" alt="Littlest Tokyo"/>
+  <img src="assets/images/littlest_tokyo_wireframe.png" alt="Littlest Tokyo Wireframe"/>
+  <img src="assets/images/robot_expressive.png" alt="Robot Expressive"/>
+  <img src="assets/images/robot_expressive_wireframe.png" alt="Robot Expressive Wireframe"/>
+</div>
 
 ## Support
+
+ffmpeg -i damaged_helmet.mp4 -vf "fps=10,scale=1080:-1:flags=lanczos" -loop 0 damaged_helmet.gif
+ffmpeg -i littlest_tokyo.mp4 -vf "fps=10,scale=1080:-1:flags=lanczos" -loop 0 littlest_tokyo.gif
+ffmpeg -i robot_expressive.mp4 -vf "fps=10,scale=1080:-1:flags=lanczos" -loop 0 robot_expressive.gif
+
 
 If you find this plugin useful, consider supporting its development:
 
