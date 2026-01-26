@@ -60,28 +60,30 @@ jobs:
           git-push: false
           skip-ci: true
           fallback-version: '1.0.0'
-          version-path: 'version'
-          output-file: 'false'
           create-summary: true
 
       - name: Debug Changelog Outputs
         run: |
-          echo "Version: ${{ steps.changelog.outputs.version }}"
-          echo "Tag: ${{ steps.changelog.outputs.tag }}"
-          echo "Skipped: ${{ steps.changelog.outputs.skipped }}"
+          echo "Version: '${{ steps.changelog.outputs.version }}'"
+          echo "Tag: '${{ steps.changelog.outputs.tag }}'"
+          echo "Skipped: '${{ steps.changelog.outputs.skipped }}'"
+          echo "Clean Changelog: '${{ steps.changelog.outputs.clean_changelog }}'"
 
-      - name: Validate Version
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+      - name: Get Version from package.json
+        id: get-version
         run: |
-          if [ -z "${{ steps.changelog.outputs.version }}" ]; then
-            echo "Error: Version output is null or empty"
-            exit 1
-          fi
+          # Read the version from package.json (which was updated by the changelog action)
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v${VERSION}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Resolved version from package.json: $VERSION"
+          echo "Resolved tag: $TAG"
 
       - name: Sync version to gradle.properties
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
-          VERSION=${{ steps.changelog.outputs.version }}
+          VERSION=${{ steps.get-version.outputs.version }}
           sed -i "s/^pluginVersion=.*/pluginVersion=$VERSION/" gradle.properties
           git add gradle.properties
           git commit --amend --no-edit
@@ -95,8 +97,8 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          name: Release ${{ steps.changelog.outputs.tag }}
+          tag_name: ${{ steps.get-version.outputs.tag }}
+          name: Release ${{ steps.get-version.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
           draft: false
           prerelease: false
@@ -124,8 +126,8 @@ jobs:
         run: |
           echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ steps.changelog.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Tag:** ${{ steps.changelog.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.get-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ steps.get-version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Changelog" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.changelog.outputs.clean_changelog }}" >> $GITHUB_STEP_SUMMARY
