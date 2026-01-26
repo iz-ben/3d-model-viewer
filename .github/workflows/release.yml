@@ -51,7 +51,7 @@ jobs:
           version-file: './gradle.properties'
           version-path: 'pluginVersion'
           preset: 'conventionalcommits'
-          config-file-path: '.versionrc'
+          config-file-path: '.versionrc.json'
           release-count: 0
           skip-on-empty: false
           skip-version-file: false
