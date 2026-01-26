@@ -1,8 +1,47 @@
-# Changelog
+##  (2026-01-26)
 
-All notable changes to this project will be documented in this file.
+* add animation widget ([80fdd0e](https://github.com/iz-ben/3d-model-viewer/commit/80fdd0e))
+* Add application listener ([1e681bb](https://github.com/iz-ben/3d-model-viewer/commit/1e681bb))
+* Add application listener ([c157410](https://github.com/iz-ben/3d-model-viewer/commit/c157410))
+* Add demo videos and screenshots ([354a34b](https://github.com/iz-ben/3d-model-viewer/commit/354a34b))
+* Add initial base configuration ([5f5ef5f](https://github.com/iz-ben/3d-model-viewer/commit/5f5ef5f))
+* Add MIT license (#2) ([136f174](https://github.com/iz-ben/3d-model-viewer/commit/136f174)), closes [#2](https://github.com/iz-ben/3d-model-viewer/issues/2)
+* add spacing between widgets ([bc3ec3a](https://github.com/iz-ben/3d-model-viewer/commit/bc3ec3a))
+* add spacing between widgets ([de164d6](https://github.com/iz-ben/3d-model-viewer/commit/de164d6))
+* add wireframe ([886c39d](https://github.com/iz-ben/3d-model-viewer/commit/886c39d))
+* add wireframe ([06e54e7](https://github.com/iz-ben/3d-model-viewer/commit/06e54e7))
+* better debugging ([70e0456](https://github.com/iz-ben/3d-model-viewer/commit/70e0456))
+* change versioning strategy to use package.json to track version (#5) ([550aa87](https://github.com/iz-ben/3d-model-viewer/commit/550aa87)), closes [#5](https://github.com/iz-ben/3d-model-viewer/issues/5)
+* clean up ([4b67065](https://github.com/iz-ben/3d-model-viewer/commit/4b67065))
+* clean up ([5439723](https://github.com/iz-ben/3d-model-viewer/commit/5439723))
+* clean up services imported ([5224f13](https://github.com/iz-ben/3d-model-viewer/commit/5224f13))
+* cleanup ffmpeg commands ([9539102](https://github.com/iz-ben/3d-model-viewer/commit/9539102))
+* fix padding on viewframe ([132cf63](https://github.com/iz-ben/3d-model-viewer/commit/132cf63))
+* fix padding on viewframe ([4e90aa7](https://github.com/iz-ben/3d-model-viewer/commit/4e90aa7))
+* Fix versionrc (#4) ([b108cff](https://github.com/iz-ben/3d-model-viewer/commit/b108cff)), closes [#4](https://github.com/iz-ben/3d-model-viewer/issues/4)
+* fix wireframe and apply wireframe depending on the settings ([7f7ddd4](https://github.com/iz-ben/3d-model-viewer/commit/7f7ddd4))
+* localize display name ([04217ae](https://github.com/iz-ben/3d-model-viewer/commit/04217ae))
+* maintain wireframe states across different files ([c7b544c](https://github.com/iz-ben/3d-model-viewer/commit/c7b544c))
+* maintain wireframe states across different files ([1540425](https://github.com/iz-ben/3d-model-viewer/commit/1540425))
+* provide relative file location to the server to allow accurate directory recreation ([1ceffbd](https://github.com/iz-ben/3d-model-viewer/commit/1ceffbd))
+* run everything from the temp dir to keep from corrupting gradle immutability ([c121f36](https://github.com/iz-ben/3d-model-viewer/commit/c121f36))
+* save gitignore ([d4b07bd](https://github.com/iz-ben/3d-model-viewer/commit/d4b07bd))
+* save multifile upload ([d43b176](https://github.com/iz-ben/3d-model-viewer/commit/d43b176))
+* save progress up to loader ([425ed90](https://github.com/iz-ben/3d-model-viewer/commit/425ed90))
+* save refactor ([4016f54](https://github.com/iz-ben/3d-model-viewer/commit/4016f54))
+* Setup Git workflow for release versioning (#3) ([e5e8c41](https://github.com/iz-ben/3d-model-viewer/commit/e5e8c41)), closes [#3](https://github.com/iz-ben/3d-model-viewer/issues/3)
+* store files in temp location ([a2607bd](https://github.com/iz-ben/3d-model-viewer/commit/a2607bd))
+* update damaged helmet readme reference ([81cb6cb](https://github.com/iz-ben/3d-model-viewer/commit/81cb6cb))
+* Update descriptions ([f6e0f23](https://github.com/iz-ben/3d-model-viewer/commit/f6e0f23))
+* update gradle details ([84937de](https://github.com/iz-ben/3d-model-viewer/commit/84937de))
+* update plugin xml to remove screenshots section (#1) ([4552460](https://github.com/iz-ben/3d-model-viewer/commit/4552460)), closes [#1](https://github.com/iz-ben/3d-model-viewer/issues/1)
+* Update the application listener and server to allow better debugging ([373f738](https://github.com/iz-ben/3d-model-viewer/commit/373f738))
+* update webserver to retain relative path mapping and secure path mapping to protect from exploitatio ([59e51d8](https://github.com/iz-ben/3d-model-viewer/commit/59e51d8))
+* use suggested intellij combo box ([e15baa9](https://github.com/iz-ben/3d-model-viewer/commit/e15baa9))
+* use system temp dir to run the webserver ([53a3c04](https://github.com/iz-ben/3d-model-viewer/commit/53a3c04))
+* Wait for the backend service to get ready before initializing the editor ([617598b](https://github.com/iz-ben/3d-model-viewer/commit/617598b))
+* working loader ([c145845](https://github.com/iz-ben/3d-model-viewer/commit/c145845))
+* working loader ([5b9fbbc](https://github.com/iz-ben/3d-model-viewer/commit/5b9fbbc))
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-This changelog is automatically generated by the release workflow based on [Conventional Commits](https://www.conventionalcommits.org/).
+
