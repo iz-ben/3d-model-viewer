@@ -45,7 +45,8 @@ class Model3DApplicationListener : AppLifecycleListener {
 
     private fun serve3dServer() {
         val serverWar = javaClass.getResourceAsStream("/glbupload-0.0.1-SNAPSHOT.war")
-        val serverTempDir = FileUtil.createTempDirectory("glb-upload-server", null, true)
+        val systemTempDir = java.io.File(System.getProperty("java.io.tmpdir"))
+        val serverTempDir = FileUtil.createTempDirectory(systemTempDir, "glb-upload-server", null, true)
         val serverWarFile = FileUtil.createTempFile(serverTempDir, "glbupload", ".war", true)
         FileUtils.copyInputStreamToFile(serverWar, serverWarFile)
         try {
