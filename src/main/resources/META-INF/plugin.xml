@@ -13,9 +13,67 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        A 3D model viewer plugin for IntelliJ-based IDEs.<br>
-        Supports GLB, GLTF, and optionally OBJ file formats.<br>
-        <em>View and inspect 3D models directly in your IDE.</em>
+<p>View and inspect 3D models directly in your IntelliJ-based IDE.</p>
+
+<h2>Features</h2>
+<ul>
+    <li>View 3D models directly in the editor</li>
+    <li>Wireframe mode toggle via status bar</li>
+    <li>Animation playback controls (play/pause)</li>
+    <li>Animation selector for models with multiple animations</li>
+</ul>
+
+<h2>Supported File Formats</h2>
+<ul>
+    <li><b>GLB</b> — Built-in support, works out of the box</li>
+    <li><b>GLTF</b> — Built-in support, automatically bundles referenced assets (textures, binary files)<br/>
+        <em>⚠️ GLTF support has limited handling for non-self-contained files; external textures may fail to show.</em>
+    </li>
+    <li><b>OBJ</b> — Optional support, enable in <b>Settings → Tools → 3D Model Viewer</b><br/>
+        <em>⚠️ OBJ support is opt-in because other plugins may also register the .obj file extension. Enabling this feature is left to your discretion to avoid potential conflicts. Requires IDE restart after enabling.</em>
+    </li>
+</ul>
+
+<h2>Installation</h2>
+
+<h3>From JetBrains Marketplace</h3>
+<ol>
+    <li>Open <b>Settings</b> → <b>Plugins</b> → <b>Marketplace</b></li>
+    <li>Search for "3D-Model-Viewer"</li>
+    <li>Click <b>Install</b></li>
+    <li>Restart IDE if prompted</li>
+</ol>
+
+<h3>From GitHub Releases</h3>
+<ol>
+    <li>Download the latest .zip file from <a href="https://github.com/iz-ben/3d-model-viewer/releases">GitHub Releases</a></li>
+    <li>Open <b>Settings</b> → <b>Plugins</b></li>
+    <li>Click the ⚙️ icon → <b>Install Plugin from Disk...</b></li>
+    <li>Select the downloaded zip file</li>
+    <li>Restart IDE if prompted</li>
+</ol>
+
+<h2>Usage</h2>
+<ol>
+    <li>Open any supported 3D model file (.glb, .gltf, or .obj if enabled)</li>
+    <li>The model will render in the editor tab</li>
+    <li>Use the status bar widgets at the bottom to toggle <b>Wireframe</b> mode, <b>Play/Pause</b> animations, or select animations</li>
+</ol>
+
+<h2>Screenshots & Videos</h2>
+<!-- TODO: Add screenshots and video links here -->
+<!-- <img src="URL_TO_SCREENSHOT_1" alt="Screenshot 1"/> -->
+<!-- <a href="URL_TO_VIDEO">Watch Demo Video</a> -->
+
+<h2>Support</h2>
+<p>If you find this plugin useful, consider supporting its development:</p>
+<p>☕ <a href="https://buymeacoffee.com/coterieke">Buy Me a Coffee</a></p>
+
+<h2>Links</h2>
+<ul>
+    <li><a href="https://github.com/iz-ben/3d-model-viewer">GitHub Repository</a></li>
+    <li><a href="https://github.com/iz-ben/3d-model-viewer/issues">Report Issues</a></li>
+</ul>
     ]]></description>
 
     <!-- Product and plugin compatibility requirements.
