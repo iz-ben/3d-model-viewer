@@ -121,7 +121,8 @@
                 parentId="tools"
                 instance="ke.co.coterie.plugins.model3dviewer.Model3DSettingsConfigurable"
                 id="ke.co.coterie.plugins.model3dviewer.settings"
-                displayName="3D Model Viewer"/>
+                key="settings.display.name"
+                bundle="messages.MyMessageBundle"/>
 
         <!-- Notification group for restart notifications -->
         <notificationGroup id="Model3DViewer.Notifications" displayType="BALLOON"/>
