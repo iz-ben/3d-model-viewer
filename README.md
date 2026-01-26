@@ -81,12 +81,12 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) t
 |------|-------------|--------------|
 | `feat:` | A new feature | Minor |
 | `fix:` | A bug fix | Patch |
-| `docs:` | Documentation only changes | Patch |
-| `style:` | Code style changes (formatting, etc.) | Patch |
-| `refactor:` | Code refactoring | Patch |
-| `perf:` | Performance improvements | Patch |
-| `test:` | Adding or updating tests | Patch |
-| `chore:` | Maintenance tasks | Patch |
+| `docs:` | Documentation only changes | None |
+| `style:` | Code style changes (formatting, etc.) | None |
+| `refactor:` | Code refactoring | None |
+| `perf:` | Performance improvements | None |
+| `test:` | Adding or updating tests | None |
+| `chore:` | Maintenance tasks | None |
 
 ### Breaking Changes
 
