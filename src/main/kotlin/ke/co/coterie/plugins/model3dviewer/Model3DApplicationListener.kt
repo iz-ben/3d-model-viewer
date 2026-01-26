@@ -56,8 +56,11 @@ class Model3DApplicationListener : AppLifecycleListener {
 
             // Serve the war file
             val processBuilder = ProcessBuilder(
-                "java", "-jar", serverWarFile.absolutePath, "--server.port=$port"
+                "java", "-jar", serverWarFile.absolutePath,
+                "--server.port=$port",
+                "--spring.servlet.multipart.location=${serverTempDir.absolutePath}"
             )
+            processBuilder.directory(serverTempDir)
             println("Starting 3D Model upload server...")
 
             val process = processBuilder.start()
