@@ -63,7 +63,7 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           VERSION=${{ steps.changelog.outputs.version }}
-          sed -i "s/^pluginVersion=.*/pluginVersion=$VERSION/" gradle.properties
+          sed -i "s/^pluginVersion=.*/pluginVersion=$VERSION/" gradle.properties || { echo "Failed to update gradle.properties"; exit 1; }
           git add gradle.properties
           git commit --amend --no-edit
           git push --follow-tags
