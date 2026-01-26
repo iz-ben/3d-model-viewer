@@ -48,8 +48,7 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          version-file: './gradle.properties'
-          version-path: 'pluginVersion'
+          version-file: './package.json'
           preset: 'conventionalcommits'
           config-file-path: '.versionrc.json'
           release-count: 0
@@ -57,8 +56,17 @@ jobs:
           skip-version-file: false
           skip-commit: false
           skip-tag: false
-          git-push: true
+          git-push: false
           skip-ci: true
+
+      - name: Sync version to gradle.properties
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          VERSION=${{ steps.changelog.outputs.version }}
+          sed -i "s/^pluginVersion=.*/pluginVersion=$VERSION/" gradle.properties
+          git add gradle.properties
+          git commit --amend --no-edit
+          git push --follow-tags
 
       - name: Build plugin
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
