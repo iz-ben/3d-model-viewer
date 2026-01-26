@@ -1,5 +1,17 @@
 # Changelog
 
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### 1.0.1 (2026-01-26)
+
+
+### Bug Fixes
+
+* versioning ([#9](https://github.com/iz-ben/3d-model-viewer/issues/9)) ([e3b45e6](https://github.com/iz-ben/3d-model-viewer/commit/e3b45e6ecbfc683bcf6afb62ac4b23edf3f4c322))
+* versioning by using standard ([#11](https://github.com/iz-ben/3d-model-viewer/issues/11)) ([6ce2d3b](https://github.com/iz-ben/3d-model-viewer/commit/6ce2d3ba8742088936df4f6ceda808aabb9f32b3))
+
+# Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
