@@ -17,19 +17,21 @@ object GltfAssetParser {
     private val gson = Gson()
 
     /**
-     * Parses a GLTF file and returns a list of all referenced external asset files.
+     * Parses a GLTF file and returns a list of all referenced external asset files
+     * along with their normalized relative paths.
      *
      * @param gltfFile The GLTF file to parse
-     * @return A list of existing File objects for referenced assets (missing files are logged and skipped)
+     * @return A list of Pairs containing (resolved File, normalized relative path with forward slashes)
+     *         Missing files are logged and skipped.
      */
-    fun parseReferencedAssets(gltfFile: File): List<File> {
+    fun parseReferencedAssets(gltfFile: File): List<Pair<File, String>> {
         if (!gltfFile.exists() || !gltfFile.canRead()) {
             println("GLTF Parser: Cannot read file ${gltfFile.absolutePath}")
             return emptyList()
         }
 
         val parentDir = gltfFile.parentFile
-        val referencedFiles = mutableListOf<File>()
+        val referencedFiles = mutableListOf<Pair<File, String>>()
 
         try {
             val jsonContent = gltfFile.readText()
@@ -79,26 +81,29 @@ object GltfAssetParser {
     }
 
     /**
-     * Resolves a URI to an absolute file path.
+     * Resolves a URI to an absolute file path and returns it with the normalized relative path.
      * Skips data URIs (embedded base64 content) and returns null for missing files.
      *
      * @param uri The URI string from the GLTF file
      * @param parentDir The parent directory of the GLTF file (base for relative paths)
-     * @return The resolved File if it exists, null otherwise
+     * @return A Pair of (resolved File, normalized relative path with forward slashes) if the file exists, null otherwise
      */
-    private fun resolveAssetFile(uri: String, parentDir: File): File? {
+    private fun resolveAssetFile(uri: String, parentDir: File): Pair<File, String>? {
         // Skip data URIs (embedded content)
         if (uri.startsWith("data:")) {
             println("GLTF Parser: Skipping embedded data URI")
             return null
         }
 
+        // Normalize the relative path and ensure forward slashes
+        val normalizedRelativePath = File(uri).toPath().normalize().toString().replace('\\', '/')
+
         // Resolve relative URI against parent directory
         val assetFile = File(parentDir, uri).canonicalFile
 
         return if (assetFile.exists()) {
-            println("GLTF Parser: Found referenced asset: ${assetFile.name}")
-            assetFile
+            println("GLTF Parser: Found referenced asset: ${assetFile.name} (relative path: $normalizedRelativePath)")
+            Pair(assetFile, normalizedRelativePath)
         } else {
             println("GLTF Parser: Warning - Referenced asset not found: $uri (resolved to ${assetFile.absolutePath})")
             null

@@ -201,11 +201,11 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             "files", file.name, gltfFile.asRequestBody("application/octet-stream".toMediaType())
         )
 
-        // Add all referenced assets
-        referencedAssets.forEach { assetFile ->
-            println("GLTF Bundle: Adding asset ${assetFile.name}")
+        // Add all referenced assets with their relative paths
+        referencedAssets.forEach { (assetFile, relativePath) ->
+            println("GLTF Bundle: Adding asset $relativePath")
             bodyBuilder.addFormDataPart(
-                "files", assetFile.name, assetFile.asRequestBody("application/octet-stream".toMediaType())
+                "files", relativePath, assetFile.asRequestBody("application/octet-stream".toMediaType())
             )
         }
 
