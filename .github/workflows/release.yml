@@ -2,20 +2,13 @@ name: Release
 
 on:
   workflow_dispatch:
-    inputs:
-      version_bump:
-        description: 'Version bump type (leave empty to auto-detect from conventional commits)'
-        required: false
-        default: ''
-        type: choice
-        options:
-          - ''
-          - patch
-          - minor
-          - major
 
 permissions:
   contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -66,7 +59,7 @@ jobs:
           git-push: false
           skip-ci: true
           fallback-version: '1.0.0'
-          pre-release: ${{ github.event.inputs.version_bump }}
+          version-path: 'version'
 
       - name: Sync version to gradle.properties
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
