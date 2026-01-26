@@ -65,7 +65,7 @@ jobs:
           VERSION=${{ steps.changelog.outputs.version }}
           sed -i "s/^pluginVersion=.*/pluginVersion=$VERSION/" gradle.properties || { echo "Failed to update gradle.properties"; exit 1; }
           git add gradle.properties
-          git commit --amend --no-edit
+          git commit -m "chore: sync Gradle pluginVersion to ${VERSION}"
           git push --follow-tags
 
       - name: Build plugin
