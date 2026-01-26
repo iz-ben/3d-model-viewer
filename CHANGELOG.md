@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/iz-ben/3d-model-viewer/compare/v1.0.1...v1.0.2) (2026-01-26)
+
+
+### Bug Fixes
+
+* explicitly inlude okhttp as a dependency ([#12](https://github.com/iz-ben/3d-model-viewer/issues/12)) ([35ef319](https://github.com/iz-ben/3d-model-viewer/commit/35ef319767efcf9e503f056060cdac4e465db9b1))
+
 ### 1.0.1 (2026-01-26)
 
 
