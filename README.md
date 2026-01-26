@@ -53,7 +53,7 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 
 ## Screenshots
 <div class="slider">
-  <img src="assets/images/damaged_helmet_wireframe.png" alt="Damaged Helmet Wireframe"/>
+  <img src="assets/images/damaged_helmet.png" alt="Damaged Helmet Wireframe"/>
   <img src="assets/images/damaged_helmet_wireframe.png" alt="Damaged Helmet"/>
   <img src="assets/images/littlest_tokyo.png" alt="Littlest Tokyo"/>
   <img src="assets/images/littlest_tokyo_wireframe.png" alt="Littlest Tokyo Wireframe"/>
