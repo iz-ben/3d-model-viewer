@@ -154,131 +154,7 @@ object GltfAssetParser {
     }
     
     /**
-     * Parses a GLB file and logs/returns its metadata and embedded asset information.
-     *
-     * @param glbFile The GLB file to parse
-     * @return GlbInfo containing metadata and embedded assets, or null if parsing fails
-     */
-    fun parseGlbMetadata(glbFile: File): GlbInfo? {
-        if (!glbFile.exists() || !glbFile.canRead()) {
-            println("GLB Parser: Cannot read file ${glbFile.absolutePath}")
-            return null
-        }
-
-        try {
-            val actualFileSize = glbFile.length()
-            
-            RandomAccessFile(glbFile, "r").use { raf ->
-                // Read 12-byte header
-                val headerBuffer = ByteArray(12)
-                raf.readFully(headerBuffer)
-                val header = ByteBuffer.wrap(headerBuffer).order(ByteOrder.LITTLE_ENDIAN)
-                
-                val magic = header.int
-                if (magic != GLB_MAGIC) {
-                    println("GLB Parser: Invalid GLB magic number in ${glbFile.name}")
-                    return null
-                }
-                
-                val glbVersion = header.int
-                header.int // Skip totalLength from header, use actual file size instead
-                
-                // Read JSON chunk header (8 bytes)
-                val chunkHeaderBuffer = ByteArray(8)
-                raf.readFully(chunkHeaderBuffer)
-                val chunkHeader = ByteBuffer.wrap(chunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
-                
-                val jsonChunkLength = chunkHeader.int
-                val jsonChunkType = chunkHeader.int
-                
-                if (jsonChunkType != GLB_CHUNK_TYPE_JSON) {
-                    println("GLB Parser: First chunk is not JSON in ${glbFile.name}")
-                    return null
-                }
-                
-                // Validate jsonChunkLength to prevent OOM from malformed files
-                val remainingBytes = actualFileSize - 20 // 12-byte header + 8-byte chunk header already read
-                if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) {
-                    println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
-                    return null
-                }
-                
-                // Read JSON chunk data
-                val jsonBytes = ByteArray(jsonChunkLength)
-                raf.readFully(jsonBytes)
-                val jsonContent = String(jsonBytes, Charsets.UTF_8).trimEnd('\u0000', ' ')
-                val gltfJson = gson.fromJson(jsonContent, JsonObject::class.java)
-                
-                // Check for binary chunk
-                var binaryChunkSize: Int? = null
-                if (raf.filePointer < actualFileSize) {
-                    val binChunkHeaderBuffer = ByteArray(8)
-                    if (raf.read(binChunkHeaderBuffer) == 8) {
-                        val binChunkHeader = ByteBuffer.wrap(binChunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
-                        val binChunkLength = binChunkHeader.int
-                        val binChunkType = binChunkHeader.int
-                        if (binChunkType == GLB_CHUNK_TYPE_BIN) {
-                            binaryChunkSize = binChunkLength
-                        }
-                    }
-                }
-                
-                // Extract metadata
-                val metadata = extractMetadata(gltfJson, glbFile.name)
-                
-                // Extract asset counts
-                val meshCount = getArraySize(gltfJson, "meshes")
-                val materialCount = getArraySize(gltfJson, "materials")
-                val textureCount = getArraySize(gltfJson, "textures")
-                val imageCount = getArraySize(gltfJson, "images")
-                val animationCount = getArraySize(gltfJson, "animations")
-                val bufferCount = getArraySize(gltfJson, "buffers")
-                
-                // Extract embedded images info
-                val embeddedImages = extractEmbeddedImages(gltfJson)
-                
-                // TODO: Provide this information via collapsible pane
-                // Log GLB info
-                println("GLB Metadata [${glbFile.name}]:")
-                println("  - GLB Version: $glbVersion")
-                println("  - Total File Size: ${formatBytes(actualFileSize)}")
-                println("  - JSON Chunk Size: ${formatBytes(jsonChunkLength.toLong())}")
-                binaryChunkSize?.let { println("  - Binary Chunk Size: ${formatBytes(it.toLong())}") }
-                println("  - Meshes: $meshCount")
-                println("  - Materials: $materialCount")
-                println("  - Textures: $textureCount")
-                println("  - Images: $imageCount")
-                println("  - Animations: $animationCount")
-                println("  - Buffers: $bufferCount")
-                
-                // Log detailed imported assets
-                extractAndLogImportedAssets(gltfJson, glbFile.name)
-                
-                return GlbInfo(
-                    metadata = metadata,
-                    glbVersion = glbVersion,
-                    totalFileSize = actualFileSize,
-                    jsonChunkSize = jsonChunkLength,
-                    binaryChunkSize = binaryChunkSize,
-                    meshCount = meshCount,
-                    materialCount = materialCount,
-                    textureCount = textureCount,
-                    imageCount = imageCount,
-                    animationCount = animationCount,
-                    bufferCount = bufferCount,
-                    embeddedImages = embeddedImages
-                )
-            }
-        } catch (e: Exception) {
-            println("GLB Parser: Error parsing GLB file ${glbFile.name}: ${e.message}")
-            return null
-        }
-    }
-    
-    /**
      * Parses a GLB file in a single pass, returning both metadata and external asset references.
-     * This is more efficient than calling parseGlbMetadata and parseGlbReferencedAssets separately,
-     * as it only reads and parses the file once.
      *
      * @param glbFile The GLB file to parse
      * @return GlbParseResult containing both GlbInfo and referenced assets
@@ -647,13 +523,15 @@ object GltfAssetParser {
             gson.fromJson(asset.get("extras"), Map::class.java) as? Map<String, Any>
         } else null
 
-        println("GLTF Metadata [$fileName]:")
-        println("  - Version: ${version ?: "N/A"}")
-        println("  - Generator: ${generator ?: "N/A"}")
-        println("  - Copyright: ${copyright ?: "N/A"}")
-        println("  - Min Version: ${minVersion ?: "N/A"}")
-        if (extras != null) {
-            println("  - Extras: $extras")
+        if (debugLogging) {
+            println("GLTF Metadata [$fileName]:")
+            println("  - Version: ${version ?: "N/A"}")
+            println("  - Generator: ${generator ?: "N/A"}")
+            println("  - Copyright: ${copyright ?: "N/A"}")
+            println("  - Min Version: ${minVersion ?: "N/A"}")
+            if (extras != null) {
+                println("  - Extras: $extras")
+            }
         }
 
         return GltfMetadata(version, generator, copyright, minVersion, extras)
@@ -766,86 +644,5 @@ object GltfAssetParser {
             println("GLTF Parser: Warning - Referenced asset not found: $uri (resolved to ${assetFile.absolutePath})")
             null
         }
-    }
-
-    /**
-     * Parses a GLB file and returns a list of all referenced external asset files
-     * along with their normalized relative paths.
-     * 
-     * Unlike self-contained GLB files, some GLB files reference external assets
-     * (images with URIs instead of embedded bufferViews).
-     *
-     * @param glbFile The GLB file to parse
-     * @return A list of Pairs containing (resolved File, normalized relative path with forward slashes)
-     *         Missing files are logged and skipped.
-     */
-    fun parseGlbReferencedAssets(glbFile: File): List<Pair<File, String>> {
-        if (!glbFile.exists() || !glbFile.canRead()) {
-            println("GLB Parser: Cannot read file ${glbFile.absolutePath}")
-            return emptyList()
-        }
-
-        val parentDir = glbFile.parentFile
-        val referencedFiles = mutableListOf<Pair<File, String>>()
-
-        try {
-            val actualFileSize = glbFile.length()
-            
-            RandomAccessFile(glbFile, "r").use { raf ->
-                // Read 12-byte header
-                val headerBuffer = ByteArray(12)
-                raf.readFully(headerBuffer)
-                val header = ByteBuffer.wrap(headerBuffer).order(ByteOrder.LITTLE_ENDIAN)
-                
-                val magic = header.int
-                if (magic != GLB_MAGIC) {
-                    println("GLB Parser: Invalid GLB magic number in ${glbFile.name}")
-                    return emptyList()
-                }
-                
-                header.int // Skip version (not needed for referenced assets)
-                header.int // Skip totalLength from header, use actual file size instead
-                
-                // Read JSON chunk header (8 bytes)
-                val chunkHeaderBuffer = ByteArray(8)
-                raf.readFully(chunkHeaderBuffer)
-                val chunkHeader = ByteBuffer.wrap(chunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
-                
-                val jsonChunkLength = chunkHeader.int
-                val jsonChunkType = chunkHeader.int
-                
-                if (jsonChunkType != GLB_CHUNK_TYPE_JSON) {
-                    println("GLB Parser: First chunk is not JSON in ${glbFile.name}")
-                    return emptyList()
-                }
-                
-                // Validate jsonChunkLength to prevent OOM from malformed files
-                val remainingBytes = actualFileSize - 20 // 12-byte header + 8-byte chunk header already read
-                if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) {
-                    println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
-                    return emptyList()
-                }
-                
-                // Read JSON chunk data
-                val jsonBytes = ByteArray(jsonChunkLength)
-                raf.readFully(jsonBytes)
-                val jsonContent = String(jsonBytes, Charsets.UTF_8).trimEnd('\u0000', ' ')
-                val gltfJson = gson.fromJson(jsonContent, JsonObject::class.java)
-                
-                // Extract buffer URIs (external .bin files)
-                extractUrisFromArray(gltfJson, "buffers").forEach { uri ->
-                    resolveAssetFile(uri, parentDir)?.let { referencedFiles.add(it) }
-                }
-
-                // Extract image URIs (external texture files)
-                extractUrisFromArray(gltfJson, "images").forEach { uri ->
-                    resolveAssetFile(uri, parentDir)?.let { referencedFiles.add(it) }
-                }
-            }
-        } catch (e: Exception) {
-            println("GLB Parser: Error parsing GLB file for references ${glbFile.name}: ${e.message}")
-        }
-
-        return referencedFiles
     }
 }
