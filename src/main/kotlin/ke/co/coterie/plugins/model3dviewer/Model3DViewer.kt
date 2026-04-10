@@ -199,11 +199,9 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
     private fun uploadGlbFile(client: OkHttpClient) {
         val glbFile = File(file.path)
         
-        // Log GLB metadata
-        GltfAssetParser.parseGlbMetadata(glbFile)
-        
-        // Check for external asset references
-        val referencedAssets = GltfAssetParser.parseGlbReferencedAssets(glbFile)
+        // Parse GLB in a single pass - gets both metadata and referenced assets
+        val parseResult = GltfAssetParser.parseGlb(glbFile)
+        val referencedAssets = parseResult.referencedAssets
         
         if (referencedAssets.isEmpty()) {
             // Self-contained GLB - single file upload

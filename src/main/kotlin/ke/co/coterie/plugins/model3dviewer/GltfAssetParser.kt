@@ -28,6 +28,12 @@ object GltfAssetParser {
     private const val GLB_CHUNK_TYPE_BIN = 0x004E4942 // "BIN\0" in little-endian
 
     /**
+     * Debug flag to control verbose metadata logging.
+     * Set to true to enable detailed logging of GLB/GLTF parsing.
+     */
+    var debugLogging = false
+
+    /**
      * Data class representing GLTF/GLB asset metadata.
      */
     data class GltfMetadata(
@@ -56,6 +62,15 @@ object GltfAssetParser {
         val embeddedImages: List<EmbeddedImage>
     )
     
+    /**
+     * Combined result from parsing a GLB file in a single pass.
+     * Contains both metadata and external asset references.
+     */
+    data class GlbParseResult(
+        val info: GlbInfo?,
+        val referencedAssets: List<Pair<File, String>>
+    )
+
     /**
      * Data class representing an embedded image in a GLB file.
      */
@@ -254,6 +269,142 @@ object GltfAssetParser {
         } catch (e: Exception) {
             println("GLB Parser: Error parsing GLB file ${glbFile.name}: ${e.message}")
             return null
+        }
+    }
+    
+    /**
+     * Parses a GLB file in a single pass, returning both metadata and external asset references.
+     * This is more efficient than calling parseGlbMetadata and parseGlbReferencedAssets separately,
+     * as it only reads and parses the file once.
+     *
+     * @param glbFile The GLB file to parse
+     * @return GlbParseResult containing both GlbInfo and referenced assets
+     */
+    fun parseGlb(glbFile: File): GlbParseResult {
+        if (!glbFile.exists() || !glbFile.canRead()) {
+            println("GLB Parser: Cannot read file ${glbFile.absolutePath}")
+            return GlbParseResult(null, emptyList())
+        }
+
+        val parentDir = glbFile.parentFile
+        val referencedFiles = mutableListOf<Pair<File, String>>()
+
+        try {
+            RandomAccessFile(glbFile, "r").use { raf ->
+                // Read 12-byte header
+                val headerBuffer = ByteArray(12)
+                raf.readFully(headerBuffer)
+                val header = ByteBuffer.wrap(headerBuffer).order(ByteOrder.LITTLE_ENDIAN)
+                
+                val magic = header.int
+                if (magic != GLB_MAGIC) {
+                    println("GLB Parser: Invalid GLB magic number in ${glbFile.name}")
+                    return GlbParseResult(null, emptyList())
+                }
+                
+                val glbVersion = header.int
+                val totalLength = header.int
+                
+                // Read JSON chunk header (8 bytes)
+                val chunkHeaderBuffer = ByteArray(8)
+                raf.readFully(chunkHeaderBuffer)
+                val chunkHeader = ByteBuffer.wrap(chunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
+                
+                val jsonChunkLength = chunkHeader.int
+                val jsonChunkType = chunkHeader.int
+                
+                if (jsonChunkType != GLB_CHUNK_TYPE_JSON) {
+                    println("GLB Parser: First chunk is not JSON in ${glbFile.name}")
+                    return GlbParseResult(null, emptyList())
+                }
+                
+                // Validate jsonChunkLength to prevent OOM from malformed files
+                val remainingBytes = totalLength - 20 // 12-byte header + 8-byte chunk header already read
+                if (jsonChunkLength !in 0..remainingBytes) {
+                    println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
+                    return GlbParseResult(null, emptyList())
+                }
+                
+                // Read JSON chunk data
+                val jsonBytes = ByteArray(jsonChunkLength)
+                raf.readFully(jsonBytes)
+                val jsonContent = String(jsonBytes, Charsets.UTF_8).trimEnd('\u0000', ' ')
+                val gltfJson = gson.fromJson(jsonContent, JsonObject::class.java)
+                
+                // Check for binary chunk
+                var binaryChunkSize: Int? = null
+                if (raf.filePointer < totalLength.toLong()) {
+                    val binChunkHeaderBuffer = ByteArray(8)
+                    if (raf.read(binChunkHeaderBuffer) == 8) {
+                        val binChunkHeader = ByteBuffer.wrap(binChunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
+                        val binChunkLength = binChunkHeader.int
+                        val binChunkType = binChunkHeader.int
+                        if (binChunkType == GLB_CHUNK_TYPE_BIN) {
+                            binaryChunkSize = binChunkLength
+                        }
+                    }
+                }
+                
+                // Extract metadata
+                val metadata = extractMetadata(gltfJson, glbFile.name)
+                
+                // Extract asset counts
+                val meshCount = getArraySize(gltfJson, "meshes")
+                val materialCount = getArraySize(gltfJson, "materials")
+                val textureCount = getArraySize(gltfJson, "textures")
+                val imageCount = getArraySize(gltfJson, "images")
+                val animationCount = getArraySize(gltfJson, "animations")
+                val bufferCount = getArraySize(gltfJson, "buffers")
+                
+                // Extract embedded images info
+                val embeddedImages = extractEmbeddedImages(gltfJson)
+                
+                // Log GLB info only when debug logging is enabled
+                if (debugLogging) {
+                    println("GLB Metadata [${glbFile.name}]:")
+                    println("  - GLB Version: $glbVersion")
+                    println("  - Total File Size: ${formatBytes(totalLength.toLong())}")
+                    println("  - JSON Chunk Size: ${formatBytes(jsonChunkLength.toLong())}")
+                    binaryChunkSize?.let { println("  - Binary Chunk Size: ${formatBytes(it.toLong())}") }
+                    println("  - Meshes: $meshCount")
+                    println("  - Materials: $materialCount")
+                    println("  - Textures: $textureCount")
+                    println("  - Images: $imageCount")
+                    println("  - Animations: $animationCount")
+                    println("  - Buffers: $bufferCount")
+                    
+                    // Log detailed imported assets
+                    extractAndLogImportedAssets(gltfJson, glbFile.name)
+                }
+                
+                // Extract external asset references (buffer URIs and image URIs)
+                extractUrisFromArray(gltfJson, "buffers").forEach { uri ->
+                    resolveAssetFile(uri, parentDir)?.let { referencedFiles.add(it) }
+                }
+                extractUrisFromArray(gltfJson, "images").forEach { uri ->
+                    resolveAssetFile(uri, parentDir)?.let { referencedFiles.add(it) }
+                }
+                
+                val glbInfo = GlbInfo(
+                    metadata = metadata,
+                    glbVersion = glbVersion,
+                    totalFileSize = totalLength,
+                    jsonChunkSize = jsonChunkLength,
+                    binaryChunkSize = binaryChunkSize,
+                    meshCount = meshCount,
+                    materialCount = materialCount,
+                    textureCount = textureCount,
+                    imageCount = imageCount,
+                    animationCount = animationCount,
+                    bufferCount = bufferCount,
+                    embeddedImages = embeddedImages
+                )
+                
+                return GlbParseResult(glbInfo, referencedFiles)
+            }
+        } catch (e: Exception) {
+            println("GLB Parser: Error parsing GLB file ${glbFile.name}: ${e.message}")
+            return GlbParseResult(null, emptyList())
         }
     }
     
