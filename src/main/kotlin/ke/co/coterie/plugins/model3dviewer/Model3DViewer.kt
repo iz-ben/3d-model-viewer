@@ -191,8 +191,9 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         val request = Request.Builder().url("http://localhost:${Model3DApplicationListener.port}/api/models/upload")
             .post(body).build()
 
-        val response = client.newCall(request).execute()
-        println(response.body.string())
+        client.newCall(request).execute().use { response ->
+            println(response.body.string())
+        }
     }
 
     private fun uploadGlbFile(client: OkHttpClient) {
@@ -233,8 +234,9 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
                 .post(body)
                 .build()
             
-            val response = client.newCall(request).execute()
-            println(response.body.string())
+            client.newCall(request).execute().use { response ->
+                println(response.body.string())
+            }
         }
     }
 
@@ -269,8 +271,9 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             .post(body)
             .build()
 
-        val response = client.newCall(request).execute()
-        println(response.body.string())
+        client.newCall(request).execute().use { response ->
+            println(response.body.string() ?: "No response body")
+        }
     }
 
 }
