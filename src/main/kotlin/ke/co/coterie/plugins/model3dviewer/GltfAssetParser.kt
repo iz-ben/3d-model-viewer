@@ -179,6 +179,13 @@ object GltfAssetParser {
                     return null
                 }
                 
+                // Validate jsonChunkLength to prevent OOM from malformed files
+                val remainingBytes = totalLength - 20 // 12-byte header + 8-byte chunk header already read
+                if (jsonChunkLength !in 0..remainingBytes) {
+                    println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
+                    return null
+                }
+                
                 // Read JSON chunk data
                 val jsonBytes = ByteArray(jsonChunkLength)
                 raf.readFully(jsonBytes)
@@ -187,7 +194,7 @@ object GltfAssetParser {
                 
                 // Check for binary chunk
                 var binaryChunkSize: Int? = null
-                if (raf.filePointer < totalLength) {
+                if (raf.filePointer < totalLength.toLong()) {
                     val binChunkHeaderBuffer = ByteArray(8)
                     if (raf.read(binChunkHeaderBuffer) == 8) {
                         val binChunkHeader = ByteBuffer.wrap(binChunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
@@ -638,7 +645,7 @@ object GltfAssetParser {
                 
                 // Skip version and totalLength
                 header.int
-                header.int
+                val totalLength = header.int
                 
                 // Read JSON chunk header (8 bytes)
                 val chunkHeaderBuffer = ByteArray(8)
@@ -650,6 +657,13 @@ object GltfAssetParser {
                 
                 if (jsonChunkType != GLB_CHUNK_TYPE_JSON) {
                     println("GLB Parser: First chunk is not JSON in ${glbFile.name}")
+                    return emptyList()
+                }
+                
+                // Validate jsonChunkLength to prevent OOM from malformed files
+                val remainingBytes = totalLength - 20 // 12-byte header + 8-byte chunk header already read
+                if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) {
+                    println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
                     return emptyList()
                 }
                 
