@@ -198,7 +198,7 @@ object GltfAssetParser {
                 
                 // Validate jsonChunkLength to prevent OOM from malformed files
                 val remainingBytes = actualFileSize - 20 // 12-byte header + 8-byte chunk header already read
-                if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) {
+                if (jsonChunkLength < 0 || jsonChunkLength.toLong() > remainingBytes) {
                     println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
                     return null
                 }
