@@ -192,7 +192,7 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             .post(body).build()
 
         val response = client.newCall(request).execute()
-        println(response.body?.string())
+        println(response.body.string())
     }
 
     private fun uploadGlbFile(client: OkHttpClient) {
@@ -234,7 +234,7 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
                 .build()
             
             val response = client.newCall(request).execute()
-            println(response.body?.string())
+            println(response.body.string())
         }
     }
 
@@ -270,7 +270,7 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             .build()
 
         val response = client.newCall(request).execute()
-        println(response.body?.string())
+        println(response.body.string())
     }
 
 }
