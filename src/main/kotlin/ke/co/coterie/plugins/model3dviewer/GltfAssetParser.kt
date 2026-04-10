@@ -566,6 +566,9 @@ object GltfAssetParser {
     /**
      * Resolves a URI to an absolute file path and returns it with the normalized relative path.
      * Skips data URIs (embedded base64 content) and returns null for missing files.
+     * 
+     * Security: Prevents path traversal attacks by ensuring resolved files remain within
+     * the parent directory of the GLTF/GLB file.
      *
      * @param uri The URI string from the GLTF file
      * @param parentDir The parent directory of the GLTF file (base for relative paths)
@@ -583,6 +586,13 @@ object GltfAssetParser {
 
         // Resolve relative URI against parent directory
         val assetFile = File(parentDir, uri).canonicalFile
+        val canonicalParentPath = parentDir.canonicalPath
+
+        // Prevent path traversal outside the parent directory
+        if (!assetFile.canonicalPath.startsWith(canonicalParentPath)) {
+            println("GLTF Parser: Security warning - Blocked path traversal attempt: $uri (resolved to ${assetFile.absolutePath}, outside of $canonicalParentPath)")
+            return null
+        }
 
         return if (assetFile.exists()) {
             println("GLTF Parser: Found referenced asset: ${assetFile.name} (relative path: $normalizedRelativePath)")
