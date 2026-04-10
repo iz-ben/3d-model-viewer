@@ -745,10 +745,12 @@ object GltfAssetParser {
 
         // Resolve relative URI against parent directory
         val assetFile = File(parentDir, uri).canonicalFile
-        val canonicalParentPath = parentDir.canonicalPath
+        val canonicalParentPath = parentDir.canonicalFile.toPath()
 
         // Prevent path traversal outside the parent directory
-        if (!assetFile.canonicalPath.startsWith(canonicalParentPath)) {
+        // Use Path.startsWith() instead of String.startsWith() to properly handle directory boundaries
+        // (e.g., /models vs /models_backup - string check would incorrectly allow /models_backup/*)
+        if (!assetFile.toPath().startsWith(canonicalParentPath)) {
             println("GLTF Parser: Security warning - Blocked path traversal attempt: $uri (resolved to ${assetFile.absolutePath}, outside of $canonicalParentPath)")
             return null
         }
