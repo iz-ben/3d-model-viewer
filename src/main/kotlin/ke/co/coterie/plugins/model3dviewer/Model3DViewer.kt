@@ -168,12 +168,19 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
 
         val fileExtension = file.extension?.lowercase()
 
-        if (fileExtension == "gltf") {
-            // GLTF files may reference external assets - upload as a bundle
-            uploadGltfBundle(client)
-        } else {
-            // GLB and OBJ files are self-contained - single file upload
-            uploadSingleFile(client)
+        when (fileExtension) {
+            "gltf" -> {
+                // GLTF files may reference external assets - upload as a bundle
+                uploadGltfBundle(client)
+            }
+            "glb" -> {
+                // GLB files may also reference external assets - check and upload accordingly
+                uploadGlbFile(client)
+            }
+            else -> {
+                // OBJ and other files - single file upload
+                uploadSingleFile(client)
+            }
         }
     }
 
@@ -184,12 +191,59 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         val request = Request.Builder().url("http://localhost:${Model3DApplicationListener.port}/api/models/upload")
             .post(body).build()
 
-        val response = client.newCall(request).execute()
-        println(response.body?.string())
+        client.newCall(request).execute().use { response ->
+            println(response.body.string())
+        }
+    }
+
+    private fun uploadGlbFile(client: OkHttpClient) {
+        val glbFile = File(file.path)
+        
+        // Parse GLB in a single pass - gets both metadata and referenced assets
+        val parseResult = GltfAssetParser.parseGlb(glbFile)
+        val referencedAssets = parseResult.referencedAssets
+        
+        if (referencedAssets.isEmpty()) {
+            // Self-contained GLB - single file upload
+            println("GLB Upload: Self-contained file, uploading single file")
+            uploadSingleFile(client)
+        } else {
+            // GLB with external references - upload as bundle
+            println("GLB Bundle: Main file + ${referencedAssets.size} referenced assets")
+            
+            val bodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+            
+            // Add the main GLB file
+            bodyBuilder.addFormDataPart(
+                "files", file.name, glbFile.asRequestBody("application/octet-stream".toMediaType())
+            )
+            
+            // Add all referenced assets with their relative paths
+            referencedAssets.forEach { (assetFile, relativePath) ->
+                println("GLB Bundle: Adding asset $relativePath")
+                bodyBuilder.addFormDataPart(
+                    "files", relativePath, assetFile.asRequestBody("application/octet-stream".toMediaType())
+                )
+            }
+            
+            val body = bodyBuilder.build()
+            val request = Request.Builder()
+                .url("http://localhost:${Model3DApplicationListener.port}/api/models/upload/bulk")
+                .post(body)
+                .build()
+            
+            client.newCall(request).execute().use { response ->
+                println(response.body.string())
+            }
+        }
     }
 
     private fun uploadGltfBundle(client: OkHttpClient) {
         val gltfFile = File(file.path)
+        
+        // Log GLTF metadata
+        GltfAssetParser.parseMetadata(gltfFile)
+        
         val referencedAssets = GltfAssetParser.parseReferencedAssets(gltfFile)
 
         println("GLTF Bundle: Main file + ${referencedAssets.size} referenced assets")
@@ -215,8 +269,9 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             .post(body)
             .build()
 
-        val response = client.newCall(request).execute()
-        println(response.body?.string())
+        client.newCall(request).execute().use { response ->
+            println(response.body.string())
+        }
     }
 
 }
