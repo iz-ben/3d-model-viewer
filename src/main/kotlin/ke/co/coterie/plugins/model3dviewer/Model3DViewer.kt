@@ -272,7 +272,7 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             .build()
 
         client.newCall(request).execute().use { response ->
-            println(response.body.string() ?: "No response body")
+            println(response.body.string())
         }
     }
 
