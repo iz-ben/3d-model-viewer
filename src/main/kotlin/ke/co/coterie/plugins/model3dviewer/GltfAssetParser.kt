@@ -235,6 +235,7 @@ object GltfAssetParser {
                 // Extract embedded images info
                 val embeddedImages = extractEmbeddedImages(gltfJson)
                 
+                // TODO: Provide this information via collapsible pane
                 // Log GLB info
                 println("GLB Metadata [${glbFile.name}]:")
                 println("  - GLB Version: $glbVersion")
