@@ -50,7 +50,7 @@ object GltfAssetParser {
     data class GlbInfo(
         val metadata: GltfMetadata?,
         val glbVersion: Int,
-        val totalFileSize: Int,
+        val totalFileSize: Long,
         val jsonChunkSize: Int,
         val binaryChunkSize: Int?,
         val meshCount: Int,
@@ -166,6 +166,8 @@ object GltfAssetParser {
         }
 
         try {
+            val actualFileSize = glbFile.length()
+            
             RandomAccessFile(glbFile, "r").use { raf ->
                 // Read 12-byte header
                 val headerBuffer = ByteArray(12)
@@ -179,7 +181,7 @@ object GltfAssetParser {
                 }
                 
                 val glbVersion = header.int
-                val totalLength = header.int
+                header.int // Skip totalLength from header, use actual file size instead
                 
                 // Read JSON chunk header (8 bytes)
                 val chunkHeaderBuffer = ByteArray(8)
@@ -195,8 +197,8 @@ object GltfAssetParser {
                 }
                 
                 // Validate jsonChunkLength to prevent OOM from malformed files
-                val remainingBytes = totalLength - 20 // 12-byte header + 8-byte chunk header already read
-                if (jsonChunkLength !in 0..remainingBytes) {
+                val remainingBytes = actualFileSize - 20 // 12-byte header + 8-byte chunk header already read
+                if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) {
                     println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
                     return null
                 }
@@ -209,7 +211,7 @@ object GltfAssetParser {
                 
                 // Check for binary chunk
                 var binaryChunkSize: Int? = null
-                if (raf.filePointer < totalLength.toLong()) {
+                if (raf.filePointer < actualFileSize) {
                     val binChunkHeaderBuffer = ByteArray(8)
                     if (raf.read(binChunkHeaderBuffer) == 8) {
                         val binChunkHeader = ByteBuffer.wrap(binChunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
@@ -239,7 +241,7 @@ object GltfAssetParser {
                 // Log GLB info
                 println("GLB Metadata [${glbFile.name}]:")
                 println("  - GLB Version: $glbVersion")
-                println("  - Total File Size: ${formatBytes(totalLength.toLong())}")
+                println("  - Total File Size: ${formatBytes(actualFileSize)}")
                 println("  - JSON Chunk Size: ${formatBytes(jsonChunkLength.toLong())}")
                 binaryChunkSize?.let { println("  - Binary Chunk Size: ${formatBytes(it.toLong())}") }
                 println("  - Meshes: $meshCount")
@@ -255,7 +257,7 @@ object GltfAssetParser {
                 return GlbInfo(
                     metadata = metadata,
                     glbVersion = glbVersion,
-                    totalFileSize = totalLength,
+                    totalFileSize = actualFileSize,
                     jsonChunkSize = jsonChunkLength,
                     binaryChunkSize = binaryChunkSize,
                     meshCount = meshCount,
@@ -291,6 +293,8 @@ object GltfAssetParser {
         val referencedFiles = mutableListOf<Pair<File, String>>()
 
         try {
+            val actualFileSize = glbFile.length()
+            
             RandomAccessFile(glbFile, "r").use { raf ->
                 // Read 12-byte header
                 val headerBuffer = ByteArray(12)
@@ -304,7 +308,7 @@ object GltfAssetParser {
                 }
                 
                 val glbVersion = header.int
-                val totalLength = header.int
+                header.int // Skip totalLength from header, use actual file size instead
                 
                 // Read JSON chunk header (8 bytes)
                 val chunkHeaderBuffer = ByteArray(8)
@@ -320,8 +324,8 @@ object GltfAssetParser {
                 }
                 
                 // Validate jsonChunkLength to prevent OOM from malformed files
-                val remainingBytes = totalLength - 20 // 12-byte header + 8-byte chunk header already read
-                if (jsonChunkLength !in 0..remainingBytes) {
+                val remainingBytes = actualFileSize - 20 // 12-byte header + 8-byte chunk header already read
+                if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) {
                     println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
                     return GlbParseResult(null, emptyList())
                 }
@@ -334,7 +338,7 @@ object GltfAssetParser {
                 
                 // Check for binary chunk
                 var binaryChunkSize: Int? = null
-                if (raf.filePointer < totalLength.toLong()) {
+                if (raf.filePointer < actualFileSize) {
                     val binChunkHeaderBuffer = ByteArray(8)
                     if (raf.read(binChunkHeaderBuffer) == 8) {
                         val binChunkHeader = ByteBuffer.wrap(binChunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
@@ -364,7 +368,7 @@ object GltfAssetParser {
                 if (debugLogging) {
                     println("GLB Metadata [${glbFile.name}]:")
                     println("  - GLB Version: $glbVersion")
-                    println("  - Total File Size: ${formatBytes(totalLength.toLong())}")
+                    println("  - Total File Size: ${formatBytes(actualFileSize)}")
                     println("  - JSON Chunk Size: ${formatBytes(jsonChunkLength.toLong())}")
                     binaryChunkSize?.let { println("  - Binary Chunk Size: ${formatBytes(it.toLong())}") }
                     println("  - Meshes: $meshCount")
@@ -389,7 +393,7 @@ object GltfAssetParser {
                 val glbInfo = GlbInfo(
                     metadata = metadata,
                     glbVersion = glbVersion,
-                    totalFileSize = totalLength,
+                    totalFileSize = actualFileSize,
                     jsonChunkSize = jsonChunkLength,
                     binaryChunkSize = binaryChunkSize,
                     meshCount = meshCount,
@@ -785,6 +789,8 @@ object GltfAssetParser {
         val referencedFiles = mutableListOf<Pair<File, String>>()
 
         try {
+            val actualFileSize = glbFile.length()
+            
             RandomAccessFile(glbFile, "r").use { raf ->
                 // Read 12-byte header
                 val headerBuffer = ByteArray(12)
@@ -797,9 +803,8 @@ object GltfAssetParser {
                     return emptyList()
                 }
                 
-                // Skip version and totalLength
-                header.int
-                val totalLength = header.int
+                header.int // Skip version (not needed for referenced assets)
+                header.int // Skip totalLength from header, use actual file size instead
                 
                 // Read JSON chunk header (8 bytes)
                 val chunkHeaderBuffer = ByteArray(8)
@@ -815,7 +820,7 @@ object GltfAssetParser {
                 }
                 
                 // Validate jsonChunkLength to prevent OOM from malformed files
-                val remainingBytes = totalLength - 20 // 12-byte header + 8-byte chunk header already read
+                val remainingBytes = actualFileSize - 20 // 12-byte header + 8-byte chunk header already read
                 if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) {
                     println("GLB Parser: Invalid JSON chunk length ($jsonChunkLength) in ${glbFile.name}, remaining bytes: $remainingBytes")
                     return emptyList()
