@@ -29,6 +29,16 @@ class Model3DViewerService(project: Project) : Disposable {
     private var messageBusConnection = project.messageBus.connect()
 
     init {
+        // Initialize from the current selection. The service may be created after the
+        // initial editor selection has already happened (e.g. status bar widgets are
+        // created at startup with a 3D model already open), in which case we would
+        // otherwise miss it and report no current file.
+        FileEditorManager.getInstance(project).selectedEditor?.file?.let { file ->
+            if (file.extension?.lowercase() in SUPPORTED_EXTENSIONS) {
+                currentFile = file
+            }
+        }
+
         // Listen for file editor selection changes
         messageBusConnection.subscribe(
             FileEditorManagerListener.FILE_EDITOR_MANAGER,

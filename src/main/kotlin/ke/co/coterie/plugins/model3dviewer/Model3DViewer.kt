@@ -82,6 +82,16 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
                         var animationsJson = JSON.stringify(animations);
                         $jsCallback
                     };
+                    // The model may have finished loading (and fired its 'load' event)
+                    // before this bridge was injected, in which case the page could not
+                    // deliver the animation list. Re-send it now if the model is ready,
+                    // otherwise the page's own 'load' handler will deliver it later.
+                    (function() {
+                        var mv = document.querySelector('model-viewer');
+                        if (mv && mv.availableAnimations && mv.availableAnimations.length > 0) {
+                            window.sendAnimationListToKotlin(mv.availableAnimations);
+                        }
+                    })();
                     """.trimIndent(),
                     browser.url,
                     0
