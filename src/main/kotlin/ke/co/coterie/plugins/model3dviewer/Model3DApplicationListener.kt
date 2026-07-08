@@ -125,13 +125,16 @@ class Model3DApplicationListener : AppLifecycleListener {
             println("Starting 3D Model upload server with $javaExecutable ...")
 
             val process = processBuilder.start()
-            // Print out output stream for debugging in a non-blocking way
+            // Read the server output on a named daemon thread so it can't hold the JVM
+            // open, and close the reader when the process exits.
             Thread {
-                process.inputStream.bufferedReader().lines().forEach { line ->
-                    println("3D Model Server: $line")
-                    // Detect when Spring Boot server is ready
-                    if (line.contains("Started") || line.contains("Tomcat started on port")) {
-                        notifyServerReady()
+                process.inputStream.bufferedReader().use { reader ->
+                    reader.forEachLine { line ->
+                        println("3D Model Server: $line")
+                        // Detect when Spring Boot server is ready
+                        if (line.contains("Started") || line.contains("Tomcat started on port")) {
+                            notifyServerReady()
+                        }
                     }
                 }
                 // The output stream closed, meaning the process exited. If it never
@@ -140,6 +143,9 @@ class Model3DApplicationListener : AppLifecycleListener {
                 if (!isServerReady) {
                     notifyServerFailed("The 3D model viewer server stopped before it was ready.")
                 }
+            }.apply {
+                name = "Model3D-Server-Output"
+                isDaemon = true
             }.start()
 
             // Guard against a server that starts but never becomes ready (e.g. hangs),
@@ -154,6 +160,9 @@ class Model3DApplicationListener : AppLifecycleListener {
                     }
                     notifyServerFailed("The 3D model viewer server did not start within ${SERVER_START_TIMEOUT_SECONDS}s.")
                 }
+            }.apply {
+                name = "Model3D-Server-Startup-Watchdog"
+                isDaemon = true
             }.start()
 
             println("3D Model upload server started.")
