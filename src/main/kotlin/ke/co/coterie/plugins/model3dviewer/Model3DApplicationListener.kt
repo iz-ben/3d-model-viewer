@@ -1,6 +1,7 @@
 package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.ide.AppLifecycleListener
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.io.FileUtil
 import org.apache.commons.io.FileUtils
 import java.util.concurrent.TimeUnit
@@ -9,6 +10,7 @@ class Model3DApplicationListener : AppLifecycleListener {
 
     companion object {
         private const val SERVER_START_TIMEOUT_SECONDS = 60L
+        private val LOG = Logger.getInstance(Model3DApplicationListener::class.java)
 
         var port = -1
         @Volatile
@@ -62,7 +64,7 @@ class Model3DApplicationListener : AppLifecycleListener {
                     listener.onReady()
                 } catch (e: Exception) {
                     // Best-effort: one failing listener must not stop the others.
-                    e.printStackTrace()
+                    LOG.warn("A 3D model viewer server-ready listener threw an exception", e)
                 }
             }
         }
@@ -80,7 +82,7 @@ class Model3DApplicationListener : AppLifecycleListener {
                     listener.onError(message)
                 } catch (e: Exception) {
                     // Best-effort: one failing listener must not stop the others.
-                    e.printStackTrace()
+                    LOG.warn("A 3D model viewer server-error listener threw an exception", e)
                 }
             }
         }
@@ -98,7 +100,8 @@ class Model3DApplicationListener : AppLifecycleListener {
             val systemTempDir = java.io.File(System.getProperty("java.io.tmpdir"))
             val serverTempDir = FileUtil.createTempDirectory(systemTempDir, "glb-upload-server", null, true)
             val serverWarFile = FileUtil.createTempFile(serverTempDir, "glbupload", ".war", true)
-            FileUtils.copyInputStreamToFile(serverWar, serverWarFile)
+            // copyInputStreamToFile does not close the source stream, so close it here.
+            serverWar.use { FileUtils.copyInputStreamToFile(it, serverWarFile) }
 
             // Use ServerSocket to find an available port
             port = java.net.ServerSocket(0).use { it.localPort }
@@ -160,8 +163,9 @@ class Model3DApplicationListener : AppLifecycleListener {
                 process.destroy()
             })
         } catch (e: Exception) {
-            e.printStackTrace()
-            notifyServerFailed("Could not start the 3D model viewer server: $e")
+            LOG.warn("Failed to start the 3D model viewer server", e)
+            val reason = e.message ?: e.javaClass.simpleName
+            notifyServerFailed("Could not start the 3D model viewer server: $reason. See idea.log for details.")
         }
     }
 
