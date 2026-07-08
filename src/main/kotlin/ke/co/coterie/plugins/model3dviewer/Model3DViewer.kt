@@ -46,6 +46,14 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
 
             // Update animations for this specific file
             animationStateService.updateAvailableAnimations(file, animations)
+
+            // The model (and its animations) are now loaded in the viewer, so this is
+            // the correct point to apply the persisted play/pause and selected animation
+            // state. Applying it earlier (on page load) has no effect because the model
+            // hasn't finished loading yet, which left animations always paused on open.
+            val state = animationStateService.getState(file)
+            state.selectedAnimation?.let { selectAnimation(it) }
+            toggleAnimation(state.isPlaying)
             null
         }
 
