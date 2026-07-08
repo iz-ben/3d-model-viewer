@@ -15,8 +15,6 @@ import com.intellij.openapi.vfs.VirtualFile
 class Model3DViewerService(project: Project) : Disposable {
 
     companion object {
-        private val SUPPORTED_EXTENSIONS = setOf("glb", "gltf", "obj")
-
         fun getInstance(project: Project): Model3DViewerService {
             return project.getService(Model3DViewerService::class.java)
         }
@@ -34,7 +32,7 @@ class Model3DViewerService(project: Project) : Disposable {
         // created at startup with a 3D model already open), in which case we would
         // otherwise miss it and report no current file.
         FileEditorManager.getInstance(project).selectedEditor?.file?.let { file ->
-            if (file.extension?.lowercase() in SUPPORTED_EXTENSIONS) {
+            if (Model3DFileSupport.isSupported(file)) {
                 currentFile = file
             }
         }
@@ -45,19 +43,19 @@ class Model3DViewerService(project: Project) : Disposable {
             object : FileEditorManagerListener {
                 override fun selectionChanged(event: com.intellij.openapi.fileEditor.FileEditorManagerEvent) {
                     val newFile = event.newFile
-                    if (newFile != null && newFile.extension?.lowercase() in SUPPORTED_EXTENSIONS) {
+                    if (Model3DFileSupport.isSupported(newFile)) {
                         currentFile = newFile
-                        val viewer = viewersByFile[newFile.path]
+                        val viewer = viewersByFile[newFile!!.path]
                         notifyViewerChanged(newFile, viewer)
-                    } else if (newFile == null || newFile.extension?.lowercase() !in SUPPORTED_EXTENSIONS) {
-                        // No 3D model file selected
+                    } else {
+                        // No supported 3D model file selected
                         currentFile = null
                         notifyViewerChanged(null, null)
                     }
                 }
 
                 override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
-                    if (file.extension?.lowercase() in SUPPORTED_EXTENSIONS) {
+                    if (Model3DFileSupport.isSupported(file)) {
                         viewersByFile.remove(file.path)
                         if (currentFile?.path == file.path) {
                             currentFile = null

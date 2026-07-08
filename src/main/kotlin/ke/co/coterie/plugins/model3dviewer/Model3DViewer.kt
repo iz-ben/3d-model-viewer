@@ -1,5 +1,6 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.google.gson.Gson
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.jcef.JBCefBrowser
@@ -177,7 +178,10 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
 
     fun selectAnimation(animationName: String) {
         println("selecting animation: $animationName")
-        executeJavaScript("if (window.selectAnimation) { window.selectAnimation('$animationName'); }")
+        // JSON-encode the name so quotes/backslashes in animation names produce a valid,
+        // properly escaped JS string literal (prevents broken JS and script injection).
+        val encodedName = Gson().toJson(animationName)
+        executeJavaScript("if (window.selectAnimation) { window.selectAnimation($encodedName); }")
     }
 
     private fun uploadFile() {
