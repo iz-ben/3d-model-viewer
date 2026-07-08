@@ -60,7 +60,13 @@ class Model3DEditor(private val project: Project, private val file: VirtualFile)
     }
 
     private fun String.escapeForHtml(): String =
-        replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            // Preserve line breaks so multi-line errors stay readable in Swing HTML.
+            .replace("\r\n", "<br>")
+            .replace("\n", "<br>")
+            .replace("\r", "<br>")
 
     override fun dispose() {
         model3DViewer?.dispose()

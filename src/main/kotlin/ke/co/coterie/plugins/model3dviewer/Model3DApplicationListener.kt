@@ -92,12 +92,13 @@ class Model3DApplicationListener : AppLifecycleListener {
     }
 
     private fun serve3dServer() {
-        val serverWar = javaClass.getResourceAsStream("/glbupload-0.0.1-SNAPSHOT.war")
-        val systemTempDir = java.io.File(System.getProperty("java.io.tmpdir"))
-        val serverTempDir = FileUtil.createTempDirectory(systemTempDir, "glb-upload-server", null, true)
-        val serverWarFile = FileUtil.createTempFile(serverTempDir, "glbupload", ".war", true)
-        FileUtils.copyInputStreamToFile(serverWar, serverWarFile)
         try {
+            val serverWar = javaClass.getResourceAsStream("/glbupload-0.0.1-SNAPSHOT.war")
+                ?: throw java.io.FileNotFoundException("Bundled server (glbupload-0.0.1-SNAPSHOT.war) was not found in the plugin resources.")
+            val systemTempDir = java.io.File(System.getProperty("java.io.tmpdir"))
+            val serverTempDir = FileUtil.createTempDirectory(systemTempDir, "glb-upload-server", null, true)
+            val serverWarFile = FileUtil.createTempFile(serverTempDir, "glbupload", ".war", true)
+            FileUtils.copyInputStreamToFile(serverWar, serverWarFile)
 
             // Use ServerSocket to find an available port
             port = java.net.ServerSocket(0).use { it.localPort }
