@@ -64,6 +64,8 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
     }
 
     private val viewerChangeListener: (VirtualFile?, Model3DViewer?) -> Unit = { file, viewer ->
+        // Only show this widget while a supported 3D model file is in focus
+        setWidgetVisible(file != null)
         if (file != null) {
             val state = animationStateService.getState(file)
             updateUIForState(state)
@@ -74,6 +76,14 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
         } else {
             // No 3D model file selected, reset UI
             updateUIForState(Model3DAnimationStateService.FileAnimationState())
+        }
+    }
+
+    private fun setWidgetVisible(visible: Boolean) {
+        if (panel.isVisible != visible) {
+            panel.isVisible = visible
+            panel.parent?.revalidate()
+            panel.parent?.repaint()
         }
     }
 
@@ -98,6 +108,8 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
     init {
         animationStateService.addStateChangeListener(animationStateListener)
         viewerService.addViewerChangeListener(viewerChangeListener)
+
+        setWidgetVisible(Model3DFileSupport.isSupportedFileInFocus(project))
 
         // Initialize with current file's state if available
         viewerService.getCurrentFile()?.let { file ->

@@ -79,20 +79,15 @@
         <listener class="ke.co.coterie.plugins.model3dviewer.Model3DApplicationListener" topic="com.intellij.ide.AppLifecycleListener"/>
     </applicationListeners>
 
-    <projectListeners>
-        <listener class="ke.co.coterie.plugins.model3dviewer.Model3DStatusBarUpdater"
-                  topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
-    </projectListeners>
-
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
 
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Status bar widgets -->
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerWidgetFactory" id="Model3DViewerWireframeWidget"/>
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationWidgetFactory" id="Model3DViewerAnimationWidget"/>
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationSelectorWidgetFactory" id="Model3DViewerAnimationSelectorWidget"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.wireframe-status-bar"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.animation-status-bar"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationSelectorWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.animation-selector-status-bar"/>
 
         <!-- File types - GLB (static registration) -->
         <fileType

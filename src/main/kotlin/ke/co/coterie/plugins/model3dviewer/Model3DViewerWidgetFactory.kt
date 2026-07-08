@@ -10,8 +10,7 @@ class Model3DViewerWidgetFactory : StatusBarWidgetFactory {
 
     override fun getDisplayName(): String = "Wireframe Toggle"
 
-    override fun isAvailable(project: Project): Boolean =
-        Model3DFileSupport.isSupportedFileInFocus(project)
+    override fun isAvailable(project: Project): Boolean = true
 
     override fun createWidget(project: Project): StatusBarWidget {
         return Model3DWireframeWidget(project)
