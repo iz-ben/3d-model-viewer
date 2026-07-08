@@ -519,6 +519,7 @@ object GltfAssetParser {
         val generator = asset.get("generator")?.asString
         val copyright = asset.get("copyright")?.asString
         val minVersion = asset.get("minVersion")?.asString
+        @Suppress("UNCHECKED_CAST")
         val extras = if (asset.has("extras") && asset.get("extras").isJsonObject) {
             gson.fromJson(asset.get("extras"), Map::class.java) as? Map<String, Any>
         } else null
