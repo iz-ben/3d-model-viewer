@@ -19,10 +19,16 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
     private val animationStateService = Model3DAnimationStateService.getInstance(project)
 
     private val comboBoxModel = DefaultComboBoxModel<String>()
+
+    // Guards against re-entrancy: programmatic combo box updates (rebuilding the
+    // model / setting the selected item) must not trigger the user-selection logic.
+    private var isUpdating = false
+
     private val comboBox = ComboBox(comboBoxModel).apply {
         toolTipText = "Select animation to play"
         isEnabled = false // Disabled by default until animations are available
         addActionListener {
+            if (isUpdating) return@addActionListener
             val selected = selectedItem as? String
             println("selected animation: $selected")
             if (selected?.isNotEmpty() == true) {
@@ -30,6 +36,9 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
                 val currentFile = viewerService.getCurrentFile()
                 if (currentFile != null) {
                     animationStateService.setSelectedAnimation(currentFile, selected)
+                    // Selecting an animation starts playback in the viewer, so keep
+                    // the play/pause state in sync (turns the toggle on).
+                    animationStateService.setAnimationPlaying(currentFile, true)
                 }
                 viewerService.getCurrentViewer()?.selectAnimation(selected)
             }
@@ -69,15 +78,20 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
     }
 
     private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState) {
-        comboBoxModel.removeAllElements()
-        state.availableAnimations.forEach { comboBoxModel.addElement(it) }
-        val hasAnimations = state.availableAnimations.isNotEmpty()
-        comboBox.isEnabled = hasAnimations
-        label.isEnabled = hasAnimations
-        if (hasAnimations && state.selectedAnimation != null) {
-            comboBox.selectedItem = state.selectedAnimation
-        } else if (hasAnimations) {
-            comboBox.selectedIndex = 0
+        isUpdating = true
+        try {
+            comboBoxModel.removeAllElements()
+            state.availableAnimations.forEach { comboBoxModel.addElement(it) }
+            val hasAnimations = state.availableAnimations.isNotEmpty()
+            comboBox.isEnabled = hasAnimations
+            label.isEnabled = hasAnimations
+            if (hasAnimations && state.selectedAnimation != null) {
+                comboBox.selectedItem = state.selectedAnimation
+            } else if (hasAnimations) {
+                comboBox.selectedIndex = 0
+            }
+        } finally {
+            isUpdating = false
         }
     }
 
