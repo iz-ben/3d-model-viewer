@@ -54,14 +54,23 @@ class Model3DApplicationListener : AppLifecycleListener {
             // Use ServerSocket to find an available port
             port = java.net.ServerSocket(0).use { it.localPort }
 
+            // Launch the bundled server with the IDE's own JVM. Using a bare "java"
+            // command relies on PATH, which fails for GUI apps on macOS (they are
+            // launched without the user's shell PATH), leaving the viewer stuck on
+            // "Loading 3D Model Viewer...". java.home always points at the running
+            // JetBrains Runtime and matches the current architecture (e.g. aarch64).
+            val javaExecutable = resolveJavaExecutable()
+
             // Serve the war file
             val processBuilder = ProcessBuilder(
-                "java", "-jar", serverWarFile.absolutePath,
+                javaExecutable, "-jar", serverWarFile.absolutePath,
                 "--server.port=$port",
                 "--spring.servlet.multipart.location=${serverTempDir.absolutePath}"
             )
             processBuilder.directory(serverTempDir)
-            println("Starting 3D Model upload server...")
+            // Merge stderr into stdout so startup failures surface in the reader below.
+            processBuilder.redirectErrorStream(true)
+            println("Starting 3D Model upload server with $javaExecutable ...")
 
             val process = processBuilder.start()
             // Print out output stream for debugging in a non-blocking way
@@ -83,5 +92,27 @@ class Model3DApplicationListener : AppLifecycleListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    /**
+     * Resolves the `java` executable of the currently running IDE JVM (the JetBrains
+     * Runtime). Falls back to a bare "java" (PATH lookup) only if the expected binary
+     * cannot be found. This avoids depending on the user's shell PATH, which is not
+     * available to GUI applications on macOS.
+     */
+    private fun resolveJavaExecutable(): String {
+        val javaHome = System.getProperty("java.home")
+        if (!javaHome.isNullOrBlank()) {
+            val binName = if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true)) {
+                "java.exe"
+            } else {
+                "java"
+            }
+            val candidate = java.io.File(javaHome, "bin${java.io.File.separator}$binName")
+            if (candidate.canExecute()) {
+                return candidate.absolutePath
+            }
+        }
+        return "java"
     }
 }
