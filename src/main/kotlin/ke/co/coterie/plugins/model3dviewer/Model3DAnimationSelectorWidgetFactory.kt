@@ -10,7 +10,8 @@ class Model3DAnimationSelectorWidgetFactory : StatusBarWidgetFactory {
 
     override fun getDisplayName(): String = "Animation Selector"
 
-    override fun isAvailable(project: Project): Boolean = true
+    override fun isAvailable(project: Project): Boolean =
+        Model3DFileSupport.isSupportedFileInFocus(project)
 
     override fun createWidget(project: Project): StatusBarWidget {
         return Model3DAnimationSelectorWidget(project)
