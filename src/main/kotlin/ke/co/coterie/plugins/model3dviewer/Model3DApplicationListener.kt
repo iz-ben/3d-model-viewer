@@ -57,7 +57,14 @@ class Model3DApplicationListener : AppLifecycleListener {
                 toNotify = listeners.toList()
                 listeners.clear()
             }
-            toNotify.forEach { it.onReady() }
+            toNotify.forEach { listener ->
+                try {
+                    listener.onReady()
+                } catch (e: Exception) {
+                    // Best-effort: one failing listener must not stop the others.
+                    e.printStackTrace()
+                }
+            }
         }
 
         private fun notifyServerFailed(message: String) {
@@ -68,7 +75,14 @@ class Model3DApplicationListener : AppLifecycleListener {
                 toNotify = listeners.toList()
                 listeners.clear()
             }
-            toNotify.forEach { it.onError(message) }
+            toNotify.forEach { listener ->
+                try {
+                    listener.onError(message)
+                } catch (e: Exception) {
+                    // Best-effort: one failing listener must not stop the others.
+                    e.printStackTrace()
+                }
+            }
         }
     }
 
@@ -129,7 +143,11 @@ class Model3DApplicationListener : AppLifecycleListener {
             Thread {
                 if (!process.waitFor(SERVER_START_TIMEOUT_SECONDS, TimeUnit.SECONDS) && !isServerReady) {
                     // Terminate the hung process so it doesn't leak or keep its port bound.
+                    // destroy() is not guaranteed to work, so force-kill if it lingers.
                     process.destroy()
+                    if (!process.waitFor(5, TimeUnit.SECONDS)) {
+                        process.destroyForcibly()
+                    }
                     notifyServerFailed("The 3D model viewer server did not start within ${SERVER_START_TIMEOUT_SECONDS}s.")
                 }
             }.start()
