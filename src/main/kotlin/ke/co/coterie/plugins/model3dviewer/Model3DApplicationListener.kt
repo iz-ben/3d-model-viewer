@@ -30,31 +30,45 @@ class Model3DApplicationListener : AppLifecycleListener {
          * callback is invoked immediately.
          */
         fun onServerReady(onReady: () -> Unit, onError: (String) -> Unit = {}) {
+            val action: () -> Unit
             synchronized(lock) {
-                when {
-                    isServerReady -> onReady()
-                    serverError != null -> onError(serverError!!)
-                    else -> listeners.add(ReadyListener(onReady, onError))
+                action = when {
+                    isServerReady -> onReady
+                    serverError != null -> {
+                        val error = serverError!!
+                        ({ onError(error) })
+                    }
+                    else -> {
+                        listeners.add(ReadyListener(onReady, onError))
+                        return
+                    }
                 }
             }
+            // Invoke outside the lock so a slow or re-entrant callback cannot deadlock
+            // or block other registrations.
+            action()
         }
 
         private fun notifyServerReady() {
+            val toNotify: List<ReadyListener>
             synchronized(lock) {
                 if (isServerReady || serverError != null) return
                 isServerReady = true
-                listeners.forEach { it.onReady() }
+                toNotify = listeners.toList()
                 listeners.clear()
             }
+            toNotify.forEach { it.onReady() }
         }
 
         private fun notifyServerFailed(message: String) {
+            val toNotify: List<ReadyListener>
             synchronized(lock) {
                 if (isServerReady || serverError != null) return
                 serverError = message
-                listeners.forEach { it.onError(message) }
+                toNotify = listeners.toList()
                 listeners.clear()
             }
+            toNotify.forEach { it.onError(message) }
         }
     }
 
@@ -114,6 +128,8 @@ class Model3DApplicationListener : AppLifecycleListener {
             // so editors don't wait indefinitely.
             Thread {
                 if (!process.waitFor(SERVER_START_TIMEOUT_SECONDS, TimeUnit.SECONDS) && !isServerReady) {
+                    // Terminate the hung process so it doesn't leak or keep its port bound.
+                    process.destroy()
                     notifyServerFailed("The 3D model viewer server did not start within ${SERVER_START_TIMEOUT_SECONDS}s.")
                 }
             }.start()
@@ -126,7 +142,7 @@ class Model3DApplicationListener : AppLifecycleListener {
             })
         } catch (e: Exception) {
             e.printStackTrace()
-            notifyServerFailed("Could not start the 3D model viewer server: ${e.message}")
+            notifyServerFailed("Could not start the 3D model viewer server: $e")
         }
     }
 
