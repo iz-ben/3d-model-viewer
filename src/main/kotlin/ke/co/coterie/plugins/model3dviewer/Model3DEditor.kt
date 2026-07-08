@@ -24,19 +24,49 @@ class Model3DEditor(private val project: Project, private val file: VirtualFile)
     }
 
     init {
-        // Wait for server to be ready before creating the viewer
-        Model3DApplicationListener.onServerReady {
-            ApplicationManager.getApplication().invokeLater {
-                if (!project.isDisposed && file.isValid) {
-                    model3DViewer = Model3DViewer(project, file)
-                    mainPanel.removeAll()
-                    mainPanel.add(model3DViewer!!.component, BorderLayout.CENTER)
-                    mainPanel.revalidate()
-                    mainPanel.repaint()
+        // Wait for the bundled server to be ready before creating the viewer, and show
+        // an error instead of hanging on "Loading..." if it fails to start.
+        Model3DApplicationListener.onServerReady(
+            onReady = {
+                ApplicationManager.getApplication().invokeLater {
+                    if (!project.isDisposed && file.isValid) {
+                        model3DViewer = Model3DViewer(project, file)
+                        mainPanel.removeAll()
+                        mainPanel.add(model3DViewer!!.component, BorderLayout.CENTER)
+                        mainPanel.revalidate()
+                        mainPanel.repaint()
+                    }
+                }
+            },
+            onError = { message ->
+                ApplicationManager.getApplication().invokeLater {
+                    if (!project.isDisposed) {
+                        showError(message)
+                    }
                 }
             }
-        }
+        )
     }
+
+    private fun showError(message: String) {
+        val html = "<html><div style='text-align:center'>" +
+            "Failed to load the 3D Model Viewer.<br>" +
+            message.escapeForHtml() +
+            "</div></html>"
+        mainPanel.removeAll()
+        mainPanel.add(JLabel(html, SwingConstants.CENTER), BorderLayout.CENTER)
+        mainPanel.revalidate()
+        mainPanel.repaint()
+    }
+
+    private fun String.escapeForHtml(): String =
+        replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            // Preserve line breaks so multi-line errors stay readable in Swing HTML.
+            .replace("\r\n", "<br>")
+            .replace("\n", "<br>")
+            .replace("\r", "<br>")
 
     override fun dispose() {
         model3DViewer?.dispose()
