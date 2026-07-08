@@ -43,9 +43,9 @@ class Model3DViewerService(project: Project) : Disposable {
             object : FileEditorManagerListener {
                 override fun selectionChanged(event: com.intellij.openapi.fileEditor.FileEditorManagerEvent) {
                     val newFile = event.newFile
-                    if (Model3DFileSupport.isSupported(newFile)) {
+                    if (newFile != null && Model3DFileSupport.isSupported(newFile)) {
                         currentFile = newFile
-                        val viewer = viewersByFile[newFile!!.path]
+                        val viewer = viewersByFile[newFile.path]
                         notifyViewerChanged(newFile, viewer)
                     } else {
                         // No supported 3D model file selected
@@ -55,12 +55,13 @@ class Model3DViewerService(project: Project) : Disposable {
                 }
 
                 override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
-                    if (Model3DFileSupport.isSupported(file)) {
-                        viewersByFile.remove(file.path)
-                        if (currentFile?.path == file.path) {
-                            currentFile = null
-                            notifyViewerChanged(null, null)
-                        }
+                    // Clean up unconditionally: viewer tracking must not depend on the
+                    // current support settings, otherwise toggling OBJ support off while
+                    // an OBJ viewer is open would leak its entry in viewersByFile.
+                    viewersByFile.remove(file.path)
+                    if (currentFile?.path == file.path) {
+                        currentFile = null
+                        notifyViewerChanged(null, null)
                     }
                 }
             }
