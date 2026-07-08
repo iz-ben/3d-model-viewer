@@ -3,37 +3,57 @@ package ke.co.coterie.plugins.model3dviewer
 import com.intellij.ide.AppLifecycleListener
 import com.intellij.openapi.util.io.FileUtil
 import org.apache.commons.io.FileUtils
+import java.util.concurrent.TimeUnit
 
 class Model3DApplicationListener : AppLifecycleListener {
 
     companion object {
+        private const val SERVER_START_TIMEOUT_SECONDS = 60L
+
         var port = -1
         @Volatile
         var isServerReady = false
             private set
 
-        private val readyCallbacks = mutableListOf<() -> Unit>()
+        @Volatile
+        var serverError: String? = null
+            private set
+
+        private data class ReadyListener(val onReady: () -> Unit, val onError: (String) -> Unit)
+
+        private val listeners = mutableListOf<ReadyListener>()
         private val lock = Any()
 
         /**
-         * Register a callback to be invoked when the server is ready.
-         * If the server is already ready, the callback is invoked immediately.
+         * Register callbacks to be invoked when the server becomes ready or fails to
+         * start. If the server is already ready (or already failed), the matching
+         * callback is invoked immediately.
          */
-        fun onServerReady(callback: () -> Unit) {
+        fun onServerReady(onReady: () -> Unit, onError: (String) -> Unit = {}) {
             synchronized(lock) {
-                if (isServerReady) {
-                    callback()
-                } else {
-                    readyCallbacks.add(callback)
+                when {
+                    isServerReady -> onReady()
+                    serverError != null -> onError(serverError!!)
+                    else -> listeners.add(ReadyListener(onReady, onError))
                 }
             }
         }
 
         private fun notifyServerReady() {
             synchronized(lock) {
+                if (isServerReady || serverError != null) return
                 isServerReady = true
-                readyCallbacks.forEach { it() }
-                readyCallbacks.clear()
+                listeners.forEach { it.onReady() }
+                listeners.clear()
+            }
+        }
+
+        private fun notifyServerFailed(message: String) {
+            synchronized(lock) {
+                if (isServerReady || serverError != null) return
+                serverError = message
+                listeners.forEach { it.onError(message) }
+                listeners.clear()
             }
         }
     }
@@ -82,7 +102,22 @@ class Model3DApplicationListener : AppLifecycleListener {
                         notifyServerReady()
                     }
                 }
+                // The output stream closed, meaning the process exited. If it never
+                // signalled readiness, report the failure so waiting editors can react
+                // instead of showing "Loading..." forever.
+                if (!isServerReady) {
+                    notifyServerFailed("The 3D model viewer server stopped before it was ready.")
+                }
             }.start()
+
+            // Guard against a server that starts but never becomes ready (e.g. hangs),
+            // so editors don't wait indefinitely.
+            Thread {
+                if (!process.waitFor(SERVER_START_TIMEOUT_SECONDS, TimeUnit.SECONDS) && !isServerReady) {
+                    notifyServerFailed("The 3D model viewer server did not start within ${SERVER_START_TIMEOUT_SECONDS}s.")
+                }
+            }.start()
+
             println("3D Model upload server started.")
             // close the process when the application exits
             Runtime.getRuntime().addShutdownHook(Thread {
@@ -91,6 +126,7 @@ class Model3DApplicationListener : AppLifecycleListener {
             })
         } catch (e: Exception) {
             e.printStackTrace()
+            notifyServerFailed("Could not start the 3D model viewer server: ${e.message}")
         }
     }
 
