@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/iz-ben/3d-model-viewer/compare/v1.0.2...v1.0.3) (2026-07-08)
+
+
+### Features
+
+* focus panes and animation sync ([#18](https://github.com/iz-ben/3d-model-viewer/issues/18)) ([821154f](https://github.com/iz-ben/3d-model-viewer/commit/821154fccfe14eeec2ca0e9785c0cf33da50e870))
+
+
+### Bug Fixes
+
+* mac viewer server jvm ([#19](https://github.com/iz-ben/3d-model-viewer/issues/19)) ([93d2621](https://github.com/iz-ben/3d-model-viewer/commit/93d2621fcb56577caed9a0cd06db73e2af79587b)), closes [#16](https://github.com/iz-ben/3d-model-viewer/issues/16)
+
 ### [1.0.2](https://github.com/iz-ben/3d-model-viewer/compare/v1.0.1...v1.0.2) (2026-01-26)
 
 
