@@ -10,27 +10,11 @@ import org.jetbrains.annotations.NonNls
 
 class Model3DEditorProvider : FileEditorProvider, DumbAware {
 
-    companion object {
-        private val SUPPORTED_EXTENSIONS = setOf("glb", "gltf")
-    }
-
     override fun accept(
         project: Project,
         file: VirtualFile
     ): Boolean {
-        val extension = file.extension?.lowercase() ?: return false
-
-        // Always accept GLB and GLTF
-        if (extension in SUPPORTED_EXTENSIONS) {
-            return true
-        }
-
-        // Accept OBJ only if enabled in settings
-        if (extension == "obj") {
-            return Model3DSettings.getInstance().state.objSupportEnabled
-        }
-
-        return false
+        return Model3DFileSupport.isSupported(file)
     }
 
     override fun createEditor(

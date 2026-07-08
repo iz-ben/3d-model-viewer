@@ -29,12 +29,23 @@ class Model3DWireframeWidget(project: Project) : EditorBasedWidget(project), Cus
         }
     }
 
-    private val viewerChangeListener: (VirtualFile?, Model3DViewer?) -> Unit = { _, viewer ->
+    private val viewerChangeListener: (VirtualFile?, Model3DViewer?) -> Unit = { file, viewer ->
+        // Only show this widget while a supported 3D model file is in focus
+        setWidgetVisible(file != null)
         // Sync wireframe state with the newly selected viewer
         viewer?.toggleWireframe(wireframeEnabled)
     }
 
+    private fun setWidgetVisible(visible: Boolean) {
+        if (checkbox.isVisible != visible) {
+            checkbox.isVisible = visible
+            checkbox.parent?.revalidate()
+            checkbox.parent?.repaint()
+        }
+    }
+
     init {
+        setWidgetVisible(Model3DFileSupport.isSupportedFileInFocus(project))
         viewerService.addViewerChangeListener(viewerChangeListener)
     }
 
