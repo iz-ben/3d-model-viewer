@@ -1,5 +1,6 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -24,10 +25,20 @@ object Model3DFileSupport {
     }
 
     /**
+     * Resolves the real 3D model file backing a [FileEditor]. For the JSON split editor
+     * ([Model3DTextEditorWithPreview]) the editor's own file is an in-memory JSON file,
+     * so we resolve the model file from the preview side instead.
+     */
+    fun resolveModelFile(editor: FileEditor?): VirtualFile? = when (editor) {
+        is Model3DTextEditorWithPreview -> editor.modelFile
+        else -> editor?.file
+    }
+
+    /**
      * Returns true when the editor currently in focus holds a supported 3D model file.
      */
     fun isSupportedFileInFocus(project: Project): Boolean {
-        val file = FileEditorManager.getInstance(project).selectedEditor?.file
-        return isSupported(file)
+        val editor = FileEditorManager.getInstance(project).selectedEditor
+        return isSupported(resolveModelFile(editor))
     }
 }

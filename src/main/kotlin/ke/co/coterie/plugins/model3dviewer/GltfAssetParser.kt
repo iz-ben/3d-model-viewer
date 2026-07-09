@@ -21,6 +21,7 @@ import java.nio.ByteOrder
 object GltfAssetParser {
 
     private val gson = Gson()
+    private val prettyGson = com.google.gson.GsonBuilder().setPrettyPrinting().create()
     
     // GLB constants
     private const val GLB_MAGIC = 0x46546C67 // "glTF" in little-endian
@@ -142,14 +143,81 @@ object GltfAssetParser {
             val gltfJson = gson.fromJson(jsonContent, JsonObject::class.java)
 
             val metadata = extractMetadata(gltfJson, gltfFile.name)
-            
+
             // Log imported assets
             extractAndLogImportedAssets(gltfJson, gltfFile.name)
-            
+
             return metadata
         } catch (e: Exception) {
             println("GLTF Parser: Error parsing GLTF metadata for ${gltfFile.name}: ${e.message}")
             return null
+        }
+    }
+
+    /**
+     * Returns the glTF JSON of a model as a pretty-printed string, or null if it
+     * cannot be read/parsed. For .gltf files this is the file contents; for .glb
+     * files it is the embedded JSON chunk extracted from the binary container.
+     */
+    fun extractGltfJson(file: File): String? {
+        if (!file.exists() || !file.canRead()) {
+            return null
+        }
+        val rawJson = when (file.extension.lowercase()) {
+            "gltf" -> runCatching { file.readText() }.getOrNull()
+            "glb" -> readGlbJsonChunk(file)
+            else -> null
+        } ?: return null
+
+        return prettyPrintJson(rawJson)
+    }
+
+    /**
+     * Reads the JSON chunk from a GLB (binary glTF) container and returns it as a
+     * string, or null if the file is not a valid GLB or the chunk cannot be read.
+     */
+    private fun readGlbJsonChunk(glbFile: File): String? {
+        return try {
+            val actualFileSize = glbFile.length()
+            RandomAccessFile(glbFile, "r").use { raf ->
+                // 12-byte header: magic, version, total length
+                val headerBuffer = ByteArray(12)
+                raf.readFully(headerBuffer)
+                val header = ByteBuffer.wrap(headerBuffer).order(ByteOrder.LITTLE_ENDIAN)
+                if (header.int != GLB_MAGIC) return null
+                header.int // version
+                header.int // total length (unused)
+
+                // 8-byte JSON chunk header: length, type
+                val chunkHeaderBuffer = ByteArray(8)
+                raf.readFully(chunkHeaderBuffer)
+                val chunkHeader = ByteBuffer.wrap(chunkHeaderBuffer).order(ByteOrder.LITTLE_ENDIAN)
+                val jsonChunkLength = chunkHeader.int
+                if (chunkHeader.int != GLB_CHUNK_TYPE_JSON) return null
+
+                val remainingBytes = actualFileSize - 20
+                if (jsonChunkLength < 0 || jsonChunkLength > remainingBytes) return null
+
+                val jsonBytes = ByteArray(jsonChunkLength)
+                raf.readFully(jsonBytes)
+                String(jsonBytes, Charsets.UTF_8).trimEnd('\u0000', ' ')
+            }
+        } catch (e: Exception) {
+            println("GLB Parser: Error reading JSON chunk for ${glbFile.name}: ${e.message}")
+            null
+        }
+    }
+
+    /**
+     * Pretty-prints a glTF JSON string. Returns the original string unchanged if it
+     * cannot be parsed as JSON, so malformed models still show their raw content.
+     */
+    private fun prettyPrintJson(rawJson: String): String {
+        return try {
+            val element = com.google.gson.JsonParser.parseString(rawJson)
+            prettyGson.toJson(element)
+        } catch (e: Exception) {
+            rawJson
         }
     }
     
