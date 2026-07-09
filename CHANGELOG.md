@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.0.3...v1.1.0) (2026-07-09)
+
+
+### Features
+
+* highlight glTF materials from the JSON caret/selection ([#21](https://github.com/iz-ben/3d-model-viewer/issues/21)) ([c37a9fa](https://github.com/iz-ben/3d-model-viewer/commit/c37a9fa0cf48d4d88b96862ad23f69a1b6891f40))
+* show glTF JSON alongside the 3D model preview ([#20](https://github.com/iz-ben/3d-model-viewer/issues/20)) ([18a1e14](https://github.com/iz-ben/3d-model-viewer/commit/18a1e14faaec6a637b39d0c56d915df3fbacd7b2)), closes [#13](https://github.com/iz-ben/3d-model-viewer/issues/13)
+
 ### [1.0.3](https://github.com/iz-ben/3d-model-viewer/compare/v1.0.2...v1.0.3) (2026-07-08)
 
 
