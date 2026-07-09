@@ -74,6 +74,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.compose</depends>
+    <depends>com.intellij.modules.json</depends>
 
     <applicationListeners>
         <listener class="ke.co.coterie.plugins.model3dviewer.Model3DApplicationListener" topic="com.intellij.ide.AppLifecycleListener"/>

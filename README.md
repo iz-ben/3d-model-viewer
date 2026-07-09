@@ -8,6 +8,9 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 - Wireframe mode toggle via status bar
 - Animation playback controls (play/pause)
 - Animation selector for models with multiple animations
+- glTF JSON view alongside the 3D preview (Markdown-style editor / split / preview toggle)
+- Highlight materials in the model by moving the caret or selecting inside the glTF JSON
+  (works for `materials`, `meshes`, and `nodes` entries)
 
 ## Supported File Formats
 

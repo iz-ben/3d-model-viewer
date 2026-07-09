@@ -58,7 +58,7 @@ class Model3DTextEditorWithPreview(
             if (file.extension?.lowercase() !in JSON_EXTENSIONS) return null
 
             // Present the JSON in a light in-memory file named *.json so it gets JSON
-            // syntax highlighting without depending on the JSON plugin module directly.
+            // syntax highlighting and JSON PSI (used to map the caret to materials).
             val jsonFile = LightVirtualFile("${file.name}.json", LOADING_PLACEHOLDER)
 
             val editor = TextEditorProvider.getInstance().createEditor(project, jsonFile) as? TextEditor
@@ -67,16 +67,28 @@ class Model3DTextEditorWithPreview(
             // populate the document from the background task below.
             (editor.editor as? EditorEx)?.isViewer = true
 
-            loadJsonAsync(project, file, editor)
+            // Highlight the corresponding materials in the 3D preview as the caret moves
+            // or the selection changes. Listeners are disposed together with the editor.
+            val highlightListener = GltfMaterialHighlightListener(project, file, editor.editor)
+            editor.editor.caretModel.addCaretListener(highlightListener, editor)
+            editor.editor.selectionModel.addSelectionListener(highlightListener, editor)
+
+            loadJsonAsync(project, file, editor, highlightListener)
             return editor
         }
 
-        private fun loadJsonAsync(project: Project, file: VirtualFile, editor: TextEditor) {
+        private fun loadJsonAsync(
+            project: Project,
+            file: VirtualFile,
+            editor: TextEditor,
+            highlightListener: GltfMaterialHighlightListener
+        ) {
             ApplicationManager.getApplication().executeOnPooledThread {
-                val text = runCatching { GltfAssetParser.extractGltfJson(File(file.path)) }
-                    .getOrNull()
-                    ?: "// Unable to read glTF JSON for ${file.name}"
+                val json = runCatching { GltfAssetParser.extractGltfJson(File(file.path)) }.getOrNull()
+                val text = json ?: "// Unable to read glTF JSON for ${file.name}"
                 val normalized = StringUtil.convertLineSeparators(text)
+                // Build the material index off-EDT from the same JSON we just read.
+                val materialIndex = json?.let { GltfMaterialIndex.fromJson(it) }
                 ApplicationManager.getApplication().invokeLater(
                     {
                         val ed = editor.editor
@@ -84,6 +96,7 @@ class Model3DTextEditorWithPreview(
                             ApplicationManager.getApplication().runWriteAction {
                                 ed.document.setText(normalized)
                             }
+                            highlightListener.materialIndex = materialIndex
                         }
                     },
                     ModalityState.any()
