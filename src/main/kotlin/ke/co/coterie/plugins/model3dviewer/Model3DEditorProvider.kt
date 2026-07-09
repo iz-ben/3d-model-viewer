@@ -21,7 +21,15 @@ class Model3DEditorProvider : FileEditorProvider, DumbAware {
         project: Project,
         file: VirtualFile
     ): FileEditor {
-        return Model3DEditor(project, file)
+        val preview = Model3DEditor(project, file)
+        // Show the glTF JSON next to the 3D preview (editor/split/preview toggle).
+        // Fall back to a preview-only editor if the JSON cannot be extracted.
+        val jsonEditor = Model3DTextEditorWithPreview.createJsonTextEditor(project, file)
+        return if (jsonEditor != null) {
+            Model3DTextEditorWithPreview(jsonEditor, preview)
+        } else {
+            preview
+        }
     }
 
     override fun getEditorTypeId(): @NonNls String {

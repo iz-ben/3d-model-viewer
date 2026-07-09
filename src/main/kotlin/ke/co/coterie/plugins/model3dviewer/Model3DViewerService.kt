@@ -31,7 +31,8 @@ class Model3DViewerService(project: Project) : Disposable {
         // initial editor selection has already happened (e.g. status bar widgets are
         // created at startup with a 3D model already open), in which case we would
         // otherwise miss it and report no current file.
-        FileEditorManager.getInstance(project).selectedEditor?.file?.let { file ->
+        FileEditorManager.getInstance(project).selectedEditor?.let { editor ->
+            val file = Model3DFileSupport.resolveModelFile(editor)
             if (Model3DFileSupport.isSupported(file)) {
                 currentFile = file
             }
@@ -42,7 +43,7 @@ class Model3DViewerService(project: Project) : Disposable {
             FileEditorManagerListener.FILE_EDITOR_MANAGER,
             object : FileEditorManagerListener {
                 override fun selectionChanged(event: com.intellij.openapi.fileEditor.FileEditorManagerEvent) {
-                    val newFile = event.newFile
+                    val newFile = Model3DFileSupport.resolveModelFile(event.newEditor)
                     if (newFile != null && Model3DFileSupport.isSupported(newFile)) {
                         currentFile = newFile
                         val viewer = viewersByFile[newFile.path]
