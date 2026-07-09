@@ -88,6 +88,11 @@ class Model3DViewerService(project: Project) : Disposable {
     }
 
     /**
+     * Get the viewer registered for a specific file, regardless of the current selection.
+     */
+    fun getViewerForFile(file: VirtualFile): Model3DViewer? = viewersByFile[file.path]
+
+    /**
      * Get the currently selected 3D model file.
      */
     fun getCurrentFile(): VirtualFile? = currentFile

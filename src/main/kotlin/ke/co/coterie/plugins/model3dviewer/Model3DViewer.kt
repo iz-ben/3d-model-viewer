@@ -184,6 +184,16 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         executeJavaScript("if (window.selectAnimation) { window.selectAnimation($encodedName); }")
     }
 
+    fun highlightMaterials(indices: List<Int>) {
+        // JSON-encode the index array so it is always a valid JS literal (e.g. [0,2,5]).
+        val encoded = Gson().toJson(indices)
+        executeJavaScript("if (window.highlightMaterials) { window.highlightMaterials($encoded); }")
+    }
+
+    fun clearHighlight() {
+        executeJavaScript("if (window.clearMaterialHighlight) { window.clearMaterialHighlight(); }")
+    }
+
     private fun uploadFile() {
         val client = OkHttpClient()
         println("Virtual File path : ${file.path}")

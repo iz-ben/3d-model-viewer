@@ -26,6 +26,10 @@ dependencies {
         // Add plugin dependencies for compilation here:
         // implementation("com.google.code.gson:gson:2.10.1")
 
+        // Bundled JSON support — needed for JSON PSI (com.intellij.json.psi) used to map
+        // caret/selection in the glTF JSON to the corresponding materials.
+        bundledPlugin("com.intellij.modules.json")
+
         composeUI()
 
     }
