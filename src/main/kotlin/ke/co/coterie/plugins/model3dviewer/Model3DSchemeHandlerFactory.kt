@@ -49,7 +49,7 @@ class Model3DSchemeHandlerFactory : CefSchemeHandlerFactory {
             val file = Model3DAssetRegistry.resolve(token, relPath)
             if (file == null || !Files.isRegularFile(file)) return notFound()
             return try {
-                Model3DResourceHandler(Files.readAllBytes(file), mimeFor(relPath))
+                Model3DResourceHandler.file(file, mimeFor(relPath))
             } catch (e: Exception) {
                 LOG.warn("Failed to read model asset: $file", e)
                 notFound()
@@ -63,11 +63,10 @@ class Model3DSchemeHandlerFactory : CefSchemeHandlerFactory {
         }
         val bytes = javaClass.getResourceAsStream(resourcePath)?.use { it.readBytes() }
             ?: return notFound()
-        return Model3DResourceHandler(bytes, mimeFor(resourcePath))
+        return Model3DResourceHandler.bytes(bytes, mimeFor(resourcePath))
     }
 
-    private fun notFound(): CefResourceHandler =
-        Model3DResourceHandler(null, "text/plain")
+    private fun notFound(): CefResourceHandler = Model3DResourceHandler.notFound()
 
     companion object {
         const val VIEWER_HOST = "model3dviewer.localhost"
