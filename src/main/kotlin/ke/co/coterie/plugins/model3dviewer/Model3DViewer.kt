@@ -6,11 +6,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.jcef.JBCefBrowser
 import com.intellij.ui.jcef.JBCefBrowserBase
 import com.intellij.ui.jcef.JBCefJSQuery
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.callback.CefContextMenuParams
@@ -19,7 +14,7 @@ import org.cef.callback.CefRunContextMenuCallback
 import org.cef.handler.CefContextMenuHandler
 import org.cef.handler.CefDisplayHandlerAdapter
 import org.cef.handler.CefLoadHandlerAdapter
-import java.io.File
+import java.nio.file.Paths
 
 class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser() {
 
@@ -30,6 +25,10 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
 
     private val viewerService = Model3DViewerService.getInstance(project)
     private val animationStateService = Model3DAnimationStateService.getInstance(project)
+
+    // Token that grants the bundled viewer app access to this model's directory
+    // (for the model file and its relative assets). Released on dispose.
+    private val assetToken: String
 
     init {
         // Register this viewer with the service
@@ -83,16 +82,12 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
                         var animationsJson = JSON.stringify(animations);
                         $jsCallback
                     };
-                    // The model may have finished loading (and fired its 'load' event)
-                    // before this bridge was injected, in which case the page could not
-                    // deliver the animation list. Re-send it now if the model is ready,
-                    // otherwise the page's own 'load' handler will deliver it later.
-                    (function() {
-                        var mv = document.querySelector('model-viewer');
-                        if (mv && mv.availableAnimations && mv.availableAnimations.length > 0) {
-                            window.sendAnimationListToKotlin(mv.availableAnimations);
-                        }
-                    })();
+                    // The model may have finished loading (and published its animation
+                    // list) before this bridge was injected. The viewer app stashes the
+                    // latest list on window.__model3dAnimations, so re-deliver it now.
+                    if (window.__model3dAnimations) {
+                        window.sendAnimationListToKotlin(window.__model3dAnimations);
+                    }
                     """.trimIndent(),
                     browser.url,
                     0
@@ -146,13 +141,20 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             }
         }, cefBrowser)
 
-        uploadFile()
+        // Serve the bundled viewer app + this model (and its relative assets) over
+        // the plugin's synthetic origin — no external server or upload required.
+        Model3DSchemeHandlerFactory.ensureRegistered()
 
-        val url: String = file.url
-        val port = Model3DApplicationListener.port
-        val wireframe = if (Model3DWireframeWidget.wireframeEnabled) "true" else "false"
-        val serverUrl = "http://localhost:${port}/viewer.html?model=${file.name}&wireframe=${wireframe}"
-        println("url: $url port: $port serverUrl: $serverUrl")
+        val modelPath = Paths.get(file.path)
+        assetToken = Model3DAssetRegistry.register(modelPath)
+        val wireframe = Model3DWireframeWidget.wireframeEnabled
+        val serverUrl = Model3DSchemeHandlerFactory.viewerUrl(
+            assetToken,
+            modelPath.fileName.toString(),
+            wireframe,
+            Model3DAutoRotateWidget.autoRotateEnabled
+        )
+        println("Loading 3D viewer: $serverUrl (file: ${file.path})")
         loadURL(serverUrl)
     }
 
@@ -169,6 +171,11 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
     fun toggleWireframe(enabled: Boolean) {
         println("toggleWireframe enabled: $enabled")
         executeJavaScript("if (window.toggleWireframe) { window.toggleWireframe($enabled); }")
+    }
+
+    fun toggleAutoRotate(enabled: Boolean) {
+        println("toggleAutoRotate enabled: $enabled")
+        executeJavaScript("if (window.toggleAutoRotate) { window.toggleAutoRotate($enabled); }")
     }
 
     fun toggleAnimation(enabled: Boolean) {
@@ -194,116 +201,8 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         executeJavaScript("if (window.clearMaterialHighlight) { window.clearMaterialHighlight(); }")
     }
 
-    private fun uploadFile() {
-        val client = OkHttpClient()
-        println("Virtual File path : ${file.path}")
-
-        val fileExtension = file.extension?.lowercase()
-
-        when (fileExtension) {
-            "gltf" -> {
-                // GLTF files may reference external assets - upload as a bundle
-                uploadGltfBundle(client)
-            }
-            "glb" -> {
-                // GLB files may also reference external assets - check and upload accordingly
-                uploadGlbFile(client)
-            }
-            else -> {
-                // OBJ and other files - single file upload
-                uploadSingleFile(client)
-            }
-        }
+    override fun dispose() {
+        Model3DAssetRegistry.unregister(assetToken)
+        super.dispose()
     }
-
-    private fun uploadSingleFile(client: OkHttpClient) {
-        val body = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart(
-            "file", file.name, File(file.path).asRequestBody("application/octet-stream".toMediaType())
-        ).build()
-        val request = Request.Builder().url("http://localhost:${Model3DApplicationListener.port}/api/models/upload")
-            .post(body).build()
-
-        client.newCall(request).execute().use { response ->
-            println(response.body.string())
-        }
-    }
-
-    private fun uploadGlbFile(client: OkHttpClient) {
-        val glbFile = File(file.path)
-        
-        // Parse GLB in a single pass - gets both metadata and referenced assets
-        val parseResult = GltfAssetParser.parseGlb(glbFile)
-        val referencedAssets = parseResult.referencedAssets
-        
-        if (referencedAssets.isEmpty()) {
-            // Self-contained GLB - single file upload
-            println("GLB Upload: Self-contained file, uploading single file")
-            uploadSingleFile(client)
-        } else {
-            // GLB with external references - upload as bundle
-            println("GLB Bundle: Main file + ${referencedAssets.size} referenced assets")
-            
-            val bodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
-            
-            // Add the main GLB file
-            bodyBuilder.addFormDataPart(
-                "files", file.name, glbFile.asRequestBody("application/octet-stream".toMediaType())
-            )
-            
-            // Add all referenced assets with their relative paths
-            referencedAssets.forEach { (assetFile, relativePath) ->
-                println("GLB Bundle: Adding asset $relativePath")
-                bodyBuilder.addFormDataPart(
-                    "files", relativePath, assetFile.asRequestBody("application/octet-stream".toMediaType())
-                )
-            }
-            
-            val body = bodyBuilder.build()
-            val request = Request.Builder()
-                .url("http://localhost:${Model3DApplicationListener.port}/api/models/upload/bulk")
-                .post(body)
-                .build()
-            
-            client.newCall(request).execute().use { response ->
-                println(response.body.string())
-            }
-        }
-    }
-
-    private fun uploadGltfBundle(client: OkHttpClient) {
-        val gltfFile = File(file.path)
-        
-        // Log GLTF metadata
-        GltfAssetParser.parseMetadata(gltfFile)
-        
-        val referencedAssets = GltfAssetParser.parseReferencedAssets(gltfFile)
-
-        println("GLTF Bundle: Main file + ${referencedAssets.size} referenced assets")
-
-        val bodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
-
-        // Add the main GLTF file
-        bodyBuilder.addFormDataPart(
-            "files", file.name, gltfFile.asRequestBody("application/octet-stream".toMediaType())
-        )
-
-        // Add all referenced assets with their relative paths
-        referencedAssets.forEach { (assetFile, relativePath) ->
-            println("GLTF Bundle: Adding asset $relativePath")
-            bodyBuilder.addFormDataPart(
-                "files", relativePath, assetFile.asRequestBody("application/octet-stream".toMediaType())
-            )
-        }
-
-        val body = bodyBuilder.build()
-        val request = Request.Builder()
-            .url("http://localhost:${Model3DApplicationListener.port}/api/models/upload/bulk")
-            .post(body)
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            println(response.body.string())
-        }
-    }
-
 }

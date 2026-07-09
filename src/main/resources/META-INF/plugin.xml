@@ -19,6 +19,7 @@
 <ul>
     <li>View 3D models directly in the editor</li>
     <li>Wireframe mode toggle via status bar</li>
+    <li>Auto-rotate toggle via status bar</li>
     <li>Animation playback controls (play/pause)</li>
     <li>Animation selector for models with multiple animations</li>
 </ul>
@@ -57,7 +58,7 @@
 <ol>
     <li>Open any supported 3D model file (.glb, .gltf, or .obj if enabled)</li>
     <li>The model will render in the editor tab</li>
-    <li>Use the status bar widgets at the bottom to toggle <b>Wireframe</b> mode, <b>Play/Pause</b> animations, or select animations</li>
+    <li>Use the status bar widgets at the bottom to toggle <b>Wireframe</b> mode, <b>Auto-rotate</b>, <b>Play/Pause</b> animations, or select animations</li>
 </ol>
 
 <h2>Support</h2>
@@ -76,19 +77,16 @@
     <depends>com.intellij.modules.compose</depends>
     <depends>com.intellij.modules.json</depends>
 
-    <applicationListeners>
-        <listener class="ke.co.coterie.plugins.model3dviewer.Model3DApplicationListener" topic="com.intellij.ide.AppLifecycleListener"/>
-    </applicationListeners>
-
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
 
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Status bar widgets -->
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.wireframe-status-bar"/>
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.animation-status-bar"/>
-        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationSelectorWidgetFactory" id="ke.co.coterie.plugins.model3d-viewer.animation-selector-status-bar"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerWidgetFactory" id="Model3DViewerWireframeWidget"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAutoRotateWidgetFactory" id="Model3DViewerAutoRotateWidget"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationWidgetFactory" id="Model3DViewerAnimationWidget"/>
+        <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DAnimationSelectorWidgetFactory" id="Model3DViewerAnimationSelectorWidget"/>
 
         <!-- File types - GLB (static registration) -->
         <fileType

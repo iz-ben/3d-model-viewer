@@ -24,28 +24,21 @@ class Model3DEditor(private val project: Project, private val file: VirtualFile)
     }
 
     init {
-        // Wait for the bundled server to be ready before creating the viewer, and show
-        // an error instead of hanging on "Loading..." if it fails to start.
-        Model3DApplicationListener.onServerReady(
-            onReady = {
-                ApplicationManager.getApplication().invokeLater {
-                    if (!project.isDisposed && file.isValid) {
-                        model3DViewer = Model3DViewer(project, file)
-                        mainPanel.removeAll()
-                        mainPanel.add(model3DViewer!!.component, BorderLayout.CENTER)
-                        mainPanel.revalidate()
-                        mainPanel.repaint()
-                    }
-                }
-            },
-            onError = { message ->
-                ApplicationManager.getApplication().invokeLater {
-                    if (!project.isDisposed) {
-                        showError(message)
-                    }
+        // The viewer is now served entirely from the plugin (bundled assets + model
+        // bytes over a synthetic origin) — there is no external server to wait for.
+        ApplicationManager.getApplication().invokeLater {
+            if (!project.isDisposed && file.isValid) {
+                try {
+                    model3DViewer = Model3DViewer(project, file)
+                    mainPanel.removeAll()
+                    mainPanel.add(model3DViewer!!.component, BorderLayout.CENTER)
+                    mainPanel.revalidate()
+                    mainPanel.repaint()
+                } catch (t: Throwable) {
+                    showError(t.message ?: t.toString())
                 }
             }
-        )
+        }
     }
 
     private fun showError(message: String) {
