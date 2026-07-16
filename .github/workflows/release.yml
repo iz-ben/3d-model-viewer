@@ -108,6 +108,10 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: ./gradlew buildPlugin
 
+      - name: Verify plugin
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: ./gradlew verifyPlugin
+
       - name: Create GitHub Release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: softprops/action-gh-release@v2

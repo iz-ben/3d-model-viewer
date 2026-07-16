@@ -16,9 +16,11 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 
 - **GLB** — Built-in support, works out of the box
 - **GLTF** — Built-in support, automatically bundles referenced assets (textures, binary files)
-  > ⚠️ GLTF support has limited handling for non-self-contained files; external textures may fail to show.
+  
 - **OBJ** — Optional support, enable in **Settings → Tools → 3D Model Viewer**
-  > ⚠️ OBJ support is opt-in because other plugins may also register the `.obj` file extension. Enabling this feature is left to your discretion to avoid potential conflicts. Requires IDE restart after enabling.
+
+> [!WARNING]
+> OBJ support is opt-in because other plugins may also register the `.obj` file extension.
 
 ## Installation
 
@@ -39,7 +41,7 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 
 ## Usage
 
-1. Open any supported 3D model file (`.glb`, `.gltf`, or `.obj` if enabled)
+1. Open any supported 3D model file (`.glb`, `.gltf`, or `.obj`)
 2. The model will render in the editor tab
 3. Use the status bar widgets at the bottom to:
    - Toggle **Wireframe** mode
