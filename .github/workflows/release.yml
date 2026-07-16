@@ -2,6 +2,16 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      release_as:
+        description: "Version bump to release. Use 'auto' to derive it from conventional commits, or force a specific bump."
+        type: choice
+        default: auto
+        options:
+          - auto
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -55,8 +65,15 @@ jobs:
       - name: Generate Changelog and Bump Version
         id: changelog
         run: |
-          # Run standard-version to bump version and generate changelog
-          standard-version --releaseCommitMessageFormat "chore(release): {{currentTag}}"
+          # Run standard-version to bump version and generate changelog.
+          # release_as=auto derives the bump from conventional commits;
+          # any other value forces that bump (overriding commit-based detection).
+          RELEASE_AS="${{ github.event.inputs.release_as }}"
+          if [ -n "$RELEASE_AS" ] && [ "$RELEASE_AS" != "auto" ]; then
+            standard-version --releaseCommitMessageFormat "chore(release): {{currentTag}}" --release-as "$RELEASE_AS"
+          else
+            standard-version --releaseCommitMessageFormat "chore(release): {{currentTag}}"
+          fi
           
           # Extract the new version from package.json
           VERSION=$(node -p "require('./package.json').version")
