@@ -37,6 +37,10 @@ intellijPlatform {
     pluginConfiguration {
         ideaVersion {
             sinceBuild = "252.25557"
+            // This plugin targets the old JCEF API,
+            // compatibility is capped at 253 (2025.3) until
+            // we migrate to the new API.
+            untilBuild = "253.*"
         }
 
         changeNotes = """
@@ -48,6 +52,18 @@ intellijPlatform {
     // Uncomment and configure when ready to publish
     publishing {
         token = providers.environmentVariable("PUBLISH_TOKEN")
+    }
+
+    pluginVerification {
+        ides {
+            recommended()
+        }
+        failureLevel = listOf(
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.COMPATIBILITY_PROBLEMS,
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.DEPRECATED_API_USAGES,
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES,
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.INVALID_PLUGIN,
+        )
     }
 }
 

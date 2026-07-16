@@ -28,10 +28,9 @@
 <ul>
     <li><b>GLB</b> — Built-in support, works out of the box</li>
     <li><b>GLTF</b> — Built-in support, automatically bundles referenced assets (textures, binary files)<br/>
-        <em>⚠️ GLTF support has limited handling for non-self-contained files; external textures may fail to show.</em>
     </li>
     <li><b>OBJ</b> — Optional support, enable in <b>Settings → Tools → 3D Model Viewer</b><br/>
-        <em>⚠️ OBJ support is opt-in because other plugins may also register the .obj file extension. Enabling this feature is left to your discretion to avoid potential conflicts. Requires IDE restart after enabling.</em>
+        <em>OBJ support is opt-in because other plugins may also register the .obj file extension. Requires IDE restart after enabling.</em>
     </li>
 </ul>
 

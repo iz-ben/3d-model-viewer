@@ -1,7 +1,7 @@
 package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.json.psi.JsonFile
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.CaretEvent
 import com.intellij.openapi.editor.event.CaretListener
@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.event.SelectionEvent
 import com.intellij.openapi.editor.event.SelectionListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.util.ThrowableComputable
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 
@@ -35,11 +36,13 @@ class GltfMaterialHighlightListener(
 
     private fun update() {
         val index = materialIndex ?: return
-        val materials = ReadAction.compute<Set<Int>, RuntimeException> {
-            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) as? JsonFile
-                ?: return@compute emptySet()
-            GltfJsonMaterialLocator.materialsForRanges(psiFile, index, currentRanges())
-        }
+        val materials = ApplicationManager.getApplication().runReadAction(
+            ThrowableComputable<Set<Int>, RuntimeException> {
+                val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) as? JsonFile
+                    ?: return@ThrowableComputable emptySet()
+                GltfJsonMaterialLocator.materialsForRanges(psiFile, index, currentRanges())
+            }
+        )
 
         if (materials == lastHighlight) return
         lastHighlight = materials
