@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.1.0...v1.2.0) (2026-07-16)
+
+
+### Features
+
+* serverless Threlte viewer with auto-rotate and spec-gloss support ([#22](https://github.com/iz-ben/3d-model-viewer/issues/22)) ([db431ff](https://github.com/iz-ben/3d-model-viewer/commit/db431fffbb68b6146044381f1458b97e2005335c))
+
 ## [1.1.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.0.3...v1.1.0) (2026-07-09)
 
 
