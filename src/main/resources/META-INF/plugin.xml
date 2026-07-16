@@ -71,6 +71,11 @@
 </ul>
     ]]></description>
 
+    <!-- Change notes are injected automatically at build time from CHANGELOG.md
+         for the current pluginVersion (see the changelog config in build.gradle.kts).
+         Do not edit this by hand. -->
+    <change-notes></change-notes>
+
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.compose</depends>
