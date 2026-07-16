@@ -1,12 +1,29 @@
+import org.jetbrains.changelog.Changelog
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
     id("org.jetbrains.intellij.platform") version "2.10.2"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
+    id("org.jetbrains.changelog") version "2.2.1"
 }
 
 group = "ke.co.coterie.plugins"
 version = providers.gradleProperty("pluginVersion").get()
+
+changelog {
+    version = providers.gradleProperty("pluginVersion")
+    groups.empty()
+}
+
+val renderedChangeNotes: String = changelog.run {
+    renderItem(
+        (getOrNull(version.get()) ?: getLatest())
+            .withHeader(false)
+            .withEmptySections(false),
+        Changelog.OutputType.HTML,
+    )
+}
 
 repositories {
     mavenCentral()
@@ -43,9 +60,7 @@ intellijPlatform {
             untilBuild = "253.*"
         }
 
-        changeNotes = """
-            Initial version
-        """.trimIndent()
+        changeNotes = renderedChangeNotes
     }
 
     // JetBrains Marketplace publishing configuration
