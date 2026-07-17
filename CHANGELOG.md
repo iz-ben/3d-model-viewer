@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.2.0...v1.3.0) (2026-07-17)
+
+
+### Features
+
+* auto-inject marketplace change notes from CHANGELOG.md ([#35](https://github.com/iz-ben/3d-model-viewer/issues/35)) ([6237384](https://github.com/iz-ben/3d-model-viewer/commit/62373842f5d25ffe00a7067f3a2e2fc6faf31161))
+
+
+### Bug Fixes
+
+* Fix marketplace compat and gate merges on plugin verification ([#34](https://github.com/iz-ben/3d-model-viewer/issues/34)) ([45f0ef0](https://github.com/iz-ben/3d-model-viewer/commit/45f0ef0ed9c1020f7f5fe7dd7cf75a555f7b9a69))
+
 ## [1.2.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.1.0...v1.2.0) (2026-07-16)
 
 
