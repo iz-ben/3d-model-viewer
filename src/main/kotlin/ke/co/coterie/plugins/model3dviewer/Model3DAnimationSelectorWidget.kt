@@ -1,5 +1,6 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.vfs.VirtualFile
@@ -45,7 +46,7 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
         }
     }
 
-    private val label = JBLabel("Pick animation:").apply {
+    private val label = JBLabel("Animation:").apply {
         isEnabled = false // Disabled by default until animations are available
     }
 
@@ -59,23 +60,23 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
     private val animationStateListener: (VirtualFile, Model3DAnimationStateService.FileAnimationState) -> Unit = { file, state ->
         // Only update if this is the currently active file
         if (viewerService.getCurrentFile()?.path == file.path) {
-            updateUIForState(state)
+            updateUIForState(state, file)
         }
     }
 
     private val viewerChangeListener: (VirtualFile?, Model3DViewer?) -> Unit = { file, viewer ->
-        // Only show this widget while a supported 3D model file is in focus
-        setWidgetVisible(file != null)
         if (file != null) {
             val state = animationStateService.getState(file)
-            updateUIForState(state)
+            // Visibility (handled in updateUIForState) follows whether the model
+            // is animated, so the selector is hidden for models without animations.
+            updateUIForState(state, file)
             // Sync selected animation with the newly selected viewer
             state.selectedAnimation?.let { animation ->
                 viewer?.selectAnimation(animation)
             }
         } else {
-            // No 3D model file selected, reset UI
-            updateUIForState(Model3DAnimationStateService.FileAnimationState())
+            // No 3D model file selected, hide the widget
+            updateUIForState(Model3DAnimationStateService.FileAnimationState(), null)
         }
     }
 
@@ -87,12 +88,26 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
         }
     }
 
-    private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState) {
+    private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState, file: VirtualFile?) {
+        // Animation discovery arrives via the JCEF JS bridge, which invokes the
+        // state-change listener off the EDT; marshal Swing mutations back onto it.
+        val app = ApplicationManager.getApplication()
+        if (!app.isDispatchThread) {
+            app.invokeLater {
+                if (!project.isDisposed) updateUIForState(state, file)
+            }
+            return
+        }
+        // Focus may have moved to another file between an off-EDT discovery and
+        // this deferred apply; ignore a state that no longer matches the focus.
+        if (file != null && viewerService.getCurrentFile()?.path != file.path) return
         isUpdating = true
         try {
             comboBoxModel.removeAllElements()
             state.availableAnimations.forEach { comboBoxModel.addElement(it) }
             val hasAnimations = state.availableAnimations.isNotEmpty()
+            // Only show the selector when the model actually has animations.
+            setWidgetVisible(hasAnimations)
             comboBox.isEnabled = hasAnimations
             label.isEnabled = hasAnimations
             if (hasAnimations && state.selectedAnimation != null) {
@@ -109,12 +124,12 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
         animationStateService.addStateChangeListener(animationStateListener)
         viewerService.addViewerChangeListener(viewerChangeListener)
 
-        setWidgetVisible(Model3DFileSupport.isSupportedFileInFocus(project))
-
-        // Initialize with current file's state if available
-        viewerService.getCurrentFile()?.let { file ->
-            val state = animationStateService.getState(file)
-            updateUIForState(state)
+        // The widget stays hidden unless the focused model has animations.
+        val currentFile = viewerService.getCurrentFile()
+        if (currentFile != null) {
+            updateUIForState(animationStateService.getState(currentFile), currentFile)
+        } else {
+            setWidgetVisible(false)
         }
     }
 
