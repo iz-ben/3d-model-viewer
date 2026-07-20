@@ -1,5 +1,6 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.CustomStatusBarWidget
@@ -59,6 +60,13 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
     }
 
     private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState) {
+        // Animation discovery arrives via the JCEF JS bridge, which invokes the
+        // state-change listener off the EDT; marshal Swing mutations back onto it.
+        val app = ApplicationManager.getApplication()
+        if (!app.isDispatchThread) {
+            app.invokeLater { updateUIForState(state) }
+            return
+        }
         val hasAnimations = state.availableAnimations.isNotEmpty()
         // Only show the toggle when the model actually has animations.
         setWidgetVisible(hasAnimations)
