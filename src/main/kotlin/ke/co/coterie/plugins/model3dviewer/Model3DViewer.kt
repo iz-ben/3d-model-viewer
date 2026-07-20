@@ -16,6 +16,7 @@ import org.cef.handler.CefContextMenuHandler
 import org.cef.handler.CefDisplayHandlerAdapter
 import org.cef.handler.CefLoadHandlerAdapter
 import java.awt.BorderLayout
+import java.awt.Color
 import java.nio.file.Paths
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -42,6 +43,7 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
      * banner. Use this instead of [getComponent] so the banner is included.
      */
     val viewerComponent: JComponent = JPanel(BorderLayout()).apply {
+        background = VIEWER_BACKGROUND
         add(loadingBanner, BorderLayout.NORTH)
         add(this@Model3DViewer.component, BorderLayout.CENTER)
     }
@@ -279,8 +281,22 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         executeJavaScript("if (window.clearMaterialHighlight) { window.clearMaterialHighlight(); }")
     }
 
+    // The JCEF browser panel's background defaults to the IDE theme background
+    // (light in light themes). Painting it with the viewer's dark background
+    // means a resize that exposes new area (opening the Model Explorer, dragging
+    // the splitter/window edge) fills the not-yet-painted region with dark
+    // instead of flashing a light background while dragging.
+    override fun getBackgroundColor(): Color = VIEWER_BACKGROUND
+
     override fun dispose() {
         Model3DAssetRegistry.unregister(assetToken)
         super.dispose()
+    }
+
+    companion object {
+        // The viewer's dark background (matches the .stage gradient's dark edge
+        // in the bundled viewer's app.css). Used to fill the JCEF surface so a
+        // resize doesn't flash a light background before the page repaints.
+        private val VIEWER_BACKGROUND = Color(0x14, 0x14, 0x18)
     }
 }
