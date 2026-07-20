@@ -17,7 +17,7 @@ class GltfStructureToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun shouldBeAvailable(project: Project): Boolean = false
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val panel = GltfStructurePanel(project, toolWindow)
+        val panel = GltfStructurePanel(project)
         val content = ContentFactory.getInstance().createContent(panel, "", false)
         content.setDisposer(panel)
         toolWindow.contentManager.addContent(content)

@@ -202,6 +202,4 @@ object GltfStructureModel {
 
     private fun JsonObject.int(name: String): Int? =
         get(name)?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber }?.asInt
-
-    private fun JsonObject.has(name: String): Boolean = get(name) != null
 }

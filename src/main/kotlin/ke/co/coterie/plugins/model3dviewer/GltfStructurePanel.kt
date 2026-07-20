@@ -17,7 +17,6 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.ToolWindow
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.ui.ColoredTreeCellRenderer
 import com.intellij.ui.DoubleClickListener
@@ -44,7 +43,6 @@ import javax.swing.tree.TreeSelectionModel
  */
 class GltfStructurePanel(
     private val project: Project,
-    private val toolWindow: ToolWindow,
 ) : com.intellij.openapi.ui.SimpleToolWindowPanel(true, true), Disposable {
 
     private val treeModel = DefaultTreeModel(null)
