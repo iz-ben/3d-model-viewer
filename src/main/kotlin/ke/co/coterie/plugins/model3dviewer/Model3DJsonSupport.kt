@@ -1,5 +1,6 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 
 /**
@@ -16,6 +17,13 @@ object Model3DJsonSupport {
     private const val SNIFF_LIMIT = 64 * 1024
     private const val MAX_FILE_SIZE = 64L * 1024 * 1024
 
+    // Caches the sniff result on the file, keyed by modification stamp, so the repeated
+    // FileEditorProvider.accept() calls the platform makes while probing/selecting editors
+    // don't each re-read the file. Invalidated automatically when the stamp changes.
+    private val CACHE_KEY = Key.create<CachedResult>("model3d.isThreeJsModelJson")
+
+    private data class CachedResult(val modificationStamp: Long, val isModel: Boolean)
+
     // The `type` must sit inside the `metadata` object, which keeps ordinary JSON
     // (configs, package.json, schemas that merely contain a "type" key) from matching.
     private val MODEL_METADATA = Regex(
@@ -28,11 +36,19 @@ object Model3DJsonSupport {
         if (file.extension?.lowercase() != "json") return false
         val length = file.length
         if (length <= 0 || length > MAX_FILE_SIZE) return false
-        return try {
+
+        val stamp = file.modificationStamp
+        file.getUserData(CACHE_KEY)?.let { cached ->
+            if (cached.modificationStamp == stamp) return cached.isModel
+        }
+
+        val result = try {
             val bytes = file.inputStream.use { it.readNBytes(SNIFF_LIMIT) }
             MODEL_METADATA.containsMatchIn(String(bytes, Charsets.UTF_8))
         } catch (e: Exception) {
             false
         }
+        file.putUserData(CACHE_KEY, CachedResult(stamp, result))
+        return result
     }
 }
