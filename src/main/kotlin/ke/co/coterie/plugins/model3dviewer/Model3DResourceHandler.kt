@@ -169,7 +169,7 @@ class Model3DResourceHandler private constructor(
     companion object {
         private val LOG = Logger.getInstance(Model3DResourceHandler::class.java)
 
-        // CEF net error code returned via CefResourceSkipCallback on skip failure.
+        // CEF net error code set on the bytesSkipped LongRef to signal skip() failure.
         private const val ERR_FAILED = -2L
 
         /** A 404 handler. */
