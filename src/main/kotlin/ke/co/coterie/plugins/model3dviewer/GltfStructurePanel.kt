@@ -174,9 +174,9 @@ class GltfStructurePanel(
             .filterIsInstance<Model3DTextEditorWithPreview>().firstOrNull() ?: return false
 
         val document = editor.jsonTextEditor.editor.document
-        val offset = ReadAction.compute<Int?, RuntimeException> {
+        val offset = ReadAction.computeBlocking<Int?, RuntimeException> {
             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) as? JsonFile
-                ?: return@compute null
+                ?: return@computeBlocking null
             GltfJsonPathLocator.offsetForPath(psiFile, jsonPath)
         } ?: return false
 

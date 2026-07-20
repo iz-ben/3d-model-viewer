@@ -82,6 +82,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.compose</depends>
     <depends>com.intellij.modules.json</depends>
+    <depends>com.intellij.modules.jcef</depends>
 
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
 
@@ -140,6 +141,8 @@
         <postStartupActivity implementation="ke.co.coterie.plugins.model3dviewer.ObjFileTypeStartupActivity"/>
         <!-- Sets initial glTF Structure tool window visibility for a restored glTF/GLB tab -->
         <postStartupActivity implementation="ke.co.coterie.plugins.model3dviewer.GltfStructureStartupActivity"/>
+        <!-- Marks the Got It tooltip state ready once the project has finished opening -->
+        <postStartupActivity implementation="ke.co.coterie.plugins.model3dviewer.Model3DJsonGotItStartupActivity"/>
 
         <!-- Tool window revealing the internal structure of the active glTF/GLB file.
              Hidden by default; shown only while a .glb/.gltf file is in focus. -->
