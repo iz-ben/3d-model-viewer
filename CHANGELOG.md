@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/iz-ben/3d-model-viewer/compare/v1.4.0...v1.4.1) (2026-07-20)
+
+
+### Bug Fixes
+
+* migrate to IntelliJ 2026.2 JCEF resource-handler API ([#55](https://github.com/iz-ben/3d-model-viewer/issues/55)) ([893978d](https://github.com/iz-ben/3d-model-viewer/commit/893978d3f560482bb32fe48c932de03f665d1c83))
+
 ## [1.4.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.3.1...v1.4.0) (2026-07-20)
 
 
