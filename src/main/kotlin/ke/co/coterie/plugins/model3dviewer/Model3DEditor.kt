@@ -31,7 +31,7 @@ class Model3DEditor(private val project: Project, private val file: VirtualFile)
                 try {
                     model3DViewer = Model3DViewer(project, file)
                     mainPanel.removeAll()
-                    mainPanel.add(model3DViewer!!.component, BorderLayout.CENTER)
+                    mainPanel.add(model3DViewer!!.viewerComponent, BorderLayout.CENTER)
                     mainPanel.revalidate()
                     mainPanel.repaint()
                 } catch (t: Throwable) {
