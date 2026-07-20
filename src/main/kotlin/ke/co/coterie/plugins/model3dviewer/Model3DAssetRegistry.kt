@@ -19,8 +19,27 @@ import java.util.concurrent.ConcurrentHashMap
  * glTF whose textures live in a `../glTF/` directory) while still refusing any
  * path that escapes the project. When the model is outside the project (or no
  * project root is known), the base falls back to the model's own directory.
+ *
+ * Because the project root can be a wide base, resolution is additionally
+ * confined to an allowlist of model/texture/buffer file extensions, so a
+ * malicious model cannot reference arbitrary non-asset project files (source
+ * code, `.env`, `.git` internals, etc.) as external buffers or images.
  */
 object Model3DAssetRegistry {
+
+    /**
+     * File extensions that may be served from disk: model containers, their
+     * geometry/material sidecars, and texture image formats the viewer loads.
+     * Anything else (source code, configs, secrets, extension-less files) is
+     * rejected even when it sits within the traversal base.
+     */
+    private val ALLOWED_ASSET_EXTENSIONS = setOf(
+        // Model containers and sidecars.
+        "gltf", "glb", "obj", "mtl", "stl", "bin",
+        // Texture / image formats.
+        "png", "jpg", "jpeg", "webp", "gif", "bmp", "tga",
+        "ktx2", "ktx", "basis", "dds", "hdr", "exr",
+    )
 
     private data class Entry(val baseDir: Path, val urlPath: String)
 
@@ -61,8 +80,8 @@ object Model3DAssetRegistry {
 
     /**
      * Resolve a relative path against the token's base directory. Returns null
-     * if the token is unknown or the resolved path escapes the base directory
-     * (path-traversal guard).
+     * if the token is unknown, the resolved path escapes the base directory
+     * (path-traversal guard), or the file is not an allowlisted asset type.
      */
     fun resolve(token: String, relativePath: String): Path? {
         val entry = entries[token] ?: return null
@@ -71,6 +90,10 @@ object Model3DAssetRegistry {
         val base = entry.baseDir.toAbsolutePath().normalize()
         val resolved = base.resolve(cleaned).normalize()
         // Must stay within the base directory.
-        return if (resolved.startsWith(base)) resolved else null
+        if (!resolved.startsWith(base)) return null
+        // Must be an asset type we intend to serve (blocks source/configs/secrets).
+        val ext = resolved.fileName.toString().substringAfterLast('.', "").lowercase()
+        if (ext !in ALLOWED_ASSET_EXTENSIONS) return null
+        return resolved
     }
 }
