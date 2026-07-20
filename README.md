@@ -16,6 +16,7 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 
 - **GLB** — Built-in support, works out of the box
 - **GLTF** — Built-in support, automatically bundles referenced assets (textures, binary files)
+- **three.js JSON** — Built-in support for three.js model JSON (BufferGeometry / Object / Scene). Detected by content, so ordinary `.json` files are unaffected and keep their normal JSON editor plus an Editor/Preview toggle
   
 - **OBJ** — Optional support, enable in **Settings → Tools → 3D Model Viewer**
 

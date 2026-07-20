@@ -22,12 +22,13 @@ import java.io.File
  */
 class Model3DTextEditorWithPreview(
     textEditor: TextEditor,
-    preview: FileEditor
+    preview: FileEditor,
+    defaultLayout: Layout = Layout.SHOW_EDITOR_AND_PREVIEW
 ) : TextEditorWithPreview(
     textEditor,
     preview,
     "3D Model Viewer",
-    Layout.SHOW_EDITOR_AND_PREVIEW
+    defaultLayout
 ) {
 
     /**
