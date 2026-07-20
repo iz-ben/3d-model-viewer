@@ -51,6 +51,10 @@ class GltfStructurePanel(
     @Volatile
     private var currentModelPath: String? = null
 
+    // Incremented on the EDT for every scheduled rebuild so a slower, earlier parse
+    // can't overwrite the tree produced by a later one (e.g. Refresh clicked twice).
+    private var refreshGeneration = 0
+
     init {
         tree.isRootVisible = true
         tree.showsRootHandles = true
@@ -114,6 +118,7 @@ class GltfStructurePanel(
         currentModelPath = modelFile.path
         val path = modelFile.path
         val name = modelFile.name
+        val generation = ++refreshGeneration
         tree.emptyText.text = "Loading $name…"
         treeModel.setRoot(null)
 
@@ -121,7 +126,7 @@ class GltfStructurePanel(
             val json = runCatching { GltfAssetParser.extractGltfJson(File(path)) }.getOrNull()
             val root = json?.let { GltfStructureModel.build(it) }
             ApplicationManager.getApplication().invokeLater({
-                if (project.isDisposed || currentModelPath != path) return@invokeLater
+                if (project.isDisposed || generation != refreshGeneration || currentModelPath != path) return@invokeLater
                 if (root == null) {
                     tree.emptyText.text = "Unable to read glTF structure for $name"
                     treeModel.setRoot(null)
