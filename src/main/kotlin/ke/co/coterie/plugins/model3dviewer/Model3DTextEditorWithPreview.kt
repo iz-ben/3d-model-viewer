@@ -3,6 +3,7 @@ package ke.co.coterie.plugins.model3dviewer
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.editor.ex.EditorEx
+import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
@@ -41,6 +42,25 @@ class Model3DTextEditorWithPreview(
      */
     val modelFile: VirtualFile?
         get() = previewEditor.file
+
+    /** The glTF JSON side of this editor, exposed for structure-tree navigation. */
+    val jsonTextEditor: TextEditor = textEditor
+
+    /**
+     * Reveals [offset] in the glTF JSON side: makes the editor visible (if only the preview
+     * was showing) and moves the caret there. Used by the glTF Structure tool window to jump
+     * to the JSON of a selected structure node.
+     */
+    fun revealJsonLocation(offset: Int) {
+        if (getLayout() == Layout.SHOW_PREVIEW) {
+            setLayout(Layout.SHOW_EDITOR_AND_PREVIEW)
+        }
+        val ed = jsonTextEditor.editor
+        if (offset in 0..ed.document.textLength) {
+            ed.caretModel.moveToOffset(offset)
+            ed.scrollingModel.scrollToCaret(ScrollType.CENTER)
+        }
+    }
 
     companion object {
         private val JSON_EXTENSIONS = setOf("gltf", "glb")

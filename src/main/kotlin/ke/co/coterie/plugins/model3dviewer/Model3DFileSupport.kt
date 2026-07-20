@@ -12,6 +12,14 @@ import com.intellij.openapi.vfs.VirtualFile
  */
 object Model3DFileSupport {
     private val BUILT_IN_EXTENSIONS = setOf("glb", "gltf", "stl")
+    private val GLTF_EXTENSIONS = setOf("glb", "gltf")
+
+    /**
+     * True for glTF-family files (`.glb` / `.gltf`) whose JSON structure the glTF Structure
+     * tool window can inspect. STL/OBJ/three.js JSON have no glTF asset/accessor/material graph.
+     */
+    fun isGltfStructured(file: VirtualFile?): Boolean =
+        file?.extension?.lowercase() in GLTF_EXTENSIONS
 
     fun isSupported(file: VirtualFile?): Boolean {
         val extension = file?.extension?.lowercase() ?: return false

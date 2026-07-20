@@ -11,6 +11,10 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 - glTF JSON view alongside the 3D preview (Markdown-style editor / split / preview toggle)
 - Highlight materials in the model by moving the caret or selecting inside the glTF JSON
   (works for `materials`, `meshes`, and `nodes` entries)
+- **Model Explorer** tool window: browse a `.glb` / `.gltf` file's internal structure
+  (asset, scenes, nodes, meshes, materials, accessors, buffer views, images, samplers,
+  animations, …). Double-click a node to jump to it in the glTF JSON, or select a material,
+  mesh or node to highlight it in the 3D preview
 
 ## Supported File Formats
 
@@ -48,6 +52,9 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
    - Toggle **Wireframe** mode
    - **Play/Pause** animations
    - Select animations
+4. For `.glb` / `.gltf` files, open the **Model Explorer** tool window (right stripe, shown while
+   a glTF file is focused) to browse the model's internal structure — double-click a node to jump
+   to it in the glTF JSON, or select a material/mesh/node to highlight it in the preview
 
 ## Screenshots & Videos
 
