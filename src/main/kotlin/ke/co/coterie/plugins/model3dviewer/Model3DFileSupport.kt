@@ -39,13 +39,18 @@ object Model3DFileSupport {
      *
      * Extension-based [isSupported] can't recognise three.js model JSON (`.json` is
      * deliberately not a supported extension, so the default JSON editor keeps working
-     * and only one editor provider claims the file). Our own editors, however, are only
-     * ever created for files that a provider already accepted as a 3D model, so their
-     * presence is itself proof of support — and checking the editor type needs no disk IO.
+     * and only one editor provider claims the file). For that one case our own editor is
+     * proof of support: [Model3DJsonEditorProvider] only builds it for accepted model
+     * JSON, and checking the editor type needs no disk IO.
+     *
+     * The bypass is scoped to `.json` so every other format still goes through
+     * [isSupported] — in particular OBJ keeps honouring the runtime enable/disable setting.
      */
     fun isSupportedEditor(editor: FileEditor?): Boolean {
-        if (editor is Model3DTextEditorWithPreview || editor is Model3DEditor) return true
-        return isSupported(resolveModelFile(editor))
+        val file = resolveModelFile(editor)
+        if (isSupported(file)) return true
+        return file?.extension?.lowercase() == "json" &&
+            (editor is Model3DTextEditorWithPreview || editor is Model3DEditor)
     }
 
     /**
