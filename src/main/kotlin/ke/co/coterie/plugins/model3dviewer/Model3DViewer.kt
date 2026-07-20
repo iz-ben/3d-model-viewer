@@ -208,11 +208,13 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         Model3DSchemeHandlerFactory.ensureRegistered()
 
         val modelPath = Paths.get(file.path)
-        assetToken = Model3DAssetRegistry.register(modelPath)
+        val projectRoot = project.basePath?.let { Paths.get(it) }
+        assetToken = Model3DAssetRegistry.register(modelPath, projectRoot)
         val wireframe = Model3DWireframeWidget.wireframeEnabled
+        val modelUrlPath = Model3DAssetRegistry.urlPath(assetToken) ?: modelPath.fileName.toString()
         val serverUrl = Model3DSchemeHandlerFactory.viewerUrl(
             assetToken,
-            modelPath.fileName.toString(),
+            modelUrlPath,
             wireframe,
             Model3DAutoRotateWidget.autoRotateEnabled
         )
