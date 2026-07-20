@@ -1,14 +1,16 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorPolicy
 import com.intellij.openapi.fileEditor.FileEditorProvider
+import com.intellij.openapi.fileEditor.ex.StructureViewFileEditorProvider
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.annotations.NonNls
 
-class Model3DEditorProvider : FileEditorProvider, DumbAware {
+class Model3DEditorProvider : FileEditorProvider, DumbAware, StructureViewFileEditorProvider {
 
     override fun accept(
         project: Project,
@@ -31,6 +33,16 @@ class Model3DEditorProvider : FileEditorProvider, DumbAware {
             preview
         }
     }
+
+    /**
+     * Implemented so the Structure tool window resolves a builder *without* creating and
+     * immediately disposing a throwaway [Model3DTextEditorWithPreview] (see
+     * [StructureViewFileEditorProvider] javadoc). That throwaway path raced our composite
+     * editor's deferred UI initialization against its disposal, throwing
+     * IncorrectOperationException. We expose no structural view for 3D model files (the
+     * Model Explorer tool window covers glTF/GLB), so return null.
+     */
+    override fun getStructureViewBuilder(project: Project, file: VirtualFile): StructureViewBuilder? = null
 
     override fun getEditorTypeId(): @NonNls String {
         return "MODEL_3D_EDITOR"
