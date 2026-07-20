@@ -33,7 +33,7 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
     private val animationStateListener: (VirtualFile, Model3DAnimationStateService.FileAnimationState) -> Unit = { file, state ->
         // Only update if this is the currently active file
         if (viewerService.getCurrentFile()?.path == file.path) {
-            updateUIForState(state)
+            updateUIForState(state, file)
         }
     }
 
@@ -42,12 +42,12 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
             val state = animationStateService.getState(file)
             // Visibility (handled in updateUIForState) follows whether the model
             // is animated, so the toggle is hidden for models without animations.
-            updateUIForState(state)
+            updateUIForState(state, file)
             // Sync animation playing state with the newly selected viewer
             viewer?.toggleAnimation(state.isPlaying)
         } else {
             // No 3D model file selected, hide the widget
-            updateUIForState(Model3DAnimationStateService.FileAnimationState())
+            updateUIForState(Model3DAnimationStateService.FileAnimationState(), null)
         }
     }
 
@@ -59,16 +59,19 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
         }
     }
 
-    private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState) {
+    private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState, file: VirtualFile?) {
         // Animation discovery arrives via the JCEF JS bridge, which invokes the
         // state-change listener off the EDT; marshal Swing mutations back onto it.
         val app = ApplicationManager.getApplication()
         if (!app.isDispatchThread) {
             app.invokeLater {
-                if (!project.isDisposed) updateUIForState(state)
+                if (!project.isDisposed) updateUIForState(state, file)
             }
             return
         }
+        // Focus may have moved to another file between an off-EDT discovery and
+        // this deferred apply; ignore a state that no longer matches the focus.
+        if (file != null && viewerService.getCurrentFile()?.path != file.path) return
         val hasAnimations = state.availableAnimations.isNotEmpty()
         // Only show the toggle when the model actually has animations.
         setWidgetVisible(hasAnimations)
@@ -83,7 +86,7 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
         // The widget stays hidden unless the focused model has animations.
         val currentFile = viewerService.getCurrentFile()
         if (currentFile != null) {
-            updateUIForState(animationStateService.getState(currentFile))
+            updateUIForState(animationStateService.getState(currentFile), currentFile)
         } else {
             setWidgetVisible(false)
         }

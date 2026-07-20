@@ -60,7 +60,7 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
     private val animationStateListener: (VirtualFile, Model3DAnimationStateService.FileAnimationState) -> Unit = { file, state ->
         // Only update if this is the currently active file
         if (viewerService.getCurrentFile()?.path == file.path) {
-            updateUIForState(state)
+            updateUIForState(state, file)
         }
     }
 
@@ -69,14 +69,14 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
             val state = animationStateService.getState(file)
             // Visibility (handled in updateUIForState) follows whether the model
             // is animated, so the selector is hidden for models without animations.
-            updateUIForState(state)
+            updateUIForState(state, file)
             // Sync selected animation with the newly selected viewer
             state.selectedAnimation?.let { animation ->
                 viewer?.selectAnimation(animation)
             }
         } else {
             // No 3D model file selected, hide the widget
-            updateUIForState(Model3DAnimationStateService.FileAnimationState())
+            updateUIForState(Model3DAnimationStateService.FileAnimationState(), null)
         }
     }
 
@@ -88,16 +88,19 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
         }
     }
 
-    private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState) {
+    private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState, file: VirtualFile?) {
         // Animation discovery arrives via the JCEF JS bridge, which invokes the
         // state-change listener off the EDT; marshal Swing mutations back onto it.
         val app = ApplicationManager.getApplication()
         if (!app.isDispatchThread) {
             app.invokeLater {
-                if (!project.isDisposed) updateUIForState(state)
+                if (!project.isDisposed) updateUIForState(state, file)
             }
             return
         }
+        // Focus may have moved to another file between an off-EDT discovery and
+        // this deferred apply; ignore a state that no longer matches the focus.
+        if (file != null && viewerService.getCurrentFile()?.path != file.path) return
         isUpdating = true
         try {
             comboBoxModel.removeAllElements()
@@ -124,7 +127,7 @@ class Model3DAnimationSelectorWidget(project: Project) : EditorBasedWidget(proje
         // The widget stays hidden unless the focused model has animations.
         val currentFile = viewerService.getCurrentFile()
         if (currentFile != null) {
-            updateUIForState(animationStateService.getState(currentFile))
+            updateUIForState(animationStateService.getState(currentFile), currentFile)
         } else {
             setWidgetVisible(false)
         }
