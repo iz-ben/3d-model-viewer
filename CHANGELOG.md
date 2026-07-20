@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.3.1...v1.4.0) (2026-07-20)
+
+
+### Features
+
+* add Model Explorer tool window for glTF/GLB structure ([#49](https://github.com/iz-ben/3d-model-viewer/issues/49)) ([e60abb2](https://github.com/iz-ben/3d-model-viewer/commit/e60abb2b9e26c2a0e9c90237c19c8708147a48f6)), closes [#48](https://github.com/iz-ben/3d-model-viewer/issues/48)
+* **plugin:** register STL file type ([#37](https://github.com/iz-ben/3d-model-viewer/issues/37)) ([04287a2](https://github.com/iz-ben/3d-model-viewer/commit/04287a2538c4c2c04b949c48b845a1f33686fe2a)), closes [#23](https://github.com/iz-ben/3d-model-viewer/issues/23) [#7](https://github.com/iz-ben/3d-model-viewer/issues/7) [#27](https://github.com/iz-ben/3d-model-viewer/issues/27)
+
+
+### Bug Fixes
+
+* **editor:** avoid Structure view disposing a throwaway 3D editor ([#50](https://github.com/iz-ben/3d-model-viewer/issues/50)) ([e863c8d](https://github.com/iz-ben/3d-model-viewer/commit/e863c8de04f95210813fde69d32edb4423285328))
+* enable viewer controls for three.js JSON models and cache sniff ([#47](https://github.com/iz-ben/3d-model-viewer/issues/47)) ([5c56d5f](https://github.com/iz-ben/3d-model-viewer/commit/5c56d5f200e955d6c41c306062fc7311468b4760))
+* **model-explorer:** guard structure refresh against stale overlapping parses ([#51](https://github.com/iz-ben/3d-model-viewer/issues/51)) ([fe847e9](https://github.com/iz-ben/3d-model-viewer/commit/fe847e95e0744487efc3277dc25a05f523531bd1))
+* **status-bar:** hide animation widgets for models without animations ([#54](https://github.com/iz-ben/3d-model-viewer/issues/54)) ([1804643](https://github.com/iz-ben/3d-model-viewer/commit/180464337c9922e2da01acbddaa2f4174c55b9ba))
+* **viewer:** center 3D model when Model Explorer pane opens ([#53](https://github.com/iz-ben/3d-model-viewer/issues/53)) ([70ca625](https://github.com/iz-ben/3d-model-viewer/commit/70ca6251105b0e3003b05b4cdc98ce84a9a238cc))
+* **viewer:** resolve model assets within the project root ([#44](https://github.com/iz-ben/3d-model-viewer/issues/44)) ([c3444b3](https://github.com/iz-ben/3d-model-viewer/commit/c3444b3adcc3790f2cdd8b9db2e4b101a3c79a8c))
+
 ### [1.3.1](https://github.com/iz-ben/3d-model-viewer/compare/v1.3.0...v1.3.1) (2026-07-17)
 
 ## [1.3.0](https://github.com/iz-ben/3d-model-viewer/compare/v1.2.0...v1.3.0) (2026-07-17)
