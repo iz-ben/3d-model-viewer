@@ -64,7 +64,9 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
         // state-change listener off the EDT; marshal Swing mutations back onto it.
         val app = ApplicationManager.getApplication()
         if (!app.isDispatchThread) {
-            app.invokeLater { updateUIForState(state) }
+            app.invokeLater {
+                if (!project.isDisposed) updateUIForState(state)
+            }
             return
         }
         val hasAnimations = state.availableAnimations.isNotEmpty()
