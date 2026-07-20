@@ -33,6 +33,9 @@ class Model3DResourceHandler private constructor(
 
     private fun openStream() {
         val factory = streamFactory ?: return
+        // Guard against a repeated open()/processRequest() on the same handler
+        // leaking the previous stream.
+        closeStream()
         stream = try {
             BufferedInputStream(factory())
         } catch (e: Exception) {
