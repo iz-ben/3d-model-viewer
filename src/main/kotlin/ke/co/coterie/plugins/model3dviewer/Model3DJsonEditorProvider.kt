@@ -1,10 +1,12 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorPolicy
 import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
+import com.intellij.openapi.fileEditor.ex.StructureViewFileEditorProvider
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -24,7 +26,7 @@ import org.jetbrains.annotations.NonNls
  * editor/preview toggle and avoids the platform's multi-provider selection edge
  * cases.
  */
-class Model3DJsonEditorProvider : FileEditorProvider, DumbAware {
+class Model3DJsonEditorProvider : FileEditorProvider, DumbAware, StructureViewFileEditorProvider {
 
     override fun accept(project: Project, file: VirtualFile): Boolean =
         Model3DJsonSupport.isThreeJsModelJson(file)
@@ -42,6 +44,15 @@ class Model3DJsonEditorProvider : FileEditorProvider, DumbAware {
             preview
         }
     }
+
+    /**
+     * Implemented so the Structure tool window never spins up and immediately disposes a
+     * throwaway [Model3DTextEditorWithPreview] just to read its structure builder (see
+     * [StructureViewFileEditorProvider] javadoc); that race threw
+     * IncorrectOperationException. When this model JSON is the active editor the live
+     * composite still exposes the normal JSON structure, so returning null here is safe.
+     */
+    override fun getStructureViewBuilder(project: Project, file: VirtualFile): StructureViewBuilder? = null
 
     override fun getEditorTypeId(): @NonNls String = EDITOR_TYPE_ID
 
