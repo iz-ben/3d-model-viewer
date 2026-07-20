@@ -76,6 +76,12 @@ intellijPlatform {
         ides {
             recommended()
         }
+        // Emit a Markdown report (alongside the default HTML) so CI can publish
+        // it to the GitHub Actions job summary.
+        verificationReportsFormats = listOf(
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.VerificationReportsFormats.MARKDOWN,
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.VerificationReportsFormats.HTML,
+        )
         failureLevel = listOf(
             org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.COMPATIBILITY_PROBLEMS,
             // DEPRECATED_API_USAGES is intentionally NOT a failure: the 2026.2+
