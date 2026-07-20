@@ -1,6 +1,7 @@
 package ke.co.coterie.plugins.model3dviewer
 
 import com.google.gson.Gson
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.jcef.JBCefBrowser
@@ -14,17 +15,46 @@ import org.cef.callback.CefRunContextMenuCallback
 import org.cef.handler.CefContextMenuHandler
 import org.cef.handler.CefDisplayHandlerAdapter
 import org.cef.handler.CefLoadHandlerAdapter
+import java.awt.BorderLayout
 import java.nio.file.Paths
+import javax.swing.JComponent
+import javax.swing.JPanel
 
 class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser() {
 
+    private val gson = Gson()
     private val animationListQuery = JBCefJSQuery.create(this as JBCefBrowserBase)
+    private val loadingStatusQuery = JBCefJSQuery.create(this as JBCefBrowserBase)
     @Volatile
     private var isPageReady = false
     private val pendingCommands = mutableListOf<String>()
 
     private val viewerService = Model3DViewerService.getInstance(project)
     private val animationStateService = Model3DAnimationStateService.getInstance(project)
+
+    // Loading banner shown while a model downloads/parses, driven by the viewer
+    // engine's loading events. Kept in its own layout region (NORTH) rather than
+    // overlaid on the JCEF browser so it renders regardless of the browser mode.
+    private val loadingBanner = Model3DLoadingBanner()
+
+    /**
+     * The component to embed in the editor: the JCEF browser plus the loading
+     * banner. Use this instead of [getComponent] so the banner is included.
+     */
+    val viewerComponent: JComponent = JPanel(BorderLayout()).apply {
+        add(loadingBanner, BorderLayout.NORTH)
+        add(this@Model3DViewer.component, BorderLayout.CENTER)
+    }
+
+    // A loading event streamed from the viewer engine over the JS bridge.
+    private data class LoadingStatus(
+        val phase: String = "",
+        val url: String? = null,
+        val loaded: Long = 0,
+        val total: Long = 0,
+        val percent: Int = 0,
+        val message: String? = null,
+    )
 
     // Token that grants the bundled viewer app access to this model's directory
     // (for the model file and its relative assets). Released on dispose.
@@ -54,6 +84,20 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             val state = animationStateService.getState(file)
             state.selectedAnimation?.let { selectAnimation(it) }
             toggleAnimation(state.isPlaying)
+            null
+        }
+
+        // Receive loading events (JSON LoadingStatus) from the viewer engine and
+        // drive the banner. UI updates must happen on the EDT.
+        loadingStatusQuery.addHandler { statusJson ->
+            val status = try {
+                gson.fromJson(statusJson, LoadingStatus::class.java)
+            } catch (e: Exception) {
+                null
+            }
+            if (status != null) {
+                ApplicationManager.getApplication().invokeLater { applyLoadingStatus(status) }
+            }
             null
         }
 
@@ -87,6 +131,24 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
                     // latest list on window.__model3dAnimations, so re-deliver it now.
                     if (window.__model3dAnimations) {
                         window.sendAnimationListToKotlin(window.__model3dAnimations);
+                    }
+                    """.trimIndent(),
+                    browser.url,
+                    0
+                )
+
+                // Inject the callback for streaming model loading status to Kotlin.
+                // Re-deliver any status published before this bridge existed, so a
+                // fast load that finished early still hides the banner.
+                val loadingCallback = loadingStatusQuery.inject("statusJson")
+                browser?.executeJavaScript(
+                    """
+                    window.sendLoadingStatusToKotlin = function(status) {
+                        var statusJson = JSON.stringify(status);
+                        $loadingCallback
+                    };
+                    if (window.__model3dLoadingStatus) {
+                        window.sendLoadingStatusToKotlin(window.__model3dLoadingStatus);
                     }
                     """.trimIndent(),
                     browser.url,
@@ -166,6 +228,20 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
                 pendingCommands.add(js)
             }
         }
+    }
+
+    // Apply a loading event to the banner (must run on the EDT). Revalidate the
+    // wrapper so showing/hiding the banner reflows the browser below it.
+    private fun applyLoadingStatus(status: LoadingStatus) {
+        when (status.phase) {
+            "start" -> loadingBanner.start()
+            "progress" -> loadingBanner.progress(status.percent, status.total)
+            "parsing" -> loadingBanner.parsing()
+            "loaded" -> loadingBanner.done()
+            "error" -> loadingBanner.error(status.message)
+        }
+        viewerComponent.revalidate()
+        viewerComponent.repaint()
     }
 
     fun toggleWireframe(enabled: Boolean) {
