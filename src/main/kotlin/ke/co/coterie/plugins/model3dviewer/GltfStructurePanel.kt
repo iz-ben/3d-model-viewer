@@ -191,6 +191,10 @@ class GltfStructurePanel(
                 }
             }
             .submit(AppExecutorUtil.getAppExecutorService())
+        // The node maps to a JSON element (node.path != null), so treat the
+        // double-click as handled and consume it (prevents the tree's default
+        // expand/collapse). The async lookup rarely fails; when it does the
+        // navigation is simply skipped in finishOnUiThread above.
         return true
     }
 

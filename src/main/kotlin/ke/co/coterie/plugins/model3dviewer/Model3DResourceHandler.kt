@@ -78,7 +78,9 @@ class Model3DResourceHandler private constructor(
         response.status = 200
         response.setHeaderByName("Cache-Control", "no-cache", true)
         // responseLength is a 32-bit int; for anything larger (or unknown), pass
-        // -1 so CEF streams until read() signals completion.
+        // -1 so CEF streams until completion is signaled: read() returning
+        // false/0 bytes (in-process) or readResponse() doing the same (the
+        // out-of-process path).
         responseLength?.set(if (contentLength in 0..Int.MAX_VALUE.toLong()) contentLength.toInt() else -1)
     }
 
