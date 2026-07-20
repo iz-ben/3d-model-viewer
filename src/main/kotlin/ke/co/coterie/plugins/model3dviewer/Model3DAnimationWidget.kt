@@ -37,15 +37,15 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
     }
 
     private val viewerChangeListener: (VirtualFile?, Model3DViewer?) -> Unit = { file, viewer ->
-        // Only show this widget while a supported 3D model file is in focus
-        setWidgetVisible(file != null)
         if (file != null) {
             val state = animationStateService.getState(file)
+            // Visibility (handled in updateUIForState) follows whether the model
+            // is animated, so the toggle is hidden for models without animations.
             updateUIForState(state)
             // Sync animation playing state with the newly selected viewer
             viewer?.toggleAnimation(state.isPlaying)
         } else {
-            // No 3D model file selected, reset UI
+            // No 3D model file selected, hide the widget
             updateUIForState(Model3DAnimationStateService.FileAnimationState())
         }
     }
@@ -60,6 +60,8 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
 
     private fun updateUIForState(state: Model3DAnimationStateService.FileAnimationState) {
         val hasAnimations = state.availableAnimations.isNotEmpty()
+        // Only show the toggle when the model actually has animations.
+        setWidgetVisible(hasAnimations)
         checkbox.isEnabled = hasAnimations
         checkbox.isSelected = if (hasAnimations) state.isPlaying else false
     }
@@ -68,12 +70,12 @@ class Model3DAnimationWidget(project: Project) : EditorBasedWidget(project), Cus
         animationStateService.addStateChangeListener(animationStateListener)
         viewerService.addViewerChangeListener(viewerChangeListener)
 
-        setWidgetVisible(Model3DFileSupport.isSupportedFileInFocus(project))
-
-        // Initialize with current file's state if available
-        viewerService.getCurrentFile()?.let { file ->
-            val state = animationStateService.getState(file)
-            updateUIForState(state)
+        // The widget stays hidden unless the focused model has animations.
+        val currentFile = viewerService.getCurrentFile()
+        if (currentFile != null) {
+            updateUIForState(animationStateService.getState(currentFile))
+        } else {
+            setWidgetVisible(false)
         }
     }
 
