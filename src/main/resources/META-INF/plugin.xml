@@ -26,10 +26,10 @@
 
 <h2>Supported File Formats</h2>
 <ul>
-    <li><b>GLB</b> — Built-in support, works out of the box</li>
-    <li><b>GLTF</b> — Built-in support, automatically bundles referenced assets (textures, binary files)<br/>
-    </li>
-    <li><b>OBJ</b> — Optional support, enable in <b>Settings → Tools → 3D Model Viewer</b><br/>
+    <li><b>GLB</b>: Built-in support, works out of the box</li>
+    <li><b>GLTF</b>: Built-in support, automatically bundles referenced assets (textures, binary files)</li>
+    <li><b>STL</b>: Built-in support, geometry only (binary and ASCII)</li>
+    <li><b>OBJ</b>: Optional support, enable in <b>Settings &gt; Tools &gt; 3D Model Viewer</b>.<br/>
         <em>OBJ support is opt-in because other plugins may also register the .obj file extension. Requires IDE restart after enabling.</em>
     </li>
 </ul>
@@ -55,7 +55,7 @@
 
 <h2>Usage</h2>
 <ol>
-    <li>Open any supported 3D model file (.glb, .gltf, or .obj if enabled)</li>
+    <li>Open any supported 3D model file (.glb, .gltf, .stl, or .obj if enabled)</li>
     <li>The model will render in the editor tab</li>
     <li>Use the status bar widgets at the bottom to toggle <b>Wireframe</b> mode, <b>Auto-rotate</b>, <b>Play/Pause</b> animations, or select animations</li>
 </ol>
@@ -107,6 +107,14 @@
                 fieldName="INSTANCE"
                 language="GLTF"
                 extensions="gltf"/>
+
+        <!-- File types - STL (static registration) -->
+        <fileType
+                name="STL"
+                implementationClass="ke.co.coterie.plugins.model3dviewer.StlFileType"
+                fieldName="INSTANCE"
+                language="STL"
+                extensions="stl"/>
 
         <!-- File editor provider for 3D model files -->
         <fileEditorProvider implementation="ke.co.coterie.plugins.model3dviewer.Model3DEditorProvider"/>

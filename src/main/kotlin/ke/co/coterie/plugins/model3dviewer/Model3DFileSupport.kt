@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
  * factories so their widgets are only shown when a matching file is active.
  */
 object Model3DFileSupport {
-    private val BUILT_IN_EXTENSIONS = setOf("glb", "gltf")
+    private val BUILT_IN_EXTENSIONS = setOf("glb", "gltf", "stl")
 
     fun isSupported(file: VirtualFile?): Boolean {
         val extension = file?.extension?.lowercase() ?: return false
