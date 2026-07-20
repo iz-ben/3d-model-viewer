@@ -29,6 +29,7 @@
     <li><b>GLB</b>: Built-in support, works out of the box</li>
     <li><b>GLTF</b>: Built-in support, automatically bundles referenced assets (textures, binary files)</li>
     <li><b>STL</b>: Built-in support, geometry only (binary and ASCII)</li>
+    <li><b>three.js JSON</b>: Built-in support for three.js model JSON (BufferGeometry / Object / Scene). Detected by content, so ordinary <code>.json</code> files keep their normal JSON editor plus an editor/preview toggle.</li>
     <li><b>OBJ</b>: Optional support, enable in <b>Settings &gt; Tools &gt; 3D Model Viewer</b>.<br/>
         <em>OBJ support is opt-in because other plugins may also register the .obj file extension. Requires IDE restart after enabling.</em>
     </li>
@@ -118,6 +119,7 @@
 
         <!-- File editor provider for 3D model files -->
         <fileEditorProvider implementation="ke.co.coterie.plugins.model3dviewer.Model3DEditorProvider"/>
+        <fileEditorProvider implementation="ke.co.coterie.plugins.model3dviewer.Model3DJsonEditorProvider"/>
 
         <!-- Application services -->
         <applicationService serviceImplementation="ke.co.coterie.plugins.model3dviewer.Model3DSettings"/>
@@ -136,4 +138,10 @@
         <!-- Startup activity to initialize OBJ file type registration -->
         <postStartupActivity implementation="ke.co.coterie.plugins.model3dviewer.ObjFileTypeStartupActivity"/>
     </extensions>
+
+    <projectListeners>
+        <!-- Shows a one-time Got It tooltip when a three.js model JSON is first opened. -->
+        <listener class="ke.co.coterie.plugins.model3dviewer.Model3DJsonGotItListener"
+                  topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+    </projectListeners>
 </idea-plugin>

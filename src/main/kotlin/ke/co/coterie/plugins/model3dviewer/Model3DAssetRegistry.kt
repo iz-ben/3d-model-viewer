@@ -91,9 +91,12 @@ object Model3DAssetRegistry {
         val resolved = base.resolve(cleaned).normalize()
         // Must stay within the base directory.
         if (!resolved.startsWith(base)) return null
-        // Must be an asset type we intend to serve (blocks source/configs/secrets).
+        // Serve allowlisted asset types, plus the token's own main model file even
+        // when its extension isn't a generic asset type (e.g. a three.js .json
+        // model). This keeps arbitrary non-asset project files unreadable.
         val ext = resolved.fileName.toString().substringAfterLast('.', "").lowercase()
-        if (ext !in ALLOWED_ASSET_EXTENSIONS) return null
-        return resolved
+        if (ext in ALLOWED_ASSET_EXTENSIONS) return resolved
+        if (resolved == base.resolve(entry.urlPath).normalize()) return resolved
+        return null
     }
 }
