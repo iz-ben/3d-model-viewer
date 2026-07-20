@@ -28,6 +28,12 @@ object Model3DIcon {
     @JvmField
     val objIconLight: Icon = IconLoader.getIcon("/icons/obj_light.svg", Model3DIcon::class.java)
 
+    @JvmField
+    val stlIcon: Icon = IconLoader.getIcon("/icons/stl_dark.svg", Model3DIcon::class.java)
+
+    @JvmField
+    val stlIconLight: Icon = IconLoader.getIcon("/icons/stl_light.svg", Model3DIcon::class.java)
+
     // Legacy aliases for backwards compatibility
     @JvmField
     @Deprecated("Use glbIcon instead", ReplaceWith("glbIcon"))
