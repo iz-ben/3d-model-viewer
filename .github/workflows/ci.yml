@@ -28,7 +28,38 @@ jobs:
         run: ./gradlew build
 
       - name: Verify plugin
+        id: verify
         run: ./gradlew verifyPlugin
+
+      - name: Publish plugin verifier report to job summary
+        if: always()
+        run: |
+          shopt -s nullglob
+          reports=(build/reports/pluginVerifier/*/report.md)
+          if [ ${#reports[@]} -eq 0 ]; then
+            echo "No plugin verifier reports were produced." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          {
+            echo "## Plugin Verifier report"
+            for report in "${reports[@]}"; do
+              ide="$(basename "$(dirname "$report")")"
+              echo ""
+              echo "<details><summary><strong>$ide</strong></summary>"
+              echo ""
+              cat "$report"
+              echo ""
+              echo "</details>"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload plugin verifier reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-verifier-reports
+          path: build/reports/pluginVerifier/**
+          retention-days: 7
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

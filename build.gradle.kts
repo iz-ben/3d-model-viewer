@@ -2,9 +2,9 @@ import org.jetbrains.changelog.Changelog
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.1.20"
-    id("org.jetbrains.intellij.platform") version "2.10.2"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
+    id("org.jetbrains.kotlin.jvm") version "2.4.10"
+    id("org.jetbrains.intellij.platform") version "2.18.1"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
     id("org.jetbrains.changelog") version "2.2.1"
 }
 
@@ -35,7 +35,7 @@ repositories {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
     intellijPlatform {
-        intellijIdea("2025.2.4")
+        intellijIdea("2026.2")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
 
         // Add plugin dependencies for compilation here:
@@ -45,6 +45,10 @@ dependencies {
         // caret/selection in the glTF JSON to the corresponding materials.
         bundledPlugin("com.intellij.modules.json")
 
+        // JCEF moved out of the platform core into its own bundled plugin in 2026.2;
+        // it provides JBCefBrowser and the org.cef.* resource-handler API.
+        bundledPlugin("com.intellij.modules.jcef")
+
         composeUI()
 
     }
@@ -53,11 +57,10 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "252.25557"
-            // This plugin targets the old JCEF API,
-            // compatibility is capped at 253 (2025.3) until
-            // we migrate to the new API.
-            untilBuild = "253.*"
+            sinceBuild = "262"
+            // Targets the new JCEF resource-handler API (open/read/skip),
+            // available from 2026.2 (build 262) onward.
+            untilBuild = "262.*"
         }
 
         changeNotes = renderedChangeNotes
@@ -73,9 +76,18 @@ intellijPlatform {
         ides {
             recommended()
         }
+        // Emit a Markdown report (alongside the default HTML) so CI can publish
+        // it to the GitHub Actions job summary.
+        verificationReportsFormats = listOf(
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.VerificationReportsFormats.MARKDOWN,
+            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.VerificationReportsFormats.HTML,
+        )
         failureLevel = listOf(
             org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.COMPATIBILITY_PROBLEMS,
-            org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.DEPRECATED_API_USAGES,
+            // DEPRECATED_API_USAGES is intentionally NOT a failure: the 2026.2+
+            // out-of-process JCEF ("cef_server") bridge invokes the deprecated
+            // CefResourceHandler.processRequest/readResponse methods over Thrift,
+            // so Model3DResourceHandler must override them to work at runtime.
             org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES,
             org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask.FailureLevel.INVALID_PLUGIN,
         )
@@ -91,7 +103,12 @@ tasks {
 }
 
 kotlin {
+    jvmToolchain(21)
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+        // Emit real JVM default methods so Kotlin does not generate delegating
+        // override bridges for Java interface default methods (e.g. ToolWindowFactory);
+        // those bridges otherwise trip the plugin verifier's deprecated/experimental checks.
+        freeCompilerArgs.add("-jvm-default=no-compatibility")
     }
 }

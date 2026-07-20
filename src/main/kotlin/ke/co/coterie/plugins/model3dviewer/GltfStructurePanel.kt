@@ -18,6 +18,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.util.concurrency.AppExecutorUtil
 import com.intellij.ui.ColoredTreeCellRenderer
 import com.intellij.ui.DoubleClickListener
 import com.intellij.ui.SimpleTextAttributes
@@ -174,14 +175,26 @@ class GltfStructurePanel(
             .filterIsInstance<Model3DTextEditorWithPreview>().firstOrNull() ?: return false
 
         val document = editor.jsonTextEditor.editor.document
-        val offset = ReadAction.compute<Int?, RuntimeException> {
+        // Compute the target offset off the EDT (PSI traversal can be non-trivial
+        // for large models), then navigate back on the UI thread. Blocking read
+        // actions on the EDT are disallowed/can freeze the UI on recent platforms.
+        ReadAction.nonBlocking<Int?> {
             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) as? JsonFile
-                ?: return@compute null
+                ?: return@nonBlocking null
             GltfJsonPathLocator.offsetForPath(psiFile, jsonPath)
-        } ?: return false
-
-        FileEditorManager.getInstance(project).openFile(file, true)
-        editor.revealJsonLocation(offset)
+        }
+            .expireWith(this)
+            .finishOnUiThread(ModalityState.defaultModalityState()) { offset ->
+                if (offset != null) {
+                    FileEditorManager.getInstance(project).openFile(file, true)
+                    editor.revealJsonLocation(offset)
+                }
+            }
+            .submit(AppExecutorUtil.getAppExecutorService())
+        // The node maps to a JSON element (node.path != null), so treat the
+        // double-click as handled and consume it (prevents the tree's default
+        // expand/collapse). The async lookup rarely fails; when it does the
+        // navigation is simply skipped in finishOnUiThread above.
         return true
     }
 
