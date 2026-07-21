@@ -5,7 +5,7 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>3D-Model-Viewer</name>
+    <name>3D Model Viewer</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor url="https://coterie.ke">Coterie Kenya</vendor>
@@ -13,7 +13,7 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-<p>View and inspect 3D models directly in your IntelliJ-based IDE.</p>
+<p>View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your IntelliJ-based IDE.</p>
 
 <h2>Features</h2>
 <ul>
@@ -41,7 +41,7 @@
 <h3>From JetBrains Marketplace</h3>
 <ol>
     <li>Open <b>Settings</b> → <b>Plugins</b> → <b>Marketplace</b></li>
-    <li>Search for "3D-Model-Viewer"</li>
+    <li>Search for "3D Model Viewer"</li>
     <li>Click <b>Install</b></li>
     <li>Restart IDE if prompted</li>
 </ol>
