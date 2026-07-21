@@ -44,7 +44,7 @@ Click any preview to play the full-quality video.
 | **GLB** | Built in, works out of the box |
 | **glTF** | Built in, referenced assets (textures, binary buffers) are bundled automatically |
 | **STL** | Built in, geometry only (binary and ASCII) |
-| **three.js JSON** | Built in for three.js model JSON (BufferGeometry, Object, or Scene). Detected by content, so ordinary `.json` files keep their normal JSON editor plus an Editor / Preview toggle |
+| **three.js JSON** | Built in for three.js model JSON (BufferGeometry, Object, or Scene), with a toggle between the JSON editor and the 3D preview |
 | **OBJ** | Optional, enable it in **Settings > Tools > 3D Model Viewer** |
 
 > [!NOTE]

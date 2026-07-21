@@ -35,7 +35,7 @@ toggle wireframe, play animations, and inspect the model's internal structure wi
     <li><b>GLB</b>: Built-in support, works out of the box</li>
     <li><b>GLTF</b>: Built-in support, automatically bundles referenced assets (textures, binary files)</li>
     <li><b>STL</b>: Built-in support, geometry only (binary and ASCII)</li>
-    <li><b>three.js JSON</b>: Built-in support for three.js model JSON (BufferGeometry / Object / Scene). Detected by content, so ordinary <code>.json</code> files keep their normal JSON editor plus an editor/preview toggle.</li>
+    <li><b>three.js JSON</b>: Built-in support for three.js model JSON (BufferGeometry / Object / Scene), with a toggle between the JSON editor and the 3D preview.</li>
     <li><b>OBJ</b>: Optional support, enable in <b>Settings &gt; Tools &gt; 3D Model Viewer</b>.<br/>
         <em>OBJ support is opt-in because other plugins may also register the .obj file extension. Requires IDE restart after enabling.</em>
     </li>
