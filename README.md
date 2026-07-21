@@ -47,9 +47,6 @@ Click any preview to play the full-quality video.
 | **three.js JSON** | Built in for three.js model JSON (BufferGeometry, Object, or Scene), with a toggle between the JSON editor and the 3D preview |
 | **OBJ** | Optional, enable it in **Settings > Tools > 3D Model Viewer** |
 
-> [!NOTE]
-> OBJ support is opt-in because other plugins may also register the `.obj` extension. Enabling or disabling it requires an IDE restart.
-
 ## Installation
 
 ### From JetBrains Marketplace
