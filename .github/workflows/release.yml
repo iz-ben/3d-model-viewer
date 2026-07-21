@@ -133,16 +133,6 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: ./gradlew verifyPlugin
 
-      # Publish to the JetBrains Marketplace before creating the GitHub Release
-      # so a publish failure doesn't leave a GitHub Release for a version that
-      # never reached the Marketplace. Opt out per run via the
-      # publish_marketplace input. PUBLISH_TOKEN is read by the publishPlugin task.
-      - name: Publish to JetBrains Marketplace
-        if: ${{ steps.changelog.outputs.skipped == 'false' && github.event.inputs.publish_marketplace == 'true' }}
-        run: ./gradlew publishPlugin
-        env:
-          PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
-
       - name: Create GitHub Release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: softprops/action-gh-release@v2
@@ -156,6 +146,17 @@ jobs:
             build/distributions/*.zip
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      # Publish to the JetBrains Marketplace. Secondary to the tag/release flow:
+      # continue-on-error keeps a publish failure from failing the release, since
+      # a version can still be uploaded to the Marketplace manually. Opt out per
+      # run via the publish_marketplace input. PUBLISH_TOKEN is read by publishPlugin.
+      - name: Publish to JetBrains Marketplace
+        if: ${{ steps.changelog.outputs.skipped == 'false' && github.event.inputs.publish_marketplace == 'true' }}
+        continue-on-error: true
+        run: ./gradlew publishPlugin
+        env:
+          PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
 
       - name: Summary
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
