@@ -6,6 +6,24 @@ View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your In
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
 [![Rating](https://img.shields.io/jetbrains/plugin/r/rating/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer/reviews)
 
+## Demo
+
+Animation playback, wireframe toggle, and the Model Explorer:
+
+| Animation playback | Wireframe mode |
+| --- | --- |
+| ![Animation playback](docs/media/animation.gif) | ![Wireframe mode](docs/media/wireframe.gif) |
+
+![Model Explorer navigation](docs/media/model-explorer.gif)
+
+## Screenshots
+
+| | |
+| --- | --- |
+| ![PBR model render](docs/media/01-hero-damaged-helmet.jpg) | ![Model Explorer tool window](docs/media/02-model-explorer.jpg) |
+| ![Material highlighting](docs/media/03-material-highlight.jpg) | ![glTF JSON split view](docs/media/04-gltf-json-view.jpg) |
+| ![Low-poly scene](docs/media/05-forest-scene.jpg) | ![Animated model](docs/media/06-animated-robot.jpg) |
+
 ## Features
 
 - View 3D models directly in the editor
