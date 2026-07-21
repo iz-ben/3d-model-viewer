@@ -1,6 +1,6 @@
 # 3D Model Viewer
 
-View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your IntelliJ-based IDE.
+View 3D models (GLB, glTF, STL, OBJ, three.js) within your IntelliJ-based IDE.
 
 [![JetBrains Marketplace Version](https://img.shields.io/jetbrains/plugin/v/29933.svg?label=Marketplace)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)

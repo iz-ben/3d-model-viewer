@@ -13,7 +13,7 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-<p>View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your IntelliJ-based IDE.</p>
+<p>View 3D models (GLB, glTF, STL, OBJ, three.js) within your IntelliJ-based IDE.</p>
 
 <p>Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure.</p>
 
