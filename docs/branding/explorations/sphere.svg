@@ -1,0 +1,20 @@
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="rightHalf"><rect x="12" y="2" width="11" height="20"/></clipPath>
+  </defs>
+  <!-- solid left hemisphere -->
+  <path d="M12 3 A9 9 0 0 0 12 21 Z" fill="#2AA6A0"/>
+  <!-- highlight for sphere volume -->
+  <ellipse cx="8" cy="8.5" rx="2.6" ry="3.4" fill="#4FC3BD" opacity="0.9" transform="rotate(-25 8 8.5)"/>
+  <!-- wireframe right hemisphere -->
+  <g clip-path="url(#rightHalf)" stroke="#1F827D" stroke-width="1.2" stroke-linecap="round" fill="none">
+    <ellipse cx="12" cy="12" rx="3" ry="9"/>
+    <ellipse cx="12" cy="12" rx="6.3" ry="9"/>
+    <ellipse cx="12" cy="12" rx="9" ry="3"/>
+    <ellipse cx="12" cy="12" rx="9" ry="6.3"/>
+    <path d="M12 12 L21 12"/>
+  </g>
+  <!-- outline + terminator -->
+  <circle cx="12" cy="12" r="9" stroke="#1F827D" stroke-width="1.3" fill="none"/>
+  <path d="M12 3 L12 21" stroke="#1F827D" stroke-width="1.3" stroke-linecap="round"/>
+</svg>

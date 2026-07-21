@@ -1,0 +1,41 @@
+<svg width="760" height="760" viewBox="0 0 760 760" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect width="760" height="760" fill="#FFFFFF"/>
+  <rect x="320" y="0" width="440" height="760" fill="#2B2D30"/>
+  <g font-family="Helvetica" font-size="16" fill="#111">
+    <text x="20" y="30">ICOSAHEDRON (d20)  * new</text>
+    <text x="20" y="180">CYLINDER  * new</text>
+    <text x="20" y="330">MONKEY / Suzanne  * new</text>
+    <text x="20" y="480">TEAPOT</text>
+    <text x="20" y="630">SPHERE</text>
+  </g>
+  <image x="30"  y="45" width="120" height="120" xlink:href="ico_160.png"/>
+  <image x="180" y="85" width="40" height="40" xlink:href="ico_40.png"/>
+  <image x="250" y="97" width="16" height="16" xlink:href="ico_16.png"/>
+  <image x="380" y="45" width="120" height="120" xlink:href="ico_160.png"/>
+  <image x="530" y="85" width="40" height="40" xlink:href="ico_40.png"/>
+  <image x="600" y="97" width="16" height="16" xlink:href="ico_16.png"/>
+  <image x="30"  y="195" width="120" height="120" xlink:href="cyl_160.png"/>
+  <image x="180" y="235" width="40" height="40" xlink:href="cyl_40.png"/>
+  <image x="250" y="247" width="16" height="16" xlink:href="cyl_16.png"/>
+  <image x="380" y="195" width="120" height="120" xlink:href="cyl_160.png"/>
+  <image x="530" y="235" width="40" height="40" xlink:href="cyl_40.png"/>
+  <image x="600" y="247" width="16" height="16" xlink:href="cyl_16.png"/>
+  <image x="30"  y="345" width="120" height="120" xlink:href="monkey_160.png"/>
+  <image x="180" y="385" width="40" height="40" xlink:href="monkey_40.png"/>
+  <image x="250" y="397" width="16" height="16" xlink:href="monkey_16.png"/>
+  <image x="380" y="345" width="120" height="120" xlink:href="monkey_160.png"/>
+  <image x="530" y="385" width="40" height="40" xlink:href="monkey_40.png"/>
+  <image x="600" y="397" width="16" height="16" xlink:href="monkey_16.png"/>
+  <image x="30"  y="495" width="120" height="120" xlink:href="teapot_160.png"/>
+  <image x="180" y="535" width="40" height="40" xlink:href="teapot_40.png"/>
+  <image x="250" y="547" width="16" height="16" xlink:href="teapot_16.png"/>
+  <image x="380" y="495" width="120" height="120" xlink:href="teapot_160.png"/>
+  <image x="530" y="535" width="40" height="40" xlink:href="teapot_40.png"/>
+  <image x="600" y="547" width="16" height="16" xlink:href="teapot_16.png"/>
+  <image x="30"  y="645" width="120" height="120" xlink:href="sph_160.png"/>
+  <image x="180" y="685" width="40" height="40" xlink:href="sph_40.png"/>
+  <image x="250" y="697" width="16" height="16" xlink:href="sph_16.png"/>
+  <image x="380" y="645" width="120" height="120" xlink:href="sph_160.png"/>
+  <image x="530" y="685" width="40" height="40" xlink:href="sph_40.png"/>
+  <image x="600" y="697" width="16" height="16" xlink:href="sph_16.png"/>
+</svg>

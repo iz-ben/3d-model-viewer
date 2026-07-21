@@ -1,0 +1,75 @@
+<svg width="700" height="470" viewBox="0 0 700 470" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="700" height="470" fill="#ffffff"/>
+<text x="20" y="60" font-family="sans-serif" font-size="13" fill="#222">R01 orange</text>
+<image x="115" y="20" width="48" height="48" xlink:href="R01_orange_48.png"/>
+<image x="170" y="38" width="16" height="16" xlink:href="R01_orange_16.png"/>
+<rect x="200" y="20" width="90" height="48" fill="#2b2d30"/>
+<image x="208" y="20" width="48" height="48" xlink:href="R01_orange_48.png"/>
+<image x="264" y="38" width="16" height="16" xlink:href="R01_orange_16.png"/>
+<text x="20" y="134" font-family="sans-serif" font-size="13" fill="#222">R02 amber</text>
+<image x="115" y="94" width="48" height="48" xlink:href="R02_amber_48.png"/>
+<image x="170" y="112" width="16" height="16" xlink:href="R02_amber_16.png"/>
+<rect x="200" y="94" width="90" height="48" fill="#2b2d30"/>
+<image x="208" y="94" width="48" height="48" xlink:href="R02_amber_48.png"/>
+<image x="264" y="112" width="16" height="16" xlink:href="R02_amber_16.png"/>
+<text x="20" y="208" font-family="sans-serif" font-size="13" fill="#222">R03 lime</text>
+<image x="115" y="168" width="48" height="48" xlink:href="R03_lime_48.png"/>
+<image x="170" y="186" width="16" height="16" xlink:href="R03_lime_16.png"/>
+<rect x="200" y="168" width="90" height="48" fill="#2b2d30"/>
+<image x="208" y="168" width="48" height="48" xlink:href="R03_lime_48.png"/>
+<image x="264" y="186" width="16" height="16" xlink:href="R03_lime_16.png"/>
+<text x="20" y="282" font-family="sans-serif" font-size="13" fill="#222">R04 green</text>
+<image x="115" y="242" width="48" height="48" xlink:href="R04_green_48.png"/>
+<image x="170" y="260" width="16" height="16" xlink:href="R04_green_16.png"/>
+<rect x="200" y="242" width="90" height="48" fill="#2b2d30"/>
+<image x="208" y="242" width="48" height="48" xlink:href="R04_green_48.png"/>
+<image x="264" y="260" width="16" height="16" xlink:href="R04_green_16.png"/>
+<text x="20" y="356" font-family="sans-serif" font-size="13" fill="#222">R05 spring</text>
+<image x="115" y="316" width="48" height="48" xlink:href="R05_spring_48.png"/>
+<image x="170" y="334" width="16" height="16" xlink:href="R05_spring_16.png"/>
+<rect x="200" y="316" width="90" height="48" fill="#2b2d30"/>
+<image x="208" y="316" width="48" height="48" xlink:href="R05_spring_48.png"/>
+<image x="264" y="334" width="16" height="16" xlink:href="R05_spring_16.png"/>
+<text x="20" y="430" font-family="sans-serif" font-size="13" fill="#222">R06 teal</text>
+<image x="115" y="390" width="48" height="48" xlink:href="R06_teal_48.png"/>
+<image x="170" y="408" width="16" height="16" xlink:href="R06_teal_16.png"/>
+<rect x="200" y="390" width="90" height="48" fill="#2b2d30"/>
+<image x="208" y="390" width="48" height="48" xlink:href="R06_teal_48.png"/>
+<image x="264" y="408" width="16" height="16" xlink:href="R06_teal_16.png"/>
+<text x="370" y="60" font-family="sans-serif" font-size="13" fill="#222">R07 azure</text>
+<image x="465" y="20" width="48" height="48" xlink:href="R07_azure_48.png"/>
+<image x="520" y="38" width="16" height="16" xlink:href="R07_azure_16.png"/>
+<rect x="550" y="20" width="90" height="48" fill="#2b2d30"/>
+<image x="558" y="20" width="48" height="48" xlink:href="R07_azure_48.png"/>
+<image x="614" y="38" width="16" height="16" xlink:href="R07_azure_16.png"/>
+<text x="370" y="134" font-family="sans-serif" font-size="13" fill="#222">R08 blue</text>
+<image x="465" y="94" width="48" height="48" xlink:href="R08_blue_48.png"/>
+<image x="520" y="112" width="16" height="16" xlink:href="R08_blue_16.png"/>
+<rect x="550" y="94" width="90" height="48" fill="#2b2d30"/>
+<image x="558" y="94" width="48" height="48" xlink:href="R08_blue_48.png"/>
+<image x="614" y="112" width="16" height="16" xlink:href="R08_blue_16.png"/>
+<text x="370" y="208" font-family="sans-serif" font-size="13" fill="#222">R09 indigo</text>
+<image x="465" y="168" width="48" height="48" xlink:href="R09_indigo_48.png"/>
+<image x="520" y="186" width="16" height="16" xlink:href="R09_indigo_16.png"/>
+<rect x="550" y="168" width="90" height="48" fill="#2b2d30"/>
+<image x="558" y="168" width="48" height="48" xlink:href="R09_indigo_48.png"/>
+<image x="614" y="186" width="16" height="16" xlink:href="R09_indigo_16.png"/>
+<text x="370" y="282" font-family="sans-serif" font-size="13" fill="#222">R10 violet</text>
+<image x="465" y="242" width="48" height="48" xlink:href="R10_violet_48.png"/>
+<image x="520" y="260" width="16" height="16" xlink:href="R10_violet_16.png"/>
+<rect x="550" y="242" width="90" height="48" fill="#2b2d30"/>
+<image x="558" y="242" width="48" height="48" xlink:href="R10_violet_48.png"/>
+<image x="614" y="260" width="16" height="16" xlink:href="R10_violet_16.png"/>
+<text x="370" y="356" font-family="sans-serif" font-size="13" fill="#222">R11 magenta</text>
+<image x="465" y="316" width="48" height="48" xlink:href="R11_magenta_48.png"/>
+<image x="520" y="334" width="16" height="16" xlink:href="R11_magenta_16.png"/>
+<rect x="550" y="316" width="90" height="48" fill="#2b2d30"/>
+<image x="558" y="316" width="48" height="48" xlink:href="R11_magenta_48.png"/>
+<image x="614" y="334" width="16" height="16" xlink:href="R11_magenta_16.png"/>
+<text x="370" y="430" font-family="sans-serif" font-size="13" fill="#222">R12 red</text>
+<image x="465" y="390" width="48" height="48" xlink:href="R12_red_48.png"/>
+<image x="520" y="408" width="16" height="16" xlink:href="R12_red_16.png"/>
+<rect x="550" y="390" width="90" height="48" fill="#2b2d30"/>
+<image x="558" y="390" width="48" height="48" xlink:href="R12_red_48.png"/>
+<image x="614" y="408" width="16" height="16" xlink:href="R12_red_16.png"/>
+</svg>

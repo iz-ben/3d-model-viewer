@@ -1,0 +1,39 @@
+<svg width="470" height="470" viewBox="0 0 470 470" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="470" height="470" fill="#ffffff"/>
+<rect x="180" y="0" width="145" height="470" fill="#f3f3f3"/>
+<rect x="325" y="0" width="145" height="470" fill="#2b2d30"/>
+<g font-family="sans-serif" font-size="12">
+<text x="195" y="20" fill="#555">light bg</text>
+<text x="340" y="20" fill="#ccc">dark bg</text>
+</g>
+<text x="12" y="73" font-family="sans-serif" font-size="13" fill="#222">P1 green>teal</text>
+<image x="195" y="35" width="48" height="48" xlink:href="P1_green_teal_48.png"/>
+<image x="265" y="51" width="16" height="16" xlink:href="P1_green_teal_16.png"/>
+<image x="340" y="35" width="48" height="48" xlink:href="P1_green_teal_48.png"/>
+<image x="410" y="51" width="16" height="16" xlink:href="P1_green_teal_16.png"/>
+<text x="12" y="143" font-family="sans-serif" font-size="13" fill="#222">P2 teal>cyan</text>
+<image x="195" y="105" width="48" height="48" xlink:href="P2_teal_cyan_48.png"/>
+<image x="265" y="121" width="16" height="16" xlink:href="P2_teal_cyan_16.png"/>
+<image x="340" y="105" width="48" height="48" xlink:href="P2_teal_cyan_48.png"/>
+<image x="410" y="121" width="16" height="16" xlink:href="P2_teal_cyan_16.png"/>
+<text x="12" y="213" font-family="sans-serif" font-size="13" fill="#222">P3 cyan>blue</text>
+<image x="195" y="175" width="48" height="48" xlink:href="P3_cyan_blue_48.png"/>
+<image x="265" y="191" width="16" height="16" xlink:href="P3_cyan_blue_16.png"/>
+<image x="340" y="175" width="48" height="48" xlink:href="P3_cyan_blue_48.png"/>
+<image x="410" y="191" width="16" height="16" xlink:href="P3_cyan_blue_16.png"/>
+<text x="12" y="283" font-family="sans-serif" font-size="13" fill="#222">P4 blue>indigo</text>
+<image x="195" y="245" width="48" height="48" xlink:href="P4_blue_indigo_48.png"/>
+<image x="265" y="261" width="16" height="16" xlink:href="P4_blue_indigo_16.png"/>
+<image x="340" y="245" width="48" height="48" xlink:href="P4_blue_indigo_48.png"/>
+<image x="410" y="261" width="16" height="16" xlink:href="P4_blue_indigo_16.png"/>
+<text x="12" y="353" font-family="sans-serif" font-size="13" fill="#222">P5 indigo>violet</text>
+<image x="195" y="315" width="48" height="48" xlink:href="P5_indigo_violet_48.png"/>
+<image x="265" y="331" width="16" height="16" xlink:href="P5_indigo_violet_16.png"/>
+<image x="340" y="315" width="48" height="48" xlink:href="P5_indigo_violet_48.png"/>
+<image x="410" y="331" width="16" height="16" xlink:href="P5_indigo_violet_16.png"/>
+<text x="12" y="423" font-family="sans-serif" font-size="13" fill="#222">P6 orange>amber</text>
+<image x="195" y="385" width="48" height="48" xlink:href="P6_orange_amber_48.png"/>
+<image x="265" y="401" width="16" height="16" xlink:href="P6_orange_amber_16.png"/>
+<image x="340" y="385" width="48" height="48" xlink:href="P6_orange_amber_48.png"/>
+<image x="410" y="401" width="16" height="16" xlink:href="P6_orange_amber_16.png"/>
+</svg>

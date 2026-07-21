@@ -1,0 +1,33 @@
+<svg width="470" height="410" viewBox="0 0 470 410" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="470" height="410" fill="#ffffff"/>
+<rect x="180" y="0" width="145" height="410" fill="#f3f3f3"/>
+<rect x="325" y="0" width="145" height="410" fill="#2b2d30"/>
+<g font-family="sans-serif" font-size="12">
+<text x="195" y="20" fill="#555">light bg</text><text x="340" y="20" fill="#ccc">dark bg</text>
+</g>
+<text x="12" y="73" font-family="sans-serif" font-size="13" fill="#222">hue60 (R02)</text>
+<image x="195" y="35" width="48" height="48" xlink:href="S60_48.png"/>
+<image x="265" y="51" width="16" height="16" xlink:href="S60_16.png"/>
+<image x="340" y="35" width="48" height="48" xlink:href="S60_48.png"/>
+<image x="410" y="51" width="16" height="16" xlink:href="S60_16.png"/>
+<text x="12" y="145" font-family="sans-serif" font-size="13" fill="#222">hue68</text>
+<image x="195" y="107" width="48" height="48" xlink:href="S68_48.png"/>
+<image x="265" y="123" width="16" height="16" xlink:href="S68_16.png"/>
+<image x="340" y="107" width="48" height="48" xlink:href="S68_48.png"/>
+<image x="410" y="123" width="16" height="16" xlink:href="S68_16.png"/>
+<text x="12" y="217" font-family="sans-serif" font-size="13" fill="#222">hue75</text>
+<image x="195" y="179" width="48" height="48" xlink:href="S75_48.png"/>
+<image x="265" y="195" width="16" height="16" xlink:href="S75_16.png"/>
+<image x="340" y="179" width="48" height="48" xlink:href="S75_48.png"/>
+<image x="410" y="195" width="16" height="16" xlink:href="S75_16.png"/>
+<text x="12" y="289" font-family="sans-serif" font-size="13" fill="#222">hue82</text>
+<image x="195" y="251" width="48" height="48" xlink:href="S82_48.png"/>
+<image x="265" y="267" width="16" height="16" xlink:href="S82_16.png"/>
+<image x="340" y="251" width="48" height="48" xlink:href="S82_48.png"/>
+<image x="410" y="267" width="16" height="16" xlink:href="S82_16.png"/>
+<text x="12" y="361" font-family="sans-serif" font-size="13" fill="#222">hue90 (R03)</text>
+<image x="195" y="323" width="48" height="48" xlink:href="S90_48.png"/>
+<image x="265" y="339" width="16" height="16" xlink:href="S90_16.png"/>
+<image x="340" y="323" width="48" height="48" xlink:href="S90_48.png"/>
+<image x="410" y="339" width="16" height="16" xlink:href="S90_16.png"/>
+</svg>

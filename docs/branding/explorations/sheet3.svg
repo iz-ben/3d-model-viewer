@@ -1,0 +1,22 @@
+<svg width="720" height="440" viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect x="0" y="0" width="360" height="440" fill="#FFFFFF"/>
+  <rect x="360" y="0" width="360" height="440" fill="#2B2D30"/>
+  <text x="20" y="30" font-family="Helvetica" font-size="16" fill="#111">SPHERE (light)</text>
+  <text x="380" y="30" font-family="Helvetica" font-size="16" fill="#eee">SPHERE (dark)</text>
+  <text x="20" y="250" font-family="Helvetica" font-size="16" fill="#111">CUBE (light) - current</text>
+  <text x="380" y="250" font-family="Helvetica" font-size="16" fill="#eee">CUBE (dark) - current</text>
+
+  <image x="30" y="55" width="140" height="140" xlink:href="sph_160.png"/>
+  <image x="200" y="125" width="40" height="40" xlink:href="sph_40.png"/>
+  <image x="270" y="137" width="16" height="16" xlink:href="sph_16.png"/>
+  <image x="390" y="55" width="140" height="140" xlink:href="sphd_160.png"/>
+  <image x="560" y="125" width="40" height="40" xlink:href="sphd_40.png"/>
+  <image x="630" y="137" width="16" height="16" xlink:href="sphd_16.png"/>
+
+  <image x="30" y="275" width="140" height="140" xlink:href="cand_160.png"/>
+  <image x="200" y="345" width="40" height="40" xlink:href="cand_40.png"/>
+  <image x="270" y="357" width="16" height="16" xlink:href="cand_16.png"/>
+  <image x="390" y="275" width="140" height="140" xlink:href="dark_160.png"/>
+  <image x="560" y="345" width="40" height="40" xlink:href="dark_40.png"/>
+  <image x="630" y="357" width="16" height="16" xlink:href="dark_16.png"/>
+</svg>

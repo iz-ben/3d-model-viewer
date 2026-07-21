@@ -1,0 +1,39 @@
+<svg width="470" height="470" viewBox="0 0 470 470" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="470" height="470" fill="#ffffff"/>
+<rect x="180" y="0" width="145" height="470" fill="#f3f3f3"/>
+<rect x="325" y="0" width="145" height="470" fill="#2b2d30"/>
+<g font-family="sans-serif" font-size="12">
+<text x="195" y="20" fill="#555">light bg</text>
+<text x="340" y="20" fill="#ccc">dark bg</text>
+</g>
+<text x="12" y="73" font-family="sans-serif" font-size="13" fill="#222">Q1 green>cyan</text>
+<image x="195" y="35" width="48" height="48" xlink:href="Q1_green_cyan_48.png"/>
+<image x="265" y="51" width="16" height="16" xlink:href="Q1_green_cyan_16.png"/>
+<image x="340" y="35" width="48" height="48" xlink:href="Q1_green_cyan_48.png"/>
+<image x="410" y="51" width="16" height="16" xlink:href="Q1_green_cyan_16.png"/>
+<text x="12" y="143" font-family="sans-serif" font-size="13" fill="#222">Q2 teal>blue</text>
+<image x="195" y="105" width="48" height="48" xlink:href="Q2_teal_blue_48.png"/>
+<image x="265" y="121" width="16" height="16" xlink:href="Q2_teal_blue_16.png"/>
+<image x="340" y="105" width="48" height="48" xlink:href="Q2_teal_blue_48.png"/>
+<image x="410" y="121" width="16" height="16" xlink:href="Q2_teal_blue_16.png"/>
+<text x="12" y="213" font-family="sans-serif" font-size="13" fill="#222">Q3 cyan>indigo</text>
+<image x="195" y="175" width="48" height="48" xlink:href="Q3_cyan_indigo_48.png"/>
+<image x="265" y="191" width="16" height="16" xlink:href="Q3_cyan_indigo_16.png"/>
+<image x="340" y="175" width="48" height="48" xlink:href="Q3_cyan_indigo_48.png"/>
+<image x="410" y="191" width="16" height="16" xlink:href="Q3_cyan_indigo_16.png"/>
+<text x="12" y="283" font-family="sans-serif" font-size="13" fill="#222">Q4 blue>violet</text>
+<image x="195" y="245" width="48" height="48" xlink:href="Q4_blue_violet_48.png"/>
+<image x="265" y="261" width="16" height="16" xlink:href="Q4_blue_violet_16.png"/>
+<image x="340" y="245" width="48" height="48" xlink:href="Q4_blue_violet_48.png"/>
+<image x="410" y="261" width="16" height="16" xlink:href="Q4_blue_violet_16.png"/>
+<text x="12" y="353" font-family="sans-serif" font-size="13" fill="#222">Q5 indigo>magenta</text>
+<image x="195" y="315" width="48" height="48" xlink:href="Q5_indigo_magenta_48.png"/>
+<image x="265" y="331" width="16" height="16" xlink:href="Q5_indigo_magenta_16.png"/>
+<image x="340" y="315" width="48" height="48" xlink:href="Q5_indigo_magenta_48.png"/>
+<image x="410" y="331" width="16" height="16" xlink:href="Q5_indigo_magenta_16.png"/>
+<text x="12" y="423" font-family="sans-serif" font-size="13" fill="#222">Q6 orange>green</text>
+<image x="195" y="385" width="48" height="48" xlink:href="Q6_orange_green_48.png"/>
+<image x="265" y="401" width="16" height="16" xlink:href="Q6_orange_green_16.png"/>
+<image x="340" y="385" width="48" height="48" xlink:href="Q6_orange_green_48.png"/>
+<image x="410" y="401" width="16" height="16" xlink:href="Q6_orange_green_16.png"/>
+</svg>

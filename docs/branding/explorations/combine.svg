@@ -1,0 +1,7 @@
+<svg width="180" height="90" viewBox="0 0 180 90" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="180" height="90" fill="#ffffff"/>
+<rect x="90" width="90" height="90" fill="#2b2d30"/>
+<image x="16" y="37" width="16" height="16" xlink:href="obj16.png"/>
+<image x="40" y="13" width="64" height="64" xlink:href="obj64.png"/>
+<image x="120" y="37" width="16" height="16" xlink:href="obj16.png"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg width="600" height="220" viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="600" height="220" fill="#ffffff"/>
+<rect x="0" y="110" width="600" height="110" fill="#2b2d30"/>
+<g font-family="sans-serif" font-size="12">
+<text x="20" y="18" fill="#333">V1 teal+orange</text>
+<text x="220" y="18" fill="#333">V2 graphite+cyan</text>
+<text x="420" y="18" fill="#333">V3 teal+pink</text>
+<text x="20" y="128" fill="#ccc">V4 amber+teal</text>
+<text x="220" y="128" fill="#ccc">V5 blue+amber</text>
+<text x="420" y="128" fill="#ccc">V6 violet+mint</text>
+</g>
+<image x="40" y="30" width="64" height="64" xlink:href="V1.png"/>
+<image x="240" y="30" width="64" height="64" xlink:href="V2.png"/>
+<image x="440" y="30" width="64" height="64" xlink:href="V3.png"/>
+<image x="40" y="140" width="64" height="64" xlink:href="V4.png"/>
+<image x="240" y="140" width="64" height="64" xlink:href="V5.png"/>
+<image x="440" y="140" width="64" height="64" xlink:href="V6.png"/>
+</svg>

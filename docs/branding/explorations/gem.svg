@@ -1,0 +1,19 @@
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- solid left -->
+  <path d="M12 5 L7 5 L3.2 10 L12 21 Z" fill="#2AA6A0"/>
+  <path d="M12 5 L7 5 L3.2 10 L12 10 Z" fill="#4FC3BD"/>
+  <!-- wireframe right -->
+  <g stroke="#1F827D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M12 5 L17 5 L20.8 10 L12 21 Z"/>
+    <path d="M17 5 L20.8 10"/>
+    <path d="M12 10 L20.8 10"/>
+    <path d="M17 5 L15 10"/>
+    <path d="M15 10 L12 21"/>
+  </g>
+  <!-- shared edges -->
+  <g stroke="#1F827D" stroke-width="1.2" stroke-linecap="round" fill="none">
+    <path d="M12 5 L12 21"/>
+    <path d="M3.2 10 L12 10"/>
+    <path d="M9 10 L12 5"/>
+  </g>
+</svg>

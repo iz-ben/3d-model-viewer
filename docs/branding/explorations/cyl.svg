@@ -1,0 +1,17 @@
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- solid left body -->
+  <path d="M6 6 L6 18 A6 2.4 0 0 0 12 20.4 L12 3.6 A6 2.4 0 0 0 6 6 Z" fill="#2AA6A0"/>
+  <!-- top ellipse lighter left -->
+  <path d="M12 3.6 A6 2.4 0 0 0 6 6" stroke="none" fill="none"/>
+  <ellipse cx="9" cy="5.4" rx="2.6" ry="1" fill="#4FC3BD"/>
+  <!-- wireframe right -->
+  <g stroke="#1F827D" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.6 A6 2.4 0 0 1 18 6 L18 18 A6 2.4 0 0 1 12 20.4"/>
+    <path d="M15.6 6.6 L15.6 18.8"/>
+  </g>
+  <!-- shared: top full ellipse + seam -->
+  <g stroke="#1F827D" stroke-width="1.2" fill="none" stroke-linecap="round">
+    <ellipse cx="12" cy="6" rx="6" ry="2.4"/>
+    <path d="M12 3.6 L12 20.4"/>
+  </g>
+</svg>

@@ -1,0 +1,49 @@
+<svg width="440" height="610" viewBox="0 0 440 610" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="440" height="610" fill="#ffffff"/>
+<rect x="150" y="0" width="145" height="610" fill="#f3f3f3"/>
+<rect x="295" y="0" width="145" height="610" fill="#2b2d30"/>
+<g font-family="sans-serif" font-size="12">
+<text x="165" y="20" fill="#555">light bg</text>
+<text x="310" y="20" fill="#ccc">dark bg</text>
+</g>
+<text x="12" y="73" font-family="sans-serif" font-size="13" fill="#222">V1 teal+orange</text>
+<image x="165" y="35" width="48" height="48" xlink:href="V1_48.png"/>
+<image x="235" y="51" width="16" height="16" xlink:href="V1_16.png"/>
+<image x="310" y="35" width="48" height="48" xlink:href="V1_48.png"/>
+<image x="380" y="51" width="16" height="16" xlink:href="V1_16.png"/>
+<text x="12" y="143" font-family="sans-serif" font-size="13" fill="#222">V2 graphite+cyan</text>
+<image x="165" y="105" width="48" height="48" xlink:href="V2_48.png"/>
+<image x="235" y="121" width="16" height="16" xlink:href="V2_16.png"/>
+<image x="310" y="105" width="48" height="48" xlink:href="V2_48.png"/>
+<image x="380" y="121" width="16" height="16" xlink:href="V2_16.png"/>
+<text x="12" y="213" font-family="sans-serif" font-size="13" fill="#222">V3 teal+pink</text>
+<image x="165" y="175" width="48" height="48" xlink:href="V3_48.png"/>
+<image x="235" y="191" width="16" height="16" xlink:href="V3_16.png"/>
+<image x="310" y="175" width="48" height="48" xlink:href="V3_48.png"/>
+<image x="380" y="191" width="16" height="16" xlink:href="V3_16.png"/>
+<text x="12" y="283" font-family="sans-serif" font-size="13" fill="#222">V4 amber+teal</text>
+<image x="165" y="245" width="48" height="48" xlink:href="V4_48.png"/>
+<image x="235" y="261" width="16" height="16" xlink:href="V4_16.png"/>
+<image x="310" y="245" width="48" height="48" xlink:href="V4_48.png"/>
+<image x="380" y="261" width="16" height="16" xlink:href="V4_16.png"/>
+<text x="12" y="353" font-family="sans-serif" font-size="13" fill="#222">V5 blue+amber</text>
+<image x="165" y="315" width="48" height="48" xlink:href="V5_48.png"/>
+<image x="235" y="331" width="16" height="16" xlink:href="V5_16.png"/>
+<image x="310" y="315" width="48" height="48" xlink:href="V5_48.png"/>
+<image x="380" y="331" width="16" height="16" xlink:href="V5_16.png"/>
+<text x="12" y="423" font-family="sans-serif" font-size="13" fill="#222">V6 violet+mint</text>
+<image x="165" y="385" width="48" height="48" xlink:href="V6_48.png"/>
+<image x="235" y="401" width="16" height="16" xlink:href="V6_16.png"/>
+<image x="310" y="385" width="48" height="48" xlink:href="V6_48.png"/>
+<image x="380" y="401" width="16" height="16" xlink:href="V6_16.png"/>
+<text x="12" y="493" font-family="sans-serif" font-size="13" fill="#222">V7 amber+gray</text>
+<image x="165" y="455" width="48" height="48" xlink:href="V7_48.png"/>
+<image x="235" y="471" width="16" height="16" xlink:href="V7_16.png"/>
+<image x="310" y="455" width="48" height="48" xlink:href="V7_48.png"/>
+<image x="380" y="471" width="16" height="16" xlink:href="V7_16.png"/>
+<text x="12" y="563" font-family="sans-serif" font-size="13" fill="#222">V8 gray+amber</text>
+<image x="165" y="525" width="48" height="48" xlink:href="V8_48.png"/>
+<image x="235" y="541" width="16" height="16" xlink:href="V8_16.png"/>
+<image x="310" y="525" width="48" height="48" xlink:href="V8_48.png"/>
+<image x="380" y="541" width="16" height="16" xlink:href="V8_16.png"/>
+</svg>

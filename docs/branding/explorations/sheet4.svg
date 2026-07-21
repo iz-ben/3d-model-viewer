@@ -1,0 +1,33 @@
+<svg width="760" height="620" viewBox="0 0 760 620" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect width="760" height="620" fill="#FFFFFF"/>
+  <g font-family="Helvetica" font-size="16" fill="#111">
+    <text x="20" y="30">SPHERE</text>
+    <text x="20" y="180">GEM / DIAMOND</text>
+    <text x="20" y="330">TORUS</text>
+    <text x="20" y="480">UTAH TEAPOT</text>
+  </g>
+  <image x="30"  y="45"  width="120" height="120" xlink:href="sph_160.png"/>
+  <image x="180" y="85"  width="40"  height="40"  xlink:href="sph_40.png"/>
+  <image x="250" y="97"  width="16"  height="16"  xlink:href="sph_16.png"/>
+
+  <image x="30"  y="195" width="120" height="120" xlink:href="gem_160.png"/>
+  <image x="180" y="235" width="40"  height="40"  xlink:href="gem_40.png"/>
+  <image x="250" y="247" width="16"  height="16"  xlink:href="gem_16.png"/>
+
+  <image x="30"  y="345" width="120" height="120" xlink:href="torus_160.png"/>
+  <image x="180" y="385" width="40"  height="40"  xlink:href="torus_40.png"/>
+  <image x="250" y="397" width="16"  height="16"  xlink:href="torus_16.png"/>
+
+  <image x="30"  y="495" width="120" height="120" xlink:href="teapot_160.png"/>
+  <image x="180" y="535" width="40"  height="40"  xlink:href="teapot_40.png"/>
+  <image x="250" y="547" width="16"  height="16"  xlink:href="teapot_16.png"/>
+
+  <rect x="320" y="0" width="440" height="620" fill="#2B2D30"/>
+  <image x="360" y="45"  width="120" height="120" xlink:href="sph_160.png"/>
+  <image x="360" y="195" width="120" height="120" xlink:href="gem_160.png"/>
+  <image x="360" y="345" width="120" height="120" xlink:href="torus_160.png"/>
+  <image x="360" y="495" width="120" height="120" xlink:href="teapot_160.png"/>
+  <text x="520" y="30" font-family="Helvetica" font-size="14" fill="#eee">(same art on dark bg;</text>
+  <text x="520" y="50" font-family="Helvetica" font-size="14" fill="#eee">final dark variant would</text>
+  <text x="520" y="70" font-family="Helvetica" font-size="14" fill="#eee">use lighter wireframe)</text>
+</svg>
