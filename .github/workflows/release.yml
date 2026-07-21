@@ -12,6 +12,10 @@ on:
           - patch
           - minor
           - major
+      publish_marketplace:
+        description: "Also publish this release to the JetBrains Marketplace."
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -143,19 +147,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      # ============================================================
-      # JetBrains Marketplace Publishing (Uncomment when ready)
-      # ============================================================
-      # Prerequisites:
-      # 1. Generate a token at: https://plugins.jetbrains.com/author/me/tokens
-      # 2. Add JETBRAINS_MARKETPLACE_TOKEN as a repository secret
-      # 3. Uncomment the step below
-      # ============================================================
-      # - name: Publish to JetBrains Marketplace
-      #   if: ${{ steps.changelog.outputs.skipped == 'false' }}
-      #   run: ./gradlew publishPlugin
-      #   env:
-      #     PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
+      # Publish to the JetBrains Marketplace. Secondary to the tag/release flow:
+      # continue-on-error keeps a publish failure from failing the release, since
+      # a version can still be uploaded to the Marketplace manually. Opt out per
+      # run via the publish_marketplace input. PUBLISH_TOKEN is read by publishPlugin.
+      - name: Publish to JetBrains Marketplace
+        id: publish_marketplace
+        if: ${{ steps.changelog.outputs.skipped == 'false' && github.event.inputs.publish_marketplace == 'true' }}
+        continue-on-error: true
+        run: ./gradlew publishPlugin
+        env:
+          PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
 
       - name: Summary
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
@@ -164,6 +166,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ steps.get-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Tag:** ${{ steps.get-version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Published to Marketplace:** ${{ steps.publish_marketplace.outcome == 'success' && 'yes' || (steps.publish_marketplace.outcome == 'failure' && 'failed (publish manually)' || 'no') }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Changelog" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.changelog.outputs.clean_changelog }}" >> $GITHUB_STEP_SUMMARY
