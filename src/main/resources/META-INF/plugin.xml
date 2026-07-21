@@ -6,7 +6,7 @@
     <vendor url="https://coterie.ke">Coterie Kenya</vendor>
 
     <description><![CDATA[
-<p>View 3D models (GLB, glTF, STL, OBJ, three.js) within your IntelliJ-based IDE.</p>
+<p>View 3D models (GLB, glTF, STL, OBJ, three.js JSON) within your IntelliJ-based IDE.</p>
 
 <p>Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure.</p>
 
