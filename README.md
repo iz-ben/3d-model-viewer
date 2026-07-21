@@ -10,11 +10,17 @@ Open a `.glb`, `.gltf`, `.stl`, three.js JSON, or `.obj` file and it renders rig
 
 ## Demo
 
-| Animation playback | Wireframe mode |
-| --- | --- |
-| ![Animation playback](docs/media/animation.gif) | ![Wireframe mode](docs/media/wireframe.gif) |
+### Animation playback
 
-![Model Explorer navigation](docs/media/model-explorer.gif)
+<video src="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/animation.mp4" poster="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/animation-poster.jpg" controls width="100%"></video>
+
+### Wireframe mode
+
+<video src="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/wireframe.mp4" poster="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/wireframe-poster.jpg" controls width="100%"></video>
+
+### Model Explorer
+
+<video src="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/explorer.mp4" poster="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/explorer-poster.jpg" controls width="100%"></video>
 
 ## Screenshots
 
