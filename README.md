@@ -2,9 +2,9 @@
 
 View 3D models (GLB, glTF, STL, OBJ, three.js) within your IntelliJ-based IDE.
 
-[![JetBrains Marketplace Version](https://img.shields.io/jetbrains/plugin/v/29933.svg?label=Marketplace)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
-[![Rating](https://img.shields.io/jetbrains/plugin/r/rating/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer/reviews)
+[![JetBrains Marketplace Version](https://img.shields.io/jetbrains/plugin/v/29933.svg?label=Marketplace)](https://plugins.jetbrains.com/plugin/29933)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/29933.svg)](https://plugins.jetbrains.com/plugin/29933)
+[![Rating](https://img.shields.io/jetbrains/plugin/r/rating/29933.svg)](https://plugins.jetbrains.com/plugin/29933/reviews)
 
 Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure.
 
@@ -129,7 +129,7 @@ git commit -m "feat!: redesign plugin settings UI"
 
 If you find this plugin useful, consider supporting its development:
 
-- Star this repository and [rate it on the JetBrains Marketplace](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer/reviews) to help others discover it
+- Star this repository and [rate it on the JetBrains Marketplace](https://plugins.jetbrains.com/plugin/29933/reviews) to help others discover it
 - Buy me a coffee: [buymeacoffee.com/coterieke](https://buymeacoffee.com/coterieke)
 
 ## License
@@ -138,6 +138,6 @@ Licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Links
 
-- [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
+- [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/29933)
 - [GitHub Repository](https://github.com/iz-ben/3d-model-viewer)
 - [Report Issues](https://github.com/iz-ben/3d-model-viewer/issues)

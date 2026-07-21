@@ -25,7 +25,7 @@
 <h2>Supported File Formats</h2>
 <ul>
     <li><b>GLB</b>: Built-in support, works out of the box</li>
-    <li><b>GLTF</b>: Built-in support, automatically bundles referenced assets (textures, binary files)</li>
+    <li><b>glTF</b>: Built-in support, automatically bundles referenced assets (textures, binary files)</li>
     <li><b>STL</b>: Built-in support, geometry only (binary and ASCII)</li>
     <li><b>three.js JSON</b>: Built-in support for three.js model JSON (BufferGeometry / Object / Scene), with a toggle between the JSON editor and the 3D preview.</li>
     <li><b>OBJ</b>: Optional support, enable it in <b>Settings &gt; Tools &gt; 3D Model Viewer</b>.</li>
