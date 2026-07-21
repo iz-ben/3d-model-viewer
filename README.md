@@ -6,7 +6,7 @@ View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your In
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
 [![Rating](https://img.shields.io/jetbrains/plugin/r/rating/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer/reviews)
 
-Open a `.glb`, `.gltf`, `.stl`, three.js JSON, or `.obj` file and it renders right in the editor tab, next to your code. Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure without leaving the IDE.
+Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure, all without leaving the IDE.
 
 ## Demo
 
