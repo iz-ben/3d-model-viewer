@@ -1,39 +1,34 @@
-<!-- Plugin Configuration File: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <!-- Unique identifier of the plugin. It should be FQN, cannot be changed between the plugin versions. -->
     <id>ke.co.coterie.plugins.model3d-viewer</id>
 
-    <!-- Public plugin name should be written in Title Case.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>3D-Model-Viewer</name>
+    <name>3D Model Viewer</name>
 
-    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor url="https://coterie.ke">Coterie Kenya</vendor>
 
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-<p>View and inspect 3D models directly in your IntelliJ-based IDE.</p>
+<p>View 3D models (GLB, glTF, STL, OBJ, three.js JSON) within your IntelliJ-based IDE.</p>
+
+<p>Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure.</p>
 
 <h2>Features</h2>
 <ul>
-    <li>View 3D models directly in the editor</li>
-    <li>Wireframe mode toggle via status bar</li>
-    <li>Auto-rotate toggle via status bar</li>
-    <li>Animation playback controls (play/pause)</li>
-    <li>Animation selector for models with multiple animations</li>
-    <li>Model Explorer tool window: browse the internal structure (materials, meshes, accessors, images, &hellip;) of GLB/GLTF files, with click-to-navigate the glTF JSON and material highlighting in the preview</li>
+    <li>Render 3D models directly in the editor tab</li>
+    <li>Orbit, pan, and zoom the camera, with an Auto-rotate toggle</li>
+    <li>Wireframe mode toggle from the status bar</li>
+    <li>Animation playback controls (play and pause) from the status bar</li>
+    <li>Animation selector for models that contain multiple animations</li>
+    <li>View the glTF JSON alongside the 3D preview, with an editor / split / preview toggle</li>
+    <li>Highlight materials in the model by moving the caret or selecting inside the glTF JSON (materials, meshes, and nodes)</li>
+    <li>Model Explorer tool window that browses a glTF model's internal structure (asset, scenes, nodes, meshes, materials, accessors, buffer views, images, samplers, and animations). Double-click a node to jump to it in the glTF JSON, or select a material, mesh, or node to highlight it in the preview</li>
 </ul>
 
 <h2>Supported File Formats</h2>
 <ul>
     <li><b>GLB</b>: Built-in support, works out of the box</li>
-    <li><b>GLTF</b>: Built-in support, automatically bundles referenced assets (textures, binary files)</li>
+    <li><b>glTF</b>: Built-in support, automatically bundles referenced assets (textures, binary files)</li>
     <li><b>STL</b>: Built-in support, geometry only (binary and ASCII)</li>
-    <li><b>three.js JSON</b>: Built-in support for three.js model JSON (BufferGeometry / Object / Scene). Detected by content, so ordinary <code>.json</code> files keep their normal JSON editor plus an editor/preview toggle.</li>
-    <li><b>OBJ</b>: Optional support, enable in <b>Settings &gt; Tools &gt; 3D Model Viewer</b>.<br/>
-        <em>OBJ support is opt-in because other plugins may also register the .obj file extension. Requires IDE restart after enabling.</em>
-    </li>
+    <li><b>three.js JSON</b>: Built-in support for three.js model JSON (BufferGeometry / Object / Scene), with a toggle between the JSON editor and the 3D preview.</li>
+    <li><b>OBJ</b>: Optional support, enable it in <b>Settings &gt; Tools &gt; 3D Model Viewer</b>.</li>
 </ul>
 
 <h2>Installation</h2>
@@ -41,7 +36,7 @@
 <h3>From JetBrains Marketplace</h3>
 <ol>
     <li>Open <b>Settings</b> → <b>Plugins</b> → <b>Marketplace</b></li>
-    <li>Search for "3D-Model-Viewer"</li>
+    <li>Search for "3D Model Viewer"</li>
     <li>Click <b>Install</b></li>
     <li>Restart IDE if prompted</li>
 </ol>
@@ -57,10 +52,14 @@
 
 <h2>Usage</h2>
 <ol>
-    <li>Open any supported 3D model file (.glb, .gltf, .stl, or .obj if enabled)</li>
-    <li>The model will render in the editor tab</li>
-    <li>Use the status bar widgets at the bottom to toggle <b>Wireframe</b> mode, <b>Auto-rotate</b>, <b>Play/Pause</b> animations, or select animations</li>
+    <li>Open any supported model file (.glb, .gltf, .stl, three.js JSON, or .obj when enabled)</li>
+    <li>The model renders in the editor tab</li>
+    <li>Use the status bar widgets to toggle <b>Wireframe</b> mode, toggle <b>Auto-rotate</b>, <b>play or pause</b> animations, or select an animation</li>
+    <li>For glTF files, open the <b>Model Explorer</b> tool window (right stripe) to browse the model's structure and highlight materials, meshes, or nodes in the preview</li>
 </ol>
+
+<h2>Compatibility</h2>
+<p>Works across JetBrains IDEs and Android Studio.</p>
 
 <h2>Support</h2>
 <p>If you find this plugin useful, consider supporting its development:</p>
@@ -78,15 +77,11 @@
          Do not edit this by hand. -->
     <change-notes></change-notes>
 
-    <!-- Product and plugin compatibility requirements.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.json</depends>
     <depends>com.intellij.modules.jcef</depends>
 
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
 
-    <!-- Extensions defined by the plugin.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Status bar widgets -->
         <statusBarWidgetFactory implementation="ke.co.coterie.plugins.model3dviewer.Model3DViewerWidgetFactory" id="Model3DViewerWireframeWidget"/>
@@ -132,9 +127,6 @@
                 id="ke.co.coterie.plugins.model3dviewer.settings"
                 key="settings.display.name"
                 bundle="messages.MyMessageBundle"/>
-
-        <!-- Notification group for restart notifications -->
-        <notificationGroup id="Model3DViewer.Notifications" displayType="BALLOON"/>
 
         <!-- Startup activity to initialize OBJ file type registration -->
         <postStartupActivity implementation="ke.co.coterie.plugins.model3dviewer.ObjFileTypeStartupActivity"/>

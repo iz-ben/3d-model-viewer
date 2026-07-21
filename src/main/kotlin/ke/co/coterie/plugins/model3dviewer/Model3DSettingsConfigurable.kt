@@ -1,7 +1,5 @@
 package ke.co.coterie.plugins.model3dviewer
 
-import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurableProvider
 import com.intellij.ui.components.JBCheckBox
@@ -22,7 +20,7 @@ class Model3DSettingsConfigurable : Configurable {
 
     override fun createComponent(): JComponent {
         objSupportCheckbox = JBCheckBox("Enable OBJ file support").apply {
-            toolTipText = "When enabled, the 3D Model Viewer will also handle .obj files. Requires IDE restart to take full effect."
+            toolTipText = "When enabled, the 3D Model Viewer will also handle .obj files."
         }
 
         mainPanel = FormBuilder.createFormBuilder()
@@ -45,9 +43,6 @@ class Model3DSettingsConfigurable : Configurable {
 
         if (wasEnabled != isEnabled) {
             settings.setObjSupportEnabled(isEnabled)
-
-            // Show restart notification
-            showRestartNotification(isEnabled)
         }
     }
 
@@ -59,24 +54,6 @@ class Model3DSettingsConfigurable : Configurable {
     override fun disposeUIResources() {
         objSupportCheckbox = null
         mainPanel = null
-    }
-
-    private fun showRestartNotification(objEnabled: Boolean) {
-        val message = if (objEnabled) {
-            "OBJ file support has been enabled. Please restart the IDE for changes to take full effect."
-        } else {
-            "OBJ file support has been disabled. Please restart the IDE for changes to take full effect."
-        }
-
-        NotificationGroupManager.getInstance()
-            .getNotificationGroup("Model3DViewer.Notifications")
-            .createNotification(
-                "3D Model Viewer",
-                message,
-                NotificationType.INFORMATION
-            )
-            .addAction(RestartIdeAction())
-            .notify(null)
     }
 }
 
