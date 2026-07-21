@@ -15,14 +15,19 @@
     <description><![CDATA[
 <p>View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your IntelliJ-based IDE.</p>
 
+<p>Open a model file and it renders right in the editor tab, next to your code. Orbit the camera,
+toggle wireframe, play animations, and inspect the model's internal structure without leaving the IDE.</p>
+
 <h2>Features</h2>
 <ul>
-    <li>View 3D models directly in the editor</li>
-    <li>Wireframe mode toggle via status bar</li>
-    <li>Auto-rotate toggle via status bar</li>
-    <li>Animation playback controls (play/pause)</li>
-    <li>Animation selector for models with multiple animations</li>
-    <li>Model Explorer tool window: browse the internal structure (materials, meshes, accessors, images, &hellip;) of GLB/GLTF files, with click-to-navigate the glTF JSON and material highlighting in the preview</li>
+    <li>Render 3D models directly in the editor tab</li>
+    <li>Orbit, pan, and zoom the camera, with an Auto-rotate toggle</li>
+    <li>Wireframe mode toggle from the status bar</li>
+    <li>Animation playback controls (play and pause) from the status bar</li>
+    <li>Animation selector for models that contain multiple animations</li>
+    <li>View the glTF JSON alongside the 3D preview, with an editor / split / preview toggle</li>
+    <li>Highlight materials in the model by moving the caret or selecting inside the glTF JSON (materials, meshes, and nodes)</li>
+    <li>Model Explorer tool window that browses a glTF model's internal structure (asset, scenes, nodes, meshes, materials, accessors, buffer views, images, samplers, and animations). Double-click a node to jump to it in the glTF JSON, or select a material, mesh, or node to highlight it in the preview</li>
 </ul>
 
 <h2>Supported File Formats</h2>
@@ -57,10 +62,14 @@
 
 <h2>Usage</h2>
 <ol>
-    <li>Open any supported 3D model file (.glb, .gltf, .stl, or .obj if enabled)</li>
-    <li>The model will render in the editor tab</li>
-    <li>Use the status bar widgets at the bottom to toggle <b>Wireframe</b> mode, <b>Auto-rotate</b>, <b>Play/Pause</b> animations, or select animations</li>
+    <li>Open any supported model file (.glb, .gltf, .stl, three.js JSON, or .obj when enabled)</li>
+    <li>The model renders in the editor tab</li>
+    <li>Use the status bar widgets to toggle <b>Wireframe</b> mode, toggle <b>Auto-rotate</b>, <b>play or pause</b> animations, or select an animation</li>
+    <li>For glTF files, open the <b>Model Explorer</b> tool window (right stripe) to browse the model's structure and highlight materials, meshes, or nodes in the preview</li>
 </ol>
+
+<h2>Compatibility</h2>
+<p>Works across all JetBrains IDEs, including the free Community editions and Android Studio.</p>
 
 <h2>Support</h2>
 <p>If you find this plugin useful, consider supporting its development:</p>
