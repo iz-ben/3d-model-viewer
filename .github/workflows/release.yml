@@ -150,7 +150,7 @@ jobs:
       # Publish to the JetBrains Marketplace. Opt out per run via the
       # publish_marketplace input. PUBLISH_TOKEN is read by the publishPlugin task.
       - name: Publish to JetBrains Marketplace
-        if: ${{ steps.changelog.outputs.skipped == 'false' && inputs.publish_marketplace }}
+        if: ${{ steps.changelog.outputs.skipped == 'false' && inputs.publish_marketplace == 'true' }}
         run: ./gradlew publishPlugin
         env:
           PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
