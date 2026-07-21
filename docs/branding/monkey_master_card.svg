@@ -1,0 +1,201 @@
+<svg width="642" height="828" viewBox="0 0 642 828" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="642" height="828" fill="#fafafa"/>
+<text x="16" y="26" font-family="sans-serif" font-size="18" font-weight="bold" fill="#111">3D Model Viewer - logo color exploration</text>
+<text x="16" y="42" font-family="sans-serif" font-size="11" fill="#666">Each variant shown on light and dark IDE backgrounds. Solid half / wireframe half.</text>
+<text x="16" y="54" font-family="sans-serif" font-size="13" font-weight="bold" fill="#111">Two-tone contrast pairings (rejected)</text>
+<rect x="16" y="66" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="66" width="42" height="42" xlink:href="V1_48.png"/>
+<rect x="64" y="66" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="66" width="42" height="42" xlink:href="V1_48.png"/>
+<text x="16" y="121" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V1 teal+orange</text>
+<rect x="120" y="66" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="120" y="66" width="42" height="42" xlink:href="V2_48.png"/>
+<rect x="168" y="66" width="42" height="42" fill="#2b2d30"/>
+<image x="168" y="66" width="42" height="42" xlink:href="V2_48.png"/>
+<text x="120" y="121" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V2 graphite+cyan</text>
+<rect x="224" y="66" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="224" y="66" width="42" height="42" xlink:href="V3_48.png"/>
+<rect x="272" y="66" width="42" height="42" fill="#2b2d30"/>
+<image x="272" y="66" width="42" height="42" xlink:href="V3_48.png"/>
+<text x="224" y="121" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V3 teal+pink</text>
+<rect x="328" y="66" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="328" y="66" width="42" height="42" xlink:href="V4_48.png"/>
+<rect x="376" y="66" width="42" height="42" fill="#2b2d30"/>
+<image x="376" y="66" width="42" height="42" xlink:href="V4_48.png"/>
+<text x="328" y="121" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V4 amber+teal</text>
+<rect x="432" y="66" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="432" y="66" width="42" height="42" xlink:href="V5_48.png"/>
+<rect x="480" y="66" width="42" height="42" fill="#2b2d30"/>
+<image x="480" y="66" width="42" height="42" xlink:href="V5_48.png"/>
+<text x="432" y="121" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V5 blue+amber</text>
+<rect x="536" y="66" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="536" y="66" width="42" height="42" xlink:href="V6_48.png"/>
+<rect x="584" y="66" width="42" height="42" fill="#2b2d30"/>
+<image x="584" y="66" width="42" height="42" xlink:href="V6_48.png"/>
+<text x="536" y="121" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V6 violet+mint</text>
+<rect x="16" y="142" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="142" width="42" height="42" xlink:href="V7_48.png"/>
+<rect x="64" y="142" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="142" width="42" height="42" xlink:href="V7_48.png"/>
+<text x="16" y="197" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V7 amber+gray</text>
+<rect x="120" y="142" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="120" y="142" width="42" height="42" xlink:href="V8_48.png"/>
+<rect x="168" y="142" width="42" height="42" fill="#2b2d30"/>
+<image x="168" y="142" width="42" height="42" xlink:href="V8_48.png"/>
+<text x="120" y="197" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">V8 gray+amber</text>
+<text x="16" y="232" font-family="sans-serif" font-size="13" font-weight="bold" fill="#111">Analogous - 30 degrees apart</text>
+<rect x="16" y="244" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="244" width="42" height="42" xlink:href="P1_green_teal_48.png"/>
+<rect x="64" y="244" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="244" width="42" height="42" xlink:href="P1_green_teal_48.png"/>
+<text x="16" y="299" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">P1 green>teal</text>
+<rect x="120" y="244" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="120" y="244" width="42" height="42" xlink:href="P2_teal_cyan_48.png"/>
+<rect x="168" y="244" width="42" height="42" fill="#2b2d30"/>
+<image x="168" y="244" width="42" height="42" xlink:href="P2_teal_cyan_48.png"/>
+<text x="120" y="299" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">P2 teal>cyan</text>
+<rect x="224" y="244" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="224" y="244" width="42" height="42" xlink:href="P3_cyan_blue_48.png"/>
+<rect x="272" y="244" width="42" height="42" fill="#2b2d30"/>
+<image x="272" y="244" width="42" height="42" xlink:href="P3_cyan_blue_48.png"/>
+<text x="224" y="299" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">P3 cyan>blue</text>
+<rect x="328" y="244" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="328" y="244" width="42" height="42" xlink:href="P4_blue_indigo_48.png"/>
+<rect x="376" y="244" width="42" height="42" fill="#2b2d30"/>
+<image x="376" y="244" width="42" height="42" xlink:href="P4_blue_indigo_48.png"/>
+<text x="328" y="299" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">P4 blue>indigo</text>
+<rect x="432" y="244" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="432" y="244" width="42" height="42" xlink:href="P5_indigo_violet_48.png"/>
+<rect x="480" y="244" width="42" height="42" fill="#2b2d30"/>
+<image x="480" y="244" width="42" height="42" xlink:href="P5_indigo_violet_48.png"/>
+<text x="432" y="299" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">P5 indigo>violet</text>
+<rect x="536" y="244" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="536" y="244" width="42" height="42" xlink:href="P6_orange_amber_48.png"/>
+<rect x="584" y="244" width="42" height="42" fill="#2b2d30"/>
+<image x="584" y="244" width="42" height="42" xlink:href="P6_orange_amber_48.png"/>
+<text x="536" y="299" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">P6 orange>amber</text>
+<text x="16" y="334" font-family="sans-serif" font-size="13" font-weight="bold" fill="#111">Two-step - 60 degrees apart</text>
+<rect x="16" y="346" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="346" width="42" height="42" xlink:href="Q1_green_cyan_48.png"/>
+<rect x="64" y="346" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="346" width="42" height="42" xlink:href="Q1_green_cyan_48.png"/>
+<text x="16" y="401" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">Q1 green>cyan</text>
+<rect x="120" y="346" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="120" y="346" width="42" height="42" xlink:href="Q2_teal_blue_48.png"/>
+<rect x="168" y="346" width="42" height="42" fill="#2b2d30"/>
+<image x="168" y="346" width="42" height="42" xlink:href="Q2_teal_blue_48.png"/>
+<text x="120" y="401" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">Q2 teal>blue</text>
+<rect x="224" y="346" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="224" y="346" width="42" height="42" xlink:href="Q3_cyan_indigo_48.png"/>
+<rect x="272" y="346" width="42" height="42" fill="#2b2d30"/>
+<image x="272" y="346" width="42" height="42" xlink:href="Q3_cyan_indigo_48.png"/>
+<text x="224" y="401" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">Q3 cyan>indigo</text>
+<rect x="328" y="346" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="328" y="346" width="42" height="42" xlink:href="Q4_blue_violet_48.png"/>
+<rect x="376" y="346" width="42" height="42" fill="#2b2d30"/>
+<image x="376" y="346" width="42" height="42" xlink:href="Q4_blue_violet_48.png"/>
+<text x="328" y="401" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">Q4 blue>violet</text>
+<rect x="432" y="346" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="432" y="346" width="42" height="42" xlink:href="Q5_indigo_magenta_48.png"/>
+<rect x="480" y="346" width="42" height="42" fill="#2b2d30"/>
+<image x="480" y="346" width="42" height="42" xlink:href="Q5_indigo_magenta_48.png"/>
+<text x="432" y="401" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">Q5 indigo>magenta</text>
+<rect x="536" y="346" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="536" y="346" width="42" height="42" xlink:href="Q6_orange_green_48.png"/>
+<rect x="584" y="346" width="42" height="42" fill="#2b2d30"/>
+<image x="584" y="346" width="42" height="42" xlink:href="Q6_orange_green_48.png"/>
+<text x="536" y="401" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">Q6 orange>green</text>
+<text x="16" y="436" font-family="sans-serif" font-size="13" font-weight="bold" fill="#111">Solid-hue rotation - cyan wireframe locked</text>
+<rect x="16" y="448" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="448" width="42" height="42" xlink:href="R01_orange_48.png"/>
+<rect x="64" y="448" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="448" width="42" height="42" xlink:href="R01_orange_48.png"/>
+<text x="16" y="503" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R01 orange</text>
+<rect x="120" y="448" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="120" y="448" width="42" height="42" xlink:href="R02_amber_48.png"/>
+<rect x="168" y="448" width="42" height="42" fill="#2b2d30"/>
+<image x="168" y="448" width="42" height="42" xlink:href="R02_amber_48.png"/>
+<text x="120" y="503" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R02 amber</text>
+<rect x="224" y="448" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="224" y="448" width="42" height="42" xlink:href="R03_lime_48.png"/>
+<rect x="272" y="448" width="42" height="42" fill="#2b2d30"/>
+<image x="272" y="448" width="42" height="42" xlink:href="R03_lime_48.png"/>
+<text x="224" y="503" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R03 lime</text>
+<rect x="328" y="448" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="328" y="448" width="42" height="42" xlink:href="R04_green_48.png"/>
+<rect x="376" y="448" width="42" height="42" fill="#2b2d30"/>
+<image x="376" y="448" width="42" height="42" xlink:href="R04_green_48.png"/>
+<text x="328" y="503" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R04 green</text>
+<rect x="432" y="448" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="432" y="448" width="42" height="42" xlink:href="R05_spring_48.png"/>
+<rect x="480" y="448" width="42" height="42" fill="#2b2d30"/>
+<image x="480" y="448" width="42" height="42" xlink:href="R05_spring_48.png"/>
+<text x="432" y="503" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R05 spring</text>
+<rect x="536" y="448" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="536" y="448" width="42" height="42" xlink:href="R06_teal_48.png"/>
+<rect x="584" y="448" width="42" height="42" fill="#2b2d30"/>
+<image x="584" y="448" width="42" height="42" xlink:href="R06_teal_48.png"/>
+<text x="536" y="503" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R06 teal</text>
+<rect x="16" y="524" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="524" width="42" height="42" xlink:href="R07_azure_48.png"/>
+<rect x="64" y="524" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="524" width="42" height="42" xlink:href="R07_azure_48.png"/>
+<text x="16" y="579" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R07 azure</text>
+<rect x="120" y="524" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="120" y="524" width="42" height="42" xlink:href="R08_blue_48.png"/>
+<rect x="168" y="524" width="42" height="42" fill="#2b2d30"/>
+<image x="168" y="524" width="42" height="42" xlink:href="R08_blue_48.png"/>
+<text x="120" y="579" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R08 blue</text>
+<rect x="224" y="524" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="224" y="524" width="42" height="42" xlink:href="R09_indigo_48.png"/>
+<rect x="272" y="524" width="42" height="42" fill="#2b2d30"/>
+<image x="272" y="524" width="42" height="42" xlink:href="R09_indigo_48.png"/>
+<text x="224" y="579" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R09 indigo</text>
+<rect x="328" y="524" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="328" y="524" width="42" height="42" xlink:href="R10_violet_48.png"/>
+<rect x="376" y="524" width="42" height="42" fill="#2b2d30"/>
+<image x="376" y="524" width="42" height="42" xlink:href="R10_violet_48.png"/>
+<text x="328" y="579" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R10 violet</text>
+<rect x="432" y="524" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="432" y="524" width="42" height="42" xlink:href="R11_magenta_48.png"/>
+<rect x="480" y="524" width="42" height="42" fill="#2b2d30"/>
+<image x="480" y="524" width="42" height="42" xlink:href="R11_magenta_48.png"/>
+<text x="432" y="579" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R11 magenta</text>
+<rect x="536" y="524" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="536" y="524" width="42" height="42" xlink:href="R12_red_48.png"/>
+<rect x="584" y="524" width="42" height="42" fill="#2b2d30"/>
+<image x="584" y="524" width="42" height="42" xlink:href="R12_red_48.png"/>
+<text x="536" y="579" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">R12 red</text>
+<text x="16" y="614" font-family="sans-serif" font-size="13" font-weight="bold" fill="#111">Fine steps: amber to lime (cyan wireframe)</text>
+<rect x="16" y="626" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="626" width="42" height="42" xlink:href="S60_48.png"/>
+<rect x="64" y="626" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="626" width="42" height="42" xlink:href="S60_48.png"/>
+<text x="16" y="681" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">hue60</text>
+<rect x="120" y="626" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="120" y="626" width="42" height="42" xlink:href="S68_48.png"/>
+<rect x="168" y="626" width="42" height="42" fill="#2b2d30"/>
+<image x="168" y="626" width="42" height="42" xlink:href="S68_48.png"/>
+<text x="120" y="681" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">hue68</text>
+<rect x="224" y="626" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="224" y="626" width="42" height="42" xlink:href="S75_48.png"/>
+<rect x="272" y="626" width="42" height="42" fill="#2b2d30"/>
+<image x="272" y="626" width="42" height="42" xlink:href="S75_48.png"/>
+<text x="224" y="681" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">hue75</text>
+<rect x="328" y="626" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="328" y="626" width="42" height="42" xlink:href="S82_48.png"/>
+<rect x="376" y="626" width="42" height="42" fill="#2b2d30"/>
+<image x="376" y="626" width="42" height="42" xlink:href="S82_48.png"/>
+<text x="328" y="681" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">hue82</text>
+<rect x="432" y="626" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="432" y="626" width="42" height="42" xlink:href="S90_48.png"/>
+<rect x="480" y="626" width="42" height="42" fill="#2b2d30"/>
+<image x="480" y="626" width="42" height="42" xlink:href="S90_48.png"/>
+<text x="432" y="681" font-family="sans-serif" font-size="10" font-weight="normal" fill="#333333">hue90</text>
+<text x="16" y="716" font-family="sans-serif" font-size="13" font-weight="bold" fill="#111">FINAL</text>
+<rect x="16" y="728" width="42" height="42" fill="#ffffff" stroke="#e2e2e2"/>
+<image x="16" y="728" width="42" height="42" xlink:href="FINAL_48.png"/>
+<rect x="64" y="728" width="42" height="42" fill="#2b2d30"/>
+<image x="64" y="728" width="42" height="42" xlink:href="FINAL_48.png"/>
+<text x="16" y="783" font-family="sans-serif" font-size="10" font-weight="bold" fill="#B58900">★ amber #CCCC33 + cyan #47A3D1</text>
+</svg>

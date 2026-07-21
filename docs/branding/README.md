@@ -30,6 +30,12 @@ in the New UI project tree and editor tabs.
 - STL: faceted triangle mesh (STL is a triangle soup)
 - OBJ: shaded globe
 
+## One-glance overview
+
+`monkey_master_card.png` is a single labeled contact sheet of the entire logo
+color journey (every variant on light and dark backgrounds, with the final
+amber + cyan choice starred).
+
 ## Directory guide
 
 - `final/` — the chosen monkey SVGs and the swap helper used during testing.
