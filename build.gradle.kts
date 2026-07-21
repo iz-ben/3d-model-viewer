@@ -4,7 +4,6 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.4.10"
     id("org.jetbrains.intellij.platform") version "2.18.1"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
     id("org.jetbrains.changelog") version "2.2.1"
 }
 
@@ -48,9 +47,6 @@ dependencies {
         // JCEF moved out of the platform core into its own bundled plugin in 2026.2;
         // it provides JBCefBrowser and the org.cef.* resource-handler API.
         bundledPlugin("com.intellij.modules.jcef")
-
-        composeUI()
-
     }
 }
 
