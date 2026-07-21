@@ -1,6 +1,10 @@
 # 3D Model Viewer
 
-View and inspect 3D models directly in your IntelliJ-based IDE.
+View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your IntelliJ-based IDE.
+
+[![JetBrains Marketplace Version](https://img.shields.io/jetbrains/plugin/v/29933.svg?label=Marketplace)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
+[![Rating](https://img.shields.io/jetbrains/plugin/r/rating/29933.svg)](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer/reviews)
 
 ## Features
 
@@ -32,7 +36,7 @@ View and inspect 3D models directly in your IntelliJ-based IDE.
 ### From JetBrains Marketplace
 
 1. Open **Settings** → **Plugins** → **Marketplace**
-2. Search for "3D-Model-Viewer"
+2. Search for "3D Model Viewer"
 3. Click **Install**
 4. Restart IDE if prompted
 
@@ -130,11 +134,14 @@ If you find this plugin useful, consider supporting its development:
 
 ☕ [Buy Me a Coffee](https://buymeacoffee.com/coterieke)
 
+⭐ [Rate and review it on the JetBrains Marketplace](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer/reviews) to help others discover it.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Links
 
+- [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/29933-3d-model-viewer)
 - [GitHub Repository](https://github.com/iz-ben/3d-model-viewer)
 - [Report Issues](https://github.com/iz-ben/3d-model-viewer/issues)
