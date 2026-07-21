@@ -73,7 +73,7 @@ Click any preview to play the full-quality video.
 
 ## Compatibility
 
-Works across JetBrains IDEs and Android Studio. Requires a build that ships JCEF (the default for current JetBrains IDEs).
+Works across JetBrains IDEs and Android Studio.
 
 ## Contributing
 
