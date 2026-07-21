@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/iz-ben/3d-model-viewer/compare/v1.4.1...v1.4.2) (2026-07-21)
+
+
+### Bug Fixes
+
+* support Community editions by dropping unused Compose dependency ([#56](https://github.com/iz-ben/3d-model-viewer/issues/56)) ([d371b4b](https://github.com/iz-ben/3d-model-viewer/commit/d371b4b0a9146c672ef12453103e561bb9f61c96))
+
 ### [1.4.1](https://github.com/iz-ben/3d-model-viewer/compare/v1.4.0...v1.4.1) (2026-07-20)
 
 
