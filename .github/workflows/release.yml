@@ -144,18 +144,17 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       # ============================================================
-      # JetBrains Marketplace Publishing (Uncomment when ready)
+      # JetBrains Marketplace Publishing
       # ============================================================
-      # Prerequisites:
-      # 1. Generate a token at: https://plugins.jetbrains.com/author/me/tokens
-      # 2. Add JETBRAINS_MARKETPLACE_TOKEN as a repository secret
-      # 3. Uncomment the step below
+      # Uses the JETBRAINS_MARKETPLACE_TOKEN repository secret, mapped to the
+      # PUBLISH_TOKEN env var read by the publishPlugin task (see build.gradle.kts).
+      # Token management: https://plugins.jetbrains.com/author/me/tokens
       # ============================================================
-      # - name: Publish to JetBrains Marketplace
-      #   if: ${{ steps.changelog.outputs.skipped == 'false' }}
-      #   run: ./gradlew publishPlugin
-      #   env:
-      #     PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
+      - name: Publish to JetBrains Marketplace
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: ./gradlew publishPlugin
+        env:
+          PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
 
       - name: Summary
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
