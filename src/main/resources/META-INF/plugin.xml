@@ -15,7 +15,7 @@
     <description><![CDATA[
 <p>View 3D models (GLB, glTF, STL, OBJ, three.js) directly in the editor of your IntelliJ-based IDE.</p>
 
-<p>Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure, all without leaving the IDE.</p>
+<p>Orbit the camera, toggle wireframe, play animations, and inspect the model's internal structure.</p>
 
 <h2>Features</h2>
 <ul>
