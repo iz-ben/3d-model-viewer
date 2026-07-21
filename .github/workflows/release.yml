@@ -147,15 +147,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      # ============================================================
-      # JetBrains Marketplace Publishing
-      # ============================================================
-      # Runs only when the "publish_marketplace" checkbox is enabled on the
-      # manual run. Uses the JETBRAINS_MARKETPLACE_TOKEN repository secret,
-      # mapped to the PUBLISH_TOKEN env var read by the publishPlugin task
-      # (see build.gradle.kts). Token management:
-      # https://plugins.jetbrains.com/author/me/tokens
-      # ============================================================
+      # Publish to the JetBrains Marketplace. Opt out per run via the
+      # publish_marketplace input. PUBLISH_TOKEN is read by the publishPlugin task.
       - name: Publish to JetBrains Marketplace
         if: ${{ steps.changelog.outputs.skipped == 'false' && inputs.publish_marketplace }}
         run: ./gradlew publishPlugin
