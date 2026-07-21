@@ -128,9 +128,6 @@
                 key="settings.display.name"
                 bundle="messages.MyMessageBundle"/>
 
-        <!-- Notification group for restart notifications -->
-        <notificationGroup id="Model3DViewer.Notifications" displayType="BALLOON"/>
-
         <!-- Startup activity to initialize OBJ file type registration -->
         <postStartupActivity implementation="ke.co.coterie.plugins.model3dviewer.ObjFileTypeStartupActivity"/>
         <!-- Sets initial glTF Structure tool window visibility for a restored glTF/GLB tab -->
