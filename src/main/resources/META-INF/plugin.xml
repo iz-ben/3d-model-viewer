@@ -69,7 +69,7 @@ toggle wireframe, play animations, and inspect the model's internal structure wi
 </ol>
 
 <h2>Compatibility</h2>
-<p>Works across all JetBrains IDEs, including the free Community editions and Android Studio.</p>
+<p>Works across JetBrains IDEs and Android Studio.</p>
 
 <h2>Support</h2>
 <p>If you find this plugin useful, consider supporting its development:</p>

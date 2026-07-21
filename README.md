@@ -10,17 +10,13 @@ Open a `.glb`, `.gltf`, `.stl`, three.js JSON, or `.obj` file and it renders rig
 
 ## Demo
 
-### Animation playback
+Click any preview to play the full-quality video.
 
-<video src="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/animation.mp4" poster="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/animation-poster.jpg" controls width="100%"></video>
+| Animation playback | Wireframe mode |
+| --- | --- |
+| [![Animation playback](docs/media/animation.gif)](docs/media/animation.mp4) | [![Wireframe mode](docs/media/wireframe.gif)](docs/media/wireframe.mp4) |
 
-### Wireframe mode
-
-<video src="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/wireframe.mp4" poster="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/wireframe-poster.jpg" controls width="100%"></video>
-
-### Model Explorer
-
-<video src="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/explorer.mp4" poster="https://github.com/iz-ben/3d-model-viewer/raw/main/docs/media/explorer-poster.jpg" controls width="100%"></video>
+[![Model Explorer navigation](docs/media/model-explorer.gif)](docs/media/explorer.mp4)
 
 ## Screenshots
 
@@ -80,7 +76,7 @@ Open a `.glb`, `.gltf`, `.stl`, three.js JSON, or `.obj` file and it renders rig
 
 ## Compatibility
 
-Works across all JetBrains IDEs, including the free Community editions and Android Studio. Requires a build that ships JCEF (the default for current JetBrains IDEs).
+Works across JetBrains IDEs and Android Studio. Requires a build that ships JCEF (the default for current JetBrains IDEs).
 
 ## Contributing
 
