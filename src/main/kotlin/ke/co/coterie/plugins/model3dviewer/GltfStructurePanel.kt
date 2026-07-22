@@ -160,10 +160,12 @@ class GltfStructurePanel(
         val file = currentModelFile() ?: return
         val viewer = Model3DViewerService.getInstance(project).getViewerForFile(file) ?: return
         val node = selectedNode()
-        if (node == null || node.materialIndices.isEmpty()) {
-            viewer.clearHighlight()
-        } else {
-            viewer.highlightMaterials(node.materialIndices)
+        when {
+            node == null -> viewer.clearHighlight()
+            node.meshIndex != null -> viewer.highlightMeshes(listOf(node.meshIndex))
+            node.nodeIndex != null -> viewer.highlightNodes(listOf(node.nodeIndex))
+            node.materialIndices.isNotEmpty() -> viewer.highlightMaterials(node.materialIndices)
+            else -> viewer.clearHighlight()
         }
     }
 

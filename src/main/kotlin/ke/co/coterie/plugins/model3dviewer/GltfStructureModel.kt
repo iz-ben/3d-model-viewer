@@ -16,15 +16,18 @@ sealed interface GltfPathSeg {
 
 /**
  * One node of the glTF structure tree. Category nodes (e.g. "Materials") group leaf nodes
- * (e.g. "Material 0 – Steel"). [path] locates the node in the glTF JSON for navigation;
- * [materialIndices] are the materials to highlight in the 3D preview when the node is
- * selected (empty when the node maps to no material).
+ * (e.g. "Material 0 – Steel"). [path] locates the node in the glTF JSON for navigation.
+ * Exactly one of [materialIndices] (material rows), [meshIndex] (mesh rows) or [nodeIndex]
+ * (node rows) drives the 3D-preview highlight when the row is selected; all are absent for
+ * rows that map to no renderable object.
  */
 class GltfStructureNode(
     val label: String,
     val secondary: String? = null,
     val path: List<GltfPathSeg>? = null,
     val materialIndices: List<Int> = emptyList(),
+    val meshIndex: Int? = null,
+    val nodeIndex: Int? = null,
     val children: List<GltfStructureNode> = emptyList(),
 )
 
@@ -45,13 +48,12 @@ object GltfStructureModel {
             ?.takeIf { it.isJsonObject }?.asJsonObject
             ?: return null
 
-        val materialIndex = GltfMaterialIndex.fromJson(json)
         val categories = mutableListOf<GltfStructureNode>()
 
         root.obj("asset")?.let { categories += assetNode(it) }
         arrayCategory(root, "scenes", "Scenes") { i, o -> sceneNode(i, o) }?.let { categories += it }
-        arrayCategory(root, "nodes", "Nodes") { i, o -> nodeNode(i, o, materialIndex) }?.let { categories += it }
-        arrayCategory(root, "meshes", "Meshes") { i, o -> meshNode(i, o, materialIndex) }?.let { categories += it }
+        arrayCategory(root, "nodes", "Nodes") { i, o -> nodeNode(i, o) }?.let { categories += it }
+        arrayCategory(root, "meshes", "Meshes") { i, o -> meshNode(i, o) }?.let { categories += it }
         arrayCategory(root, "materials", "Materials") { i, o -> materialNode(i, o) }?.let { categories += it }
         arrayCategory(root, "accessors", "Accessors") { i, o -> accessorNode(i, o) }?.let { categories += it }
         arrayCategory(root, "bufferViews", "Buffer Views") { i, o -> bufferViewNode(i, o) }?.let { categories += it }
@@ -86,7 +88,7 @@ object GltfStructureModel {
         return leaf(o.name(i, "Scene"), "$nodes root node(s)".takeIf { nodes > 0 }, path("scenes", i))
     }
 
-    private fun nodeNode(i: Int, o: JsonObject, mi: GltfMaterialIndex?): GltfStructureNode {
+    private fun nodeNode(i: Int, o: JsonObject): GltfStructureNode {
         val mesh = o.int("mesh")
         val secondary = when {
             mesh != null -> "mesh $mesh"
@@ -94,12 +96,15 @@ object GltfStructureModel {
             o.arr("children") != null -> "${o.arr("children")!!.size()} child node(s)"
             else -> null
         }
-        return leaf(o.name(i, "Node"), secondary, path("nodes", i), mi?.materialsForNode(i)?.sorted() ?: emptyList())
+        // Highlight the node's own subtree (its instance), so shared meshes/materials
+        // don't drag in unrelated nodes.
+        return GltfStructureNode(o.name(i, "Node"), secondary, path("nodes", i), nodeIndex = i)
     }
 
-    private fun meshNode(i: Int, o: JsonObject, mi: GltfMaterialIndex?): GltfStructureNode {
+    private fun meshNode(i: Int, o: JsonObject): GltfStructureNode {
         val prims = o.arr("primitives")?.size() ?: 0
-        return leaf(o.name(i, "Mesh"), "$prims primitive(s)", path("meshes", i), mi?.materialsForMesh(i)?.sorted() ?: emptyList())
+        // Highlight exactly this mesh (all instances of it), not the materials it uses.
+        return GltfStructureNode(o.name(i, "Mesh"), "$prims primitive(s)", path("meshes", i), meshIndex = i)
     }
 
     private fun materialNode(i: Int, o: JsonObject): GltfStructureNode {

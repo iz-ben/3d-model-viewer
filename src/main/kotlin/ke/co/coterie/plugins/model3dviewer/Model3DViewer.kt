@@ -277,6 +277,16 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         executeJavaScript("if (window.highlightMaterials) { window.highlightMaterials($encoded); }")
     }
 
+    fun highlightMeshes(indices: List<Int>) {
+        val encoded = Gson().toJson(indices)
+        executeJavaScript("if (window.highlightMeshes) { window.highlightMeshes($encoded); }")
+    }
+
+    fun highlightNodes(indices: List<Int>) {
+        val encoded = Gson().toJson(indices)
+        executeJavaScript("if (window.highlightNodes) { window.highlightNodes($encoded); }")
+    }
+
     fun clearHighlight() {
         executeJavaScript("if (window.clearMaterialHighlight) { window.clearMaterialHighlight(); }")
     }
