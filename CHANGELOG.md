@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/iz-ben/3d-model-viewer/compare/v1.4.2...v1.4.3) (2026-07-22)
+
+
+### Documentation
+
+* Marketplace SEO, media, README + description overhaul ([#59](https://github.com/iz-ben/3d-model-viewer/issues/59)) ([3d5fd0b](https://github.com/iz-ben/3d-model-viewer/commit/3d5fd0b296ca0647815643b22ec1e1d0f2bcdb80))
+
 ### [1.4.2](https://github.com/iz-ben/3d-model-viewer/compare/v1.4.1...v1.4.2) (2026-07-21)
 
 
