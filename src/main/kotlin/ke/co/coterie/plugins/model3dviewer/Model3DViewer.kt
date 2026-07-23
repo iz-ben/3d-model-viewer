@@ -1,6 +1,8 @@
 package ke.co.coterie.plugins.model3dviewer
 
 import com.google.gson.Gson
+import com.intellij.ide.ui.LafManager
+import com.intellij.ide.ui.LafManagerListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -33,6 +35,16 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
     private val viewerService = Model3DViewerService.getInstance(project)
     private val animationStateService = Model3DAnimationStateService.getInstance(project)
 
+    // Resolved renderer backdrop ('light' / 'dark') for this viewer, following the
+    // user's setting (which may itself track the IDE theme). Declared before
+    // [viewerComponent] so its Swing fill can use it, and kept up to date via the
+    // settings + look-and-feel listeners registered in init.
+    @Volatile
+    private var currentBackground: String =
+        Model3DBackground.resolve(Model3DSettings.getInstance().state.backgroundMode)
+
+    private val settingsListener: () -> Unit = { updateBackground() }
+
     // Loading banner shown while a model downloads/parses, driven by the viewer
     // engine's loading events. Kept in its own layout region (NORTH) rather than
     // overlaid on the JCEF browser so it renders regardless of the browser mode.
@@ -43,7 +55,7 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
      * banner. Use this instead of [getComponent] so the banner is included.
      */
     val viewerComponent: JComponent = JPanel(BorderLayout()).apply {
-        background = VIEWER_BACKGROUND
+        background = Model3DBackground.swingColor(currentBackground)
         add(loadingBanner, BorderLayout.NORTH)
         add(this@Model3DViewer.component, BorderLayout.CENTER)
     }
@@ -218,10 +230,34 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
             assetToken,
             modelUrlPath,
             wireframe,
-            Model3DAutoRotateWidget.autoRotateEnabled
+            Model3DAutoRotateWidget.autoRotateEnabled,
+            currentBackground
         )
         println("Loading 3D viewer: $serverUrl (file: ${file.path})")
         loadURL(serverUrl)
+
+        // Keep the backdrop in sync while the viewer is open: when the user changes
+        // the renderer-background setting, or (in "Follow IDE" mode) the IDE theme
+        // switches. The connection is tied to this browser's disposal.
+        Model3DSettings.getInstance().addSettingsChangeListener(settingsListener)
+        ApplicationManager.getApplication().messageBus.connect(this)
+            .subscribe(LafManagerListener.TOPIC, LafManagerListener { _: LafManager -> updateBackground() })
+    }
+
+    /**
+     * Recompute the resolved backdrop from the current setting/IDE theme and, if it
+     * changed, push it to the running viewer and repaint the Swing fill so a resize
+     * won't flash the old colour.
+     */
+    private fun updateBackground() {
+        val resolved = Model3DBackground.resolve(Model3DSettings.getInstance().state.backgroundMode)
+        if (resolved == currentBackground) return
+        currentBackground = resolved
+        executeJavaScript("if (window.setBackground) { window.setBackground('$resolved'); }")
+        ApplicationManager.getApplication().invokeLater {
+            viewerComponent.background = Model3DBackground.swingColor(resolved)
+            viewerComponent.repaint()
+        }
     }
 
     private fun executeJavaScript(js: String) {
@@ -291,22 +327,16 @@ class Model3DViewer(val project: Project, val file: VirtualFile) : JBCefBrowser(
         executeJavaScript("if (window.clearMaterialHighlight) { window.clearMaterialHighlight(); }")
     }
 
-    // The JCEF browser panel's background defaults to the IDE theme background
-    // (light in light themes). Painting it with the viewer's dark background
-    // means a resize that exposes new area (opening the Model Explorer, dragging
-    // the splitter/window edge) fills the not-yet-painted region with dark
-    // instead of flashing a light background while dragging.
-    override fun getBackgroundColor(): Color = VIEWER_BACKGROUND
+    // The JCEF browser panel's background defaults to the IDE theme background.
+    // Painting it with the resolved viewer backdrop means a resize that exposes
+    // new area (opening the Model Explorer, dragging the splitter/window edge)
+    // fills the not-yet-painted region with the matching colour instead of
+    // flashing a mismatched background while dragging.
+    override fun getBackgroundColor(): Color = Model3DBackground.swingColor(currentBackground)
 
     override fun dispose() {
+        Model3DSettings.getInstance().removeSettingsChangeListener(settingsListener)
         Model3DAssetRegistry.unregister(assetToken)
         super.dispose()
-    }
-
-    companion object {
-        // The viewer's dark background (matches the .stage gradient's dark edge
-        // in the bundled viewer's app.css). Used to fill the JCEF surface so a
-        // resize doesn't flash a light background before the page repaints.
-        private val VIEWER_BACKGROUND = Color(0x14, 0x14, 0x18)
     }
 }
