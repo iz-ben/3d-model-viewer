@@ -2,8 +2,10 @@ package ke.co.coterie.plugins.model3dviewer
 
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurableProvider
+import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.util.ui.FormBuilder
+import javax.swing.DefaultComboBoxModel
 import javax.swing.JComponent
 import javax.swing.JPanel
 
@@ -14,6 +16,7 @@ import javax.swing.JPanel
 class Model3DSettingsConfigurable : Configurable {
 
     private var objSupportCheckbox: JBCheckBox? = null
+    private var backgroundCombo: ComboBox<Model3DSettings.BackgroundMode>? = null
     private var mainPanel: JPanel? = null
 
     override fun getDisplayName(): String = "3D Model Viewer"
@@ -23,8 +26,14 @@ class Model3DSettingsConfigurable : Configurable {
             toolTipText = "When enabled, the 3D Model Viewer will also handle .obj files."
         }
 
+        backgroundCombo = ComboBox(DefaultComboBoxModel(Model3DSettings.BackgroundMode.entries.toTypedArray())).apply {
+            toolTipText = "Backdrop for the 3D preview. \"Follow IDE theme\" matches the IDE's light/dark theme."
+            renderer = com.intellij.ui.SimpleListCellRenderer.create("") { it.label }
+        }
+
         mainPanel = FormBuilder.createFormBuilder()
             .addComponent(objSupportCheckbox!!)
+            .addLabeledComponent("Renderer background:", backgroundCombo!!)
             .addComponentFillVertically(JPanel(), 0)
             .panel
 
@@ -33,7 +42,8 @@ class Model3DSettingsConfigurable : Configurable {
 
     override fun isModified(): Boolean {
         val settings = Model3DSettings.getInstance()
-        return objSupportCheckbox?.isSelected != settings.state.objSupportEnabled
+        return objSupportCheckbox?.isSelected != settings.state.objSupportEnabled ||
+            selectedBackgroundMode()?.id != settings.state.backgroundMode
     }
 
     override fun apply() {
@@ -44,17 +54,24 @@ class Model3DSettingsConfigurable : Configurable {
         if (wasEnabled != isEnabled) {
             settings.setObjSupportEnabled(isEnabled)
         }
+
+        selectedBackgroundMode()?.let { settings.setBackgroundMode(it.id) }
     }
 
     override fun reset() {
         val settings = Model3DSettings.getInstance()
         objSupportCheckbox?.isSelected = settings.state.objSupportEnabled
+        backgroundCombo?.selectedItem = Model3DSettings.BackgroundMode.fromId(settings.state.backgroundMode)
     }
 
     override fun disposeUIResources() {
         objSupportCheckbox = null
+        backgroundCombo = null
         mainPanel = null
     }
+
+    private fun selectedBackgroundMode(): Model3DSettings.BackgroundMode? =
+        backgroundCombo?.selectedItem as? Model3DSettings.BackgroundMode
 }
 
 /**

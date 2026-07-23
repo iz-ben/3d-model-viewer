@@ -94,13 +94,20 @@ class Model3DSchemeHandlerFactory : CefSchemeHandlerFactory {
 
         /**
          * Build the viewer URL for an already-registered model token. Encodes
-         * the model path + type + wireframe + auto-rotate flags.
+         * the model path + type + wireframe + auto-rotate flags and the resolved
+         * backdrop (`light`/`dark`).
          */
-        fun viewerUrl(token: String, modelPath: String, wireframe: Boolean, autoRotate: Boolean): String {
+        fun viewerUrl(
+            token: String,
+            modelPath: String,
+            wireframe: Boolean,
+            autoRotate: Boolean,
+            background: String
+        ): String {
             val type = modelPath.substringAfterLast('/').substringAfterLast('.', "").lowercase()
             val modelParam = enc("m/$token/$modelPath")
             return "http://$VIEWER_HOST/index.html?model=$modelParam&type=$type" +
-                "&wireframe=$wireframe&autorotate=$autoRotate"
+                "&wireframe=$wireframe&autorotate=$autoRotate&background=$background"
         }
 
         private fun enc(value: String): String =

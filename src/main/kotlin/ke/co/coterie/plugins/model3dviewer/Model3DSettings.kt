@@ -21,8 +21,24 @@ class Model3DSettings : PersistentStateComponent<Model3DSettings.State> {
     private val listeners = mutableListOf<() -> Unit>()
 
     data class State(
-        var objSupportEnabled: Boolean = false
+        var objSupportEnabled: Boolean = false,
+        var backgroundMode: String = BackgroundMode.FOLLOW_IDE.id
     )
+
+    /**
+     * Renderer-background preference for the 3D preview. [FOLLOW_IDE] matches the
+     * IDE's light/dark theme; [LIGHT] and [DARK] force a fixed backdrop.
+     */
+    enum class BackgroundMode(val id: String, val label: String) {
+        FOLLOW_IDE("follow", "Follow IDE theme"),
+        LIGHT("light", "Light"),
+        DARK("dark", "Dark");
+
+        companion object {
+            fun fromId(id: String?): BackgroundMode =
+                entries.firstOrNull { it.id == id } ?: FOLLOW_IDE
+        }
+    }
 
     override fun getState(): State = myState
 
@@ -37,6 +53,17 @@ class Model3DSettings : PersistentStateComponent<Model3DSettings.State> {
     fun setObjSupportEnabled(enabled: Boolean) {
         if (myState.objSupportEnabled != enabled) {
             myState.objSupportEnabled = enabled
+            notifyListeners()
+        }
+    }
+
+    /**
+     * Set the renderer-background preference for the 3D preview.
+     * @param mode one of [BackgroundMode] ids
+     */
+    fun setBackgroundMode(mode: String) {
+        if (myState.backgroundMode != mode) {
+            myState.backgroundMode = mode
             notifyListeners()
         }
     }
