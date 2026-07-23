@@ -1,7 +1,12 @@
 package ke.co.coterie.plugins.model3dviewer
 
+import com.intellij.ide.ui.LafManager
+import com.intellij.ide.ui.LafManagerListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.editor.colors.EditorColorsListener
+import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.openapi.editor.colors.EditorColorsScheme
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditor
@@ -88,6 +93,12 @@ class Model3DTextEditorWithPreview(
             // populate the document from the background task below.
             (editor.editor as? EditorEx)?.isViewer = true
 
+            // This in-memory *.json viewer otherwise renders with a fixed (light)
+            // color scheme regardless of the IDE theme, so it looks out of place
+            // next to the 3D preview and the rest of a dark IDE. Bind it to the
+            // editor scheme that matches the current UI theme and keep it in sync.
+            bindEditorToIdeTheme(editor)
+
             // Highlight the corresponding materials in the 3D preview as the caret moves
             // or the selection changes. Listeners are disposed together with the editor.
             val highlightListener = GltfMaterialHighlightListener(project, file, editor.editor)
@@ -96,6 +107,24 @@ class Model3DTextEditorWithPreview(
 
             loadJsonAsync(project, file, editor, highlightListener)
             return editor
+        }
+
+        /**
+         * Bind [editor]'s color scheme to the one matching the current IDE UI theme
+         * and re-apply it whenever the theme or global editor scheme changes, so the
+         * in-memory glTF JSON view tracks the IDE instead of staying on a fixed
+         * (light) scheme. Subscriptions are tied to the editor's disposal.
+         */
+        private fun bindEditorToIdeTheme(editor: TextEditor) {
+            val ex = editor.editor as? EditorEx ?: return
+            fun apply() {
+                val scheme: EditorColorsScheme = EditorColorsManager.getInstance().schemeForCurrentUITheme
+                if (ex.colorsScheme !== scheme) ex.colorsScheme = scheme
+            }
+            apply()
+            val connection = ApplicationManager.getApplication().messageBus.connect(editor)
+            connection.subscribe(EditorColorsManager.TOPIC, EditorColorsListener { apply() })
+            connection.subscribe(LafManagerListener.TOPIC, LafManagerListener { _: LafManager -> apply() })
         }
 
         private fun loadJsonAsync(
