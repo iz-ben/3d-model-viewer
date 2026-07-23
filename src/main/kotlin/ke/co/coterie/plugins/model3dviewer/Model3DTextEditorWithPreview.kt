@@ -118,13 +118,20 @@ class Model3DTextEditorWithPreview(
         private fun bindEditorToIdeTheme(editor: TextEditor) {
             val ex = editor.editor as? EditorEx ?: return
             fun apply() {
+                if (ex.isDisposed) return
                 val scheme: EditorColorsScheme = EditorColorsManager.getInstance().schemeForCurrentUITheme
                 if (ex.colorsScheme !== scheme) ex.colorsScheme = scheme
             }
+            // Theme/scheme change callbacks are not guaranteed to run on the EDT, and
+            // mutating editor UI state off-EDT is unsafe; marshal onto the EDT (the
+            // apply() guards against a disposed editor). The initial call already runs
+            // on the EDT during editor creation.
+            fun applyOnEdt() =
+                ApplicationManager.getApplication().invokeLater({ apply() }, ModalityState.any())
             apply()
             val connection = ApplicationManager.getApplication().messageBus.connect(editor)
-            connection.subscribe(EditorColorsManager.TOPIC, EditorColorsListener { apply() })
-            connection.subscribe(LafManagerListener.TOPIC, LafManagerListener { _: LafManager -> apply() })
+            connection.subscribe(EditorColorsManager.TOPIC, EditorColorsListener { applyOnEdt() })
+            connection.subscribe(LafManagerListener.TOPIC, LafManagerListener { _: LafManager -> applyOnEdt() })
         }
 
         private fun loadJsonAsync(
