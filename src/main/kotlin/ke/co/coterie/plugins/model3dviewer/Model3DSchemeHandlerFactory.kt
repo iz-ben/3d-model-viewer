@@ -104,10 +104,10 @@ class Model3DSchemeHandlerFactory : CefSchemeHandlerFactory {
             autoRotate: Boolean,
             background: String
         ): String {
-            val type = modelPath.substringAfterLast('/').substringAfterLast('.', "").lowercase()
+            val type = enc(modelPath.substringAfterLast('/').substringAfterLast('.', "").lowercase())
             val modelParam = enc("m/$token/$modelPath")
             return "http://$VIEWER_HOST/index.html?model=$modelParam&type=$type" +
-                "&wireframe=$wireframe&autorotate=$autoRotate&background=$background"
+                "&wireframe=$wireframe&autorotate=$autoRotate&background=${enc(background)}"
         }
 
         private fun enc(value: String): String =
